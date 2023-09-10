@@ -1,6 +1,6 @@
 ## Team Members Description
 
-### Team Leader: Will Aftring
+#### Team Leader: Will Aftring
 I am currently working as a Windows debug engineer primarily working on the Windows authentication stack (Kerberos, NTLM, TLS) and the Windows container runtime (docker, containerd). Most of my development experience is in C/C++, C# but I often have to debug x86 and arm64 assembly.
 
 #### Security Leader: Hanwen Zhang
