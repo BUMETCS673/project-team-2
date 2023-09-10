@@ -15,3 +15,6 @@ I have taken the following courses thus far  INFO STR W/JAVA (CS520), DATA STRUC
 
 #### Design and Implementation Leader: Maryam Hussein
 I am currently employed as a Full Stack Developer at IBM, where I have had the opportunity to work with various programming languages. Among these, I have a strong preference for Java and the Spring Boot framework. My passion for software development has driven me to constantly learn and grow, with the goal of becoming a proficient software architect in the near future.Outside of work, I am dedicated to maintaining a healthy work-life balance. You can often find me in the gym, where I pursue my fitness goals with enthusiasm. My commitment to both my professional and personal development is what keeps me motivated and driven to excel in all aspects of lif.
+
+#### Configuration Leader: Andrew Ouellette
+Hello everyone, my name is Andrew. I am also in the Masters of Software Development program and this is my second to last course. I have a BS in Physics and Mathematics from UMass but have been working as a Software Engineer/Developer since graduating back in 2017. Java is the language I know best and use the most but I also have some JavaScript/HTML/CSS and Kotlin experience as well. I don't have a project idea but I would like to build something using Java/Spring or Android Studio.
