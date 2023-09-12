@@ -18,3 +18,6 @@ I am currently employed as a Full Stack Developer at IBM, where I have had the o
 
 #### Configuration Leader: Andrew Ouellette
 Hello everyone, my name is Andrew. I am also in the Masters of Software Development program and this is my second to last course. I have a BS in Physics and Mathematics from UMass but have been working as a Software Engineer/Developer since graduating back in 2017. Java is the language I know best and use the most but I also have some JavaScript/HTML/CSS and Kotlin experience as well. When I'm not coding I enjoy playing hockey, tennis and PC video games.
+
+#### Security Leader: Xin Zhao
+Hello everyone. My name is Xin Zhao. I am currently enrolled in the MS in Computer Sciece at Boston University Metropolitan College. I haven't started working yet. I have taken the following courses thus far Java and Data Structure, Algorithm analysis, operating systems, computer networks, fundamentals of analysis and data visualization, web application development, web mining and graphic analysis. I think my positioning within the team is flexible. I am looking forward to working with everyone to complete this long-term project.
