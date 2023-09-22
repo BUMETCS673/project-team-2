@@ -17,7 +17,7 @@ public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    @GetMapping("/hello")
+    @GetMapping("/solosavings")
     public String welcome() {
         // Log a message using the logger
         logger.info(" Welcome to SoloSavings Application");
