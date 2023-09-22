@@ -7,5 +7,5 @@ package com.soloSavings.service;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-public class UserService {
+public interface UserService {
 }
