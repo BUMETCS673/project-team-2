@@ -15,15 +15,5 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class UserAuthenticationController {
-    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-    @GetMapping("/solosavings/register")
-    public String register() {
-        logger.info(" Register an account with SoloSavings Application");
-        return "register";
-    }
-    @GetMapping("/solosavings/login")
-    public String login() {
-        logger.info(" Login to SoloSavings Application");
-        return "login";
-    }
+    private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationController.class);
 }

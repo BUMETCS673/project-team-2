@@ -123,7 +123,7 @@
     <div class="hero">
         <h1>Welcome to SoloSavings</h1>
         <p>Your Money Management Solution</p>
-        <a href="register.jsp" class="btn-primary">Get Started</a>
+        <a href="/" class="btn-primary">Get Started</a>
     </div>
 
     <section class="features">
