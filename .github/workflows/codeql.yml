@@ -43,7 +43,12 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
-
+        
+    - name: Set up CodeQL
+      uses: github/codeql-action/setup@v1
+      with:
+        languages: ${{ matrix.language }}
+        
     - name: Initialize CodeQL database
       run: codeql database init --language=$CODEQL_LANGUAGE
 
