@@ -1,4 +1,4 @@
-package com.soloSavings.service;
+package com.soloSavings.exceptions;
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
  * Boston University MET CS 673 - Software Engineering
@@ -7,5 +7,8 @@ package com.soloSavings.service;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-public interface IncomeAndExpenseServic {
+public class TransactionException extends Exception{
+    public TransactionException(String message){
+        super(message);
+    }
 }

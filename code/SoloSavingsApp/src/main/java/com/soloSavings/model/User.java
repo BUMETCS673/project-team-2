@@ -8,6 +8,11 @@ import jakarta.persistence.Table;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 
@@ -21,6 +26,10 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -41,11 +50,6 @@ public class User {
         this.password_hash = digestor.digest(password_hash.getBytes(StandardCharsets.UTF_8));
         this.balance_amount = balance_amount;
     }
-
-    public User() {
-
-    }
-
     public Integer getUser_id() {
         return user_id;
     }

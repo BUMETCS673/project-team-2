@@ -1,8 +1,11 @@
 package com.soloSavings.repository;
 
-import com.soloSavings.model.User;
+import com.soloSavings.model.Transaction;
+import com.soloSavings.model.helper.TransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -13,6 +16,12 @@ import org.springframework.stereotype.Repository;
  * Team 2 - SoloSavings Application
  */
 @Repository
-public interface UserRepository extends JpaRepository<User,Integer> {
+public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
+
+    //Expenses
+
+
+    //Income
+    //List<Transaction> findByTransactionType(TransactionType transactionType);
 
 }
