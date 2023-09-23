@@ -31,7 +31,7 @@ jobs:
       run: echo "Run, Build Application using the script"
         
     - name: Build Java project
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file code/SoloSavingsApp/pom.xml
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
