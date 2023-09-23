@@ -25,7 +25,6 @@ RUN mvn package -DskipTests
 FROM openjdk:17-jdk
 ENV SPRING_MYSQL_HOST=solosavings-db
 # Copy the jar from builder to the new image
-COPY --from=builder /app/target/*.jar app.jar
-
+COPY --from=builder /app/target/*.war app.war
 # Run the jar file 
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/app.war"]
