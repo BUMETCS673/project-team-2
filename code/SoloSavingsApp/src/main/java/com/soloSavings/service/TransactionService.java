@@ -7,5 +7,14 @@ package com.soloSavings.service;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-public interface IncomeAndExpenseServic {
+public interface TransactionService {
+
+
+    //Expenses
+
+
+    //Income
+
+
+
 }
