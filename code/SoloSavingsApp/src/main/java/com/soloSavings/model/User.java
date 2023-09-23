@@ -21,17 +21,17 @@ public class User {
 
     @Id
     @GeneratedValue
-    private int user_id ;
+    private Integer user_id ;
     private String username;
     private String email;
     private String password_hash;
     private LocalDate registration_date;
-    private Long balance_amount;
+    private Double balance_amount;
     private LocalDate last_updated;
 
 
-    public User(int user_id, String username, String email, String password_hash, LocalDate registration_date,
-                Long balance_amount, LocalDate last_updated) {
+    public User(Integer user_id, String username, String email, String password_hash, LocalDate registration_date,
+                Double balance_amount, LocalDate last_updated) {
         this.user_id = user_id;
         this.username = username;
         this.email = email;
@@ -45,10 +45,10 @@ public class User {
 
     }
 
-    public int getUser_id() {
+    public Integer getUser_id() {
         return user_id;
     }
-    public void setUser_id(int user_id) {
+    public void setUser_id(Integer user_id) {
         this.user_id = user_id;
     }
     public String getUsername() {
@@ -75,10 +75,10 @@ public class User {
     public void setRegistration_date(LocalDate registration_date) {
         this.registration_date = registration_date;
     }
-    public Long getBalance_amount() {
+    public Double getBalance_amount() {
         return balance_amount;
     }
-    public void setBalance_amount(Long balance_amount) {
+    public void setBalance_amount(Double balance_amount) {
         this.balance_amount = balance_amount;
     }
     public LocalDate getLast_updated() {

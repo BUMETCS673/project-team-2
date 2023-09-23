@@ -20,13 +20,13 @@ public class Income {
 
     @Id
     @GeneratedValue
-    private int income_id;
-    private int user_id;
+    private Integer income_id;
+    private Integer user_id;
     private String source;
-    private Long amount;
+    private Double amount;
     private LocalDate income_date;
 
-    public Income(int income_id, int user_id, String source, Long amount, LocalDate income_date) {
+    public Income(Integer income_id, Integer user_id, String source, Double amount, LocalDate income_date) {
 
         this.income_id = income_id;
         this.user_id = user_id;
@@ -39,19 +39,19 @@ public class Income {
 
     }
 
-    public int getIncome_id() {
+    public Integer getIncome_id() {
         return income_id;
     }
 
-    public void setIncome_id(int income_id) {
+    public void setIncome_id(Integer income_id) {
         this.income_id = income_id;
     }
 
-    public int getUser_id() {
+    public Integer getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(Integer user_id) {
         this.user_id = user_id;
     }
 
@@ -63,11 +63,11 @@ public class Income {
         this.source = source;
     }
 
-    public Long getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

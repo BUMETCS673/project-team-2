@@ -20,13 +20,13 @@ public class Expense {
 
     @Id
     @GeneratedValue
-    private int expense_id;
-    private int user_id;
+    private Integer expense_id;
+    private Integer user_id;
     private String category;
-    private Long amount;
+    private Double amount;
     private LocalDate expense_date;
 
-    public Expense(int expense_id, int user_id, String category, Long amount, LocalDate expense_date) {
+    public Expense(Integer expense_id, Integer user_id, String category, Double amount, LocalDate expense_date) {
         this.expense_id = expense_id;
         this.user_id = user_id;
         this.category = category;
@@ -38,19 +38,19 @@ public class Expense {
 
     }
 
-    public int getExpense_id() {
+    public Integer getExpense_id() {
         return expense_id;
     }
 
-    public void setExpense_id(int expense_id) {
+    public void setExpense_id(Integer expense_id) {
         this.expense_id = expense_id;
     }
 
-    public int getUser_id() {
+    public Integer getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(Integer user_id) {
         this.user_id = user_id;
     }
 
@@ -62,11 +62,11 @@ public class Expense {
         this.category = category;
     }
 
-    public Long getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
