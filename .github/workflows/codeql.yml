@@ -44,18 +44,7 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         
-    - name: Set up CodeQL
-      uses: github/codeql-action/setup@v1
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
       with:
-        languages: ${{ matrix.language }}
-        
-    - name: Initialize CodeQL database
-      run: codeql database init --language=$CODEQL_LANGUAGE
-
-    - name: Analyze code
-      run: codeql analyze --all-queries --database=$CODEQL_DATABASE
-
-    - name: Upload results
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: codeql-sarif.sarif
+        category: "/language:${{matrix.language}}"
