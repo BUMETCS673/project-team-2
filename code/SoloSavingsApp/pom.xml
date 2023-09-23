@@ -41,10 +41,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
 		<!-- dependencies for sql -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -52,6 +48,18 @@
 			<version>8.0.33</version>
 		</dependency>
 		<!-- end dependencies for sql -->
+
+		<!-- dependencies for security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- end dependencies for security -->
 	</dependencies>
 
 	<build>

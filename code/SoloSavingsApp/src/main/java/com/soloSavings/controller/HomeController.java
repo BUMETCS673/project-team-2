@@ -17,6 +17,11 @@ public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/solosavings";
+    }
+
     @GetMapping("/solosavings")
     public String welcome() {
         // Log a message using the logger
