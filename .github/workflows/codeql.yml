@@ -31,6 +31,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: 17
+        distribution: 'adopt'
 
     - name: Say Hello
       run: echo "Hello World!!!"
