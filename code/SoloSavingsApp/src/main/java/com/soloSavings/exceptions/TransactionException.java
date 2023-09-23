@@ -7,5 +7,8 @@ package com.soloSavings.exceptions;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-public class IncomeException {
+public class TransactionException extends Exception{
+    public TransactionException(String message){
+        super(message);
+    }
 }

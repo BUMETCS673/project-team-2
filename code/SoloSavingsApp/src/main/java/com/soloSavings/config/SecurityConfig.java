@@ -16,6 +16,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable() // for testing, will remove later
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(new AntPathRequestMatcher("/**")).permitAll();
                     auth.requestMatchers(new AntPathRequestMatcher("/solosavings/**")).permitAll();
