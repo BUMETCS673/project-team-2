@@ -42,7 +42,7 @@ public class HomeController {
 
     @GetMapping("/login")
     public String needAuth() {
-        return "redirect:/needAuth";
+        return "needAuth";
     }
 
     @GetMapping("/dashboard")
