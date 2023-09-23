@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>404 - Not Found</title>
+    <title>Need Authentication</title>
     <style>
         body {
             font-family: Arial, sans-serif;

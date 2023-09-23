@@ -97,7 +97,7 @@
     <h1>Login to SoloSavings</h1>
 
     <section>
-        <form action="/solosavings/login" method="post">
+        <form id="loginForm">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             
@@ -115,4 +115,30 @@
 <footer>
     &copy; 2023 SoloSavings
 </footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#loginForm').submit(function(event) {
+            event.preventDefault();
+            const formData = {
+                username: $('input[name="username"]').val(),
+                password: $('input[name="password"]').val(),
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/login',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    console.log('Login successful:', response);
+                    window.location.href = '/login';
+                },
+                error: function(error) {
+                    console.error('Login failed:', error);
+                }
+            });
+        });
+    });
+</script>
 </html>

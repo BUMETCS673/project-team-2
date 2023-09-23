@@ -1,5 +1,6 @@
 package com.soloSavings.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -22,10 +23,12 @@ public class SecurityConfig {
         http
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll();
+                    auth.requestMatchers(new AntPathRequestMatcher("/**")).permitAll();
                     auth.requestMatchers(new AntPathRequestMatcher("/solosavings/**")).permitAll(); //Any URL with pattern "/solosavings/**" do not need to be authenticated
                     auth.anyRequest().authenticated();
                 })
-                .securityMatcher("/api/**") //Any request with pattern "/api/**" needs to be authenticated
+                //.securityMatcher("/api/**") //Any request with pattern "/api/**" needs to be authenticated
                 .securityMatcher("/dashboard/**")   //Any URL with pattern "/dashboard/**" needs to be authenticated
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -36,8 +39,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    public static String hashedPassword(String plaintTextPassword) {
+        PasswordEncoder encoder = passwordEncoder();
+        return encoder.encode(plaintTextPassword);
+    }
 }

@@ -1,9 +1,7 @@
 package com.soloSavings.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.soloSavings.config.SecurityConfig;
+import jakarta.persistence.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -12,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
@@ -31,31 +31,28 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-
     @Id
-    @GeneratedValue
-    private Integer user_id ;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id ;
     private String username;
+    @Column(unique = true)
     private String email;
-    private byte[] password_hash;
+    private String password_hash;
     private LocalDate registration_date;
     private Double balance_amount;
     private LocalDate last_updated;
 
 
-    public User(String username, String email, String password_hash, Double balance_amount) throws NoSuchAlgorithmException {
-        MessageDigest digestor = MessageDigest.getInstance("SHA-256");
+    public User(String username, String email, String plain_text_password, Double balance_amount) throws NoSuchAlgorithmException {
         this.username = username;
         this.email = email;
-        this.password_hash = digestor.digest(password_hash.getBytes(StandardCharsets.UTF_8));
+        this.password_hash = SecurityConfig.hashedPassword(plain_text_password);
         this.balance_amount = balance_amount;
     }
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getId() {
+        return id;
     }
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
-    }
+
     public String getUsername() {
         return username;
     }
@@ -68,12 +65,11 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public byte[] getPassword_hash() {
+    public String getPassword_hash() {
         return password_hash;
     }
-    public void setPassword_hash(String password_hash) throws NoSuchAlgorithmException {
-        MessageDigest digestor = MessageDigest.getInstance("SHA-256");
-        this.password_hash = digestor.digest(password_hash.getBytes(StandardCharsets.UTF_8));
+    public boolean isPasswordMatches(String password_hash) {
+        return true;
     }
     public LocalDate getRegistration_date() {
         return registration_date;

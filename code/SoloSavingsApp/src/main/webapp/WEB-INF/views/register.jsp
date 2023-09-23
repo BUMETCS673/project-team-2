@@ -56,6 +56,7 @@
         }
 
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             width: 95%;
             padding: 10px;
@@ -105,21 +106,20 @@
 
     <div class="container">
         <h1>Register for SoloSavings</h1>
-        <form action="register.jsp" method="POST">
-            <!-- Registration form fields: username/email, password, and confirm password -->
+        <form id="registrationForm">
             <div class="form-group">
-                <label for="register-username">Username or Email:</label>
-                <input type="text" id="register-username" name="register-username" required>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
             </div>
 
             <div class="form-group">
-                <label for="register-password">Password:</label>
-                <input type="password" id="register-password" name="register-password" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
             </div>
 
             <div class="form-group">
-                <label for="confirm-password">Confirm Password:</label>
-                <input type="password" id="confirm-password" name="confirm-password" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
             </div>
 
             <button type="submit">Register</button>
@@ -130,4 +130,31 @@
 <footer>
     &copy; 2023 SoloSavings
 </footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#registrationForm').submit(function(event) {
+            event.preventDefault();
+            const formData = {
+                username: $('input[name="username"]').val(),
+                password: $('input[name="password"]').val(),
+                email: $('input[name="email"]').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/register',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    console.log('Registration successful:', response);
+                    window.location.href = '/login';
+                },
+                error: function(error) {
+                    console.error('Registration failed:', error);
+                }
+            });
+        });
+    });
+</script>
 </html>
