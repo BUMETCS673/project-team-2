@@ -30,12 +30,10 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v2
       with:
-        java-version: 11
+        java-version: 17
 
     - name: Say Hello
-      run: |
-        echo "Hello World!!!"
-        echo "Run => Build Application"
+      run: echo "Hello World!!!"
         
     - name: Build Java project
       run: mvn -B package --file code/SoloSavingsApp/pom.xml
