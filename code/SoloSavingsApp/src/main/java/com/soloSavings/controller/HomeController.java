@@ -17,12 +17,15 @@ public class HomeController {
 
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/solosavings";
+    }
+
     @GetMapping("/solosavings")
     public String welcome() {
-        // Log a message using the logger
         logger.info(" Welcome to SoloSavings Application");
-
-        // Return the name of your JSP or HTML file
-        return "home"; // This should return the name of your view file  ,this will replace with React
+        return "home";
     }
+
 }

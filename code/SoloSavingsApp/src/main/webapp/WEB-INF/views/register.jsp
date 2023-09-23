@@ -46,7 +46,6 @@
         }
 
         .form-group {
-            text-align: left;
             margin-bottom: 20px;
         }
 
@@ -58,7 +57,7 @@
 
         input[type="text"],
         input[type="password"] {
-            width: 100%;
+            width: 95%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 3px;
@@ -87,6 +86,9 @@
             color: white;
             text-align: center;
             padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
@@ -94,8 +96,9 @@
     <header>
         <nav>
             <ul>
-                <li><a href="index.jsp">Home</a></li>
-                <li><a href="login.jsp">Login</a></li>
+                <li><a href="/solosavings" style="color: white;">Home</a></li>
+                <li><a href="/solosavings/login" style="color: white;">Login</a></li>
+                <li><a href="/solosavings/register" style="color: white;">Register</a></li>
             </ul>
         </nav>
     </header>
@@ -121,11 +124,10 @@
 
             <button type="submit">Register</button>
         </form>
-        <p>Already have an account? <a href="login.jsp">Login here</a></p>
+        <p>Already have an account? <a href="/solosavings/login">Login here</a></p>
     </div>
-
-    <footer>
-        &copy; 2023 SoloSavings
-    </footer>
 </body>
+<footer>
+    &copy; 2023 SoloSavings
+</footer>
 </html>
