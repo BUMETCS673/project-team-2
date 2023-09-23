@@ -113,9 +113,9 @@
     <header>
         <nav>
             <ul>
-                <li><a href="index.jsp" style="color: white;">Home</a></li>
-                <li><a href="login.jsp" style="color: white;">Login</a></li>
-                <li><a href="register.jsp" style="color: white;">Register</a></li>
+                <li><a href="/solosavings" style="color: white;">Home</a></li>
+                <li><a href="/solosavings/login" style="color: white;">Login</a></li>
+                <li><a href="/solosavings/register" style="color: white;">Register</a></li>
             </ul>
         </nav>
     </header>

@@ -43,6 +43,10 @@
             padding: 20px;
             max-width: 400px;
             margin: 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
         }
         label {
             display: block;
@@ -83,9 +87,9 @@
     <header>
         <nav>
             <ul>
-                <li><a href="index.jsp">Home</a></li>
-                <li><a href="login.jsp">Login</a></li>
-                <li><a href="register.jsp">Register</a></li>
+                <li><a href="/solosavings" style="color: white;">Home</a></li>
+                <li><a href="/solosavings/login" style="color: white;">Login</a></li>
+                <li><a href="/solosavings/register" style="color: white;">Register</a></li>
             </ul>
         </nav>
     </header>
@@ -93,7 +97,7 @@
     <h1>Login to SoloSavings</h1>
 
     <section>
-        <form action="/login" method="post">
+        <form action="/solosavings/login" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             
@@ -105,11 +109,10 @@
     </section>
 
     <section>
-        <p>Don't have an account? <a href="register.jsp">Register here</a></p>
+        <p>Don't have an account? <a href="/solosavings/register">Register here</a></p>
     </section>
-
-    <footer>
-        &copy; 2023 SoloSavings
-    </footer>
 </body>
+<footer>
+    &copy; 2023 SoloSavings
+</footer>
 </html>
