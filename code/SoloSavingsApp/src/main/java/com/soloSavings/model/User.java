@@ -4,6 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 
 
@@ -24,21 +28,18 @@ public class User {
     private Integer user_id ;
     private String username;
     private String email;
-    private String password_hash;
+    private byte[] password_hash;
     private LocalDate registration_date;
     private Double balance_amount;
     private LocalDate last_updated;
 
 
-    public User(Integer user_id, String username, String email, String password_hash, LocalDate registration_date,
-                Double balance_amount, LocalDate last_updated) {
-        this.user_id = user_id;
+    public User(String username, String email, String password_hash, Double balance_amount) throws NoSuchAlgorithmException {
+        MessageDigest digestor = MessageDigest.getInstance("SHA-256");
         this.username = username;
         this.email = email;
-        this.password_hash = password_hash;
-        this.registration_date = registration_date;
+        this.password_hash = digestor.digest(password_hash.getBytes(StandardCharsets.UTF_8));
         this.balance_amount = balance_amount;
-        this.last_updated = last_updated;
     }
 
     public User() {
@@ -63,11 +64,12 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getPassword_hash() {
+    public byte[] getPassword_hash() {
         return password_hash;
     }
-    public void setPassword_hash(String password_hash) {
-        this.password_hash = password_hash;
+    public void setPassword_hash(String password_hash) throws NoSuchAlgorithmException {
+        MessageDigest digestor = MessageDigest.getInstance("SHA-256");
+        this.password_hash = digestor.digest(password_hash.getBytes(StandardCharsets.UTF_8));
     }
     public LocalDate getRegistration_date() {
         return registration_date;

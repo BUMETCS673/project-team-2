@@ -25,13 +25,13 @@ import java.net.URISyntaxException;
 @RequestMapping("/api")
 public class UserAuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationController.class);
-//    @Autowired
-//    private UserServiceImp userServiceImp;
-//
-//    @PostMapping("/register")
-//    public ResponseEntity<String> registerUser(@RequestBody User user) throws URISyntaxException {
-//        logger.info("Request to create a new user: {}", user);
-//        userServiceImp.save(user);
-//        return ResponseEntity.ok("User registered successfully");
-//    }
+    @Autowired
+    private UserServiceImp userServiceImp;
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody User user) throws URISyntaxException {
+        logger.info("Request to create a new user: {}", user);
+        userServiceImp.save(user);
+        return ResponseEntity.ok("User registered successfully");
+    }
 }
