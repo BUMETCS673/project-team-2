@@ -27,8 +27,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: 11
+
     - name: Say Hello
-      run: echo "Run, Build Application using the script"
+      run: |
+        echo "Hello World!!!"
+        echo "Run => Build Application"
         
     - name: Build Java project
       run: mvn -B package --file code/SoloSavingsApp/pom.xml
