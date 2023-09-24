@@ -56,6 +56,7 @@
         }
 
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             width: 95%;
             padding: 10px;
@@ -105,21 +106,25 @@
 
     <div class="container">
         <h1>Register for SoloSavings</h1>
-        <form action="register.jsp" method="POST">
-            <!-- Registration form fields: username/email, password, and confirm password -->
+        <form id="registrationForm">
             <div class="form-group">
-                <label for="register-username">Username or Email:</label>
-                <input type="text" id="register-username" name="register-username" required>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
             </div>
 
             <div class="form-group">
-                <label for="register-password">Password:</label>
-                <input type="password" id="register-password" name="register-password" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
             </div>
 
             <div class="form-group">
-                <label for="confirm-password">Confirm Password:</label>
-                <input type="password" id="confirm-password" name="confirm-password" required>
+                <label for="password_hash">Password:</label>
+                <input type="password" id="password_hash" name="password_hash" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
             </div>
 
             <button type="submit">Register</button>
@@ -130,4 +135,58 @@
 <footer>
     &copy; 2023 SoloSavings
 </footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function isValidationCheckPassed() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password_hash").value;
+        const confirmPassword = document.getElementById("confirm_password").value;
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+
+        if (username.length < 6) {
+            alert("Username must be at least 6 characters long.");
+            return false;
+        }
+
+        if (!passwordPattern.test(password)) {
+            alert("Password must contain at least one uppercase letter, one lowercase letter, one digit, and be at least 8 characters long.");
+            return false;
+        }
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return false;
+        }
+
+        return true;
+    }
+
+    $(document).ready(function() {
+        $('#registrationForm').submit(function(event) {
+            event.preventDefault();
+            if(!isValidationCheckPassed()) return;
+
+            const formData = {
+                username: $('input[name="username"]').val(),
+                password_hash: $('input[name="password_hash"]').val(),
+                email: $('input[name="email"]').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/register',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    console.log('Registration successful:', response);
+                    confirm("Your account successfully created, redirect to your dashboard.")
+                    window.location.replace("/dashboard");
+                },
+                error: function(error) {
+                    console.error('Registration failed:', error);
+                }
+            });
+        });
+    });
+</script>
 </html>

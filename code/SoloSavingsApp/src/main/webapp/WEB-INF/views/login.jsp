@@ -97,12 +97,12 @@
     <h1>Login to SoloSavings</h1>
 
     <section>
-        <form action="/solosavings/login" method="post">
+        <form id="loginForm">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password_hash">Password:</label>
+            <input type="password" id="password_hash" name="password_hash" required>
             
             <button type="submit">Login</button>
         </form>
@@ -115,4 +115,31 @@
 <footer>
     &copy; 2023 SoloSavings
 </footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#loginForm').submit(function(event) {
+            event.preventDefault();
+            const formData = {
+                username: $('input[name="username"]').val(),
+                password_hash: $('input[name="password_hash"]').val(),
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/login',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    console.log('Login successful:', response);
+                    alert("Authentication passed successfully, redirect to your dashboard.")
+                    window.location.replace("/dashboard");
+                },
+                error: function(error) {
+                    console.error('Login failed:', error);
+                }
+            });
+        });
+    });
+</script>
 </html>

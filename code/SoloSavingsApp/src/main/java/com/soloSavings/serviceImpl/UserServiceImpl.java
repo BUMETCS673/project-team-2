@@ -1,11 +1,13 @@
 package com.soloSavings.serviceImpl;
-/*
- * Copyright (c) 2023 Team 2 - SoloSavings
- * Boston University MET CS 673 - Software Engineering
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of
- * Team 2 - SoloSavings Application
- */
-public class UserServiceImpl {
+
+import com.soloSavings.model.User;
+import com.soloSavings.repository.UserRepository;
+import com.soloSavings.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
+
+public class UserServiceImpl  {
+
 }
