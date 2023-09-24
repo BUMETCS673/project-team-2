@@ -101,8 +101,8 @@
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
             
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password_hash">Password:</label>
+            <input type="password" id="password_hash" name="password_hash" required>
             
             <button type="submit">Login</button>
         </form>
@@ -122,7 +122,7 @@
             event.preventDefault();
             const formData = {
                 username: $('input[name="username"]').val(),
-                password: $('input[name="password"]').val(),
+                password_hash: $('input[name="password_hash"]').val(),
             };
 
             $.ajax({
@@ -132,7 +132,8 @@
                 data: JSON.stringify(formData),
                 success: function(response) {
                     console.log('Login successful:', response);
-                    window.location.href = '/login';
+                    alert("Authentication passed successfully, redirect to your dashboard.")
+                    window.location.replace("/dashboard");
                 },
                 error: function(error) {
                     console.error('Login failed:', error);

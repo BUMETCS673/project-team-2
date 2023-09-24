@@ -41,7 +41,7 @@ import java.time.LocalDate;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id ;
+    private Integer user_id ;
     private String username;
     @Column(unique = true)
     private String email;
@@ -50,14 +50,16 @@ public class User {
     private Double balance_amount;
     private LocalDate last_updated;
 
-    public User(String username, String email, String plain_text_password, Double balance_amount) throws NoSuchAlgorithmException {
+    public User(String username, String email, String password_plain_text) {
         this.username = username;
         this.email = email;
-        this.password_hash = SecurityConfig.hashedPassword(plain_text_password);
-        this.balance_amount = balance_amount;
+        this.password_hash = SecurityConfig.hashedPassword(password_plain_text);
+        this.balance_amount = 0.00;
+        this.registration_date = LocalDate.now();
+        this.last_updated = LocalDate.now();
     }
     public Integer getId() {
-        return id;
+        return user_id;
     }
 
     public String getUsername() {
@@ -72,7 +74,7 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getPassword_hash() {
+    public String getPassword() {
         return password_hash;
     }
     public boolean isPasswordMatches(String password_hash) {

@@ -23,8 +23,7 @@ public class SecurityConfig {
         http
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll();
-                    auth.requestMatchers(new AntPathRequestMatcher("/**")).permitAll();
+                    auth.requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll(); // TODO: need restriction, need all open for testing
                     auth.requestMatchers(new AntPathRequestMatcher("/solosavings/**")).permitAll(); //Any URL with pattern "/solosavings/**" do not need to be authenticated
                     auth.anyRequest().authenticated();
                 })

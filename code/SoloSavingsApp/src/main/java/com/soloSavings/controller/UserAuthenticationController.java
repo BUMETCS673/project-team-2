@@ -1,15 +1,15 @@
 package com.soloSavings.controller;
 
 import com.soloSavings.model.User;
-import com.soloSavings.serviceImpl.UserServiceImp;
+import com.soloSavings.repository.UserRepository;
+import com.soloSavings.service.UserService;
+import com.soloSavings.serviceImpl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 
 /*
@@ -24,12 +24,15 @@ import java.security.NoSuchAlgorithmException;
 @RequestMapping("/api")
 public class UserAuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationController.class);
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerUser(@RequestBody User user) {
+    public ResponseEntity<User> registerUser(@RequestBody User user) throws NoSuchAlgorithmException {
         logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Request to create a new user: {}", user);
-        ResponseEntity.ok("User registered successfully");
-        return "redirect:/solosavings";
+        User newUser = new User(user.getUsername(), user.getEmail(), user.getPassword());
+        User result = userService.save(newUser);
+        return ResponseEntity.ok().body(result);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -42,6 +45,6 @@ public class UserAuthenticationController {
     @GetMapping("/dummy-user")
     public void createUser() throws NoSuchAlgorithmException {
         logger.info("!!!!!!!!!!!!!!Request to create a new dummy user!!!!!!!!!!!!!!");
-        User user = new User("hello", "hello@hi.com", "hi123", 100.00);
+        User user = new User("hello", "hello@hi.com", "hi123");
     }
 }

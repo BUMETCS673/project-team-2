@@ -1,6 +1,13 @@
 package com.soloSavings.service;
 
+import com.soloSavings.model.User;
+import com.soloSavings.repository.UserRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -11,5 +18,6 @@ import org.springframework.stereotype.Repository;
  * Team 2 - SoloSavings Application
  */
 @Repository
-public interface UserService {
+public interface UserService extends CrudRepository<User, Long> {
+
 }
