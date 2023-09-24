@@ -25,13 +25,16 @@ import java.security.NoSuchAlgorithmException;
 public class UserAuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationController.class);
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private UserService userService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> registerUser(@RequestBody User user) throws NoSuchAlgorithmException {
         logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Request to create a new user: {}", user);
-        User newUser = new User(user.getUsername(), user.getEmail(), user.getPassword());
-        User result = userService.save(newUser);
+        //User newUser = new User(user.getUsername(), user.getEmail(), user.getPassword());
+        User result = userService.save(user);
         return ResponseEntity.ok().body(result);
     }
 
@@ -40,11 +43,5 @@ public class UserAuthenticationController {
         logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Request to log in an user: {}", user);
         ResponseEntity.ok("User logged in successfully");
         return "redirect:/solosavings";
-    }
-
-    @GetMapping("/dummy-user")
-    public void createUser() throws NoSuchAlgorithmException {
-        logger.info("!!!!!!!!!!!!!!Request to create a new dummy user!!!!!!!!!!!!!!");
-        User user = new User("hello", "hello@hi.com", "hi123");
     }
 }

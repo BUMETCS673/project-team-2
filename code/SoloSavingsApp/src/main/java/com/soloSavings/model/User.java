@@ -37,7 +37,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,60 +49,9 @@ public class User {
     private Double balance_amount;
     private LocalDate last_updated;
 
-    public User(String username, String email, String password_plain_text) {
-        this.username = username;
-        this.email = email;
-        this.password_hash = SecurityConfig.hashedPassword(password_plain_text);
+    public User() {
         this.balance_amount = 0.00;
         this.registration_date = LocalDate.now();
         this.last_updated = LocalDate.now();
     }
-    public Integer getId() {
-        return user_id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getPassword() {
-        return password_hash;
-    }
-    public boolean isPasswordMatches(String password_hash) {
-        return true;
-    }
-    public LocalDate getRegistration_date() {
-        return registration_date;
-    }
-    public void setRegistration_date(LocalDate registration_date) {
-        this.registration_date = registration_date;
-    }
-    public Double getBalance_amount() {
-        return balance_amount;
-    }
-    public void setBalance_amount(Double balance_amount) {
-        this.balance_amount = balance_amount;
-    }
-    public LocalDate getLast_updated() {
-        return last_updated;
-    }
-    public void setLast_updated(LocalDate last_updated) {
-        this.last_updated = last_updated;
-    }
-
-
-    @Override
-    public String toString() {
-        // TODO Auto-generated method stub
-        return getUsername() + "(" + getEmail() + ")";
-    }
-
 }
