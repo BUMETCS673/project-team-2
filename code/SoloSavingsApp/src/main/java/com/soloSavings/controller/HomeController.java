@@ -24,8 +24,29 @@ public class HomeController {
 
     @GetMapping("/solosavings")
     public String welcome() {
-        logger.info(" Welcome to SoloSavings Application");
+        logger.info("Welcome to SoloSavings Application");
         return "home";
     }
 
+    @GetMapping("/solosavings/register")
+    public String register() {
+        logger.info("Register an account with SoloSavings Application");
+        return "register";
+    }
+
+    @GetMapping("/solosavings/login")
+    public String login() {
+        logger.info("Login to SoloSavings Application");
+        return "login";
+    }
+
+    @GetMapping("/login")
+    public String needAuth() {
+        return "needAuth";
+    }
+
+    @GetMapping("/solosavings/dashboard")
+    public String dashboard() {
+        return "dashboard";
+    }
 }

@@ -35,10 +35,10 @@ public class TransactionServiceTest {
         Transaction trans = new Transaction(1,1,null, TransactionType.CREDIT,givenAmount,null);
 
         //When
-        when(userRepository.findById(user.getUser_id())).thenReturn(Optional.of(user));
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(transactionRepository.save(any(Transaction.class))).thenReturn(trans);
         when(userRepository.save(any(User.class))).thenReturn(user);
-        Double actualAmount = transactionService.addTransaction(user.getUser_id(),trans);
+        Double actualAmount = transactionService.addTransaction(user.getId(),trans);
 
         //Then
         Assertions.assertEquals(expectedAmount,actualAmount);
@@ -47,12 +47,12 @@ public class TransactionServiceTest {
     public void testAddIncomeError() throws TransactionException {
         //Given
         Double givenAmount = -1.00;
-        User user = new User(1,"","","",null,100.00,null);
+        User user = new User(1,"","","",null,100.55,null);
         Transaction trans = new Transaction(1,1,null, TransactionType.CREDIT,givenAmount,null);
 
         //Then
         Assertions.assertThrows(TransactionException.class, () -> {
-            transactionService.addTransaction(user.getUser_id(),trans);
+            transactionService.addTransaction(user.getId(),trans);
         });
     }
 }
