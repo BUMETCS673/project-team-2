@@ -2,7 +2,7 @@ package com.soloSavings.service;
 
 import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Transaction;
-import com.soloSavings.model.helper.TransactionType;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,13 +14,18 @@ import java.util.List;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
+
+@Service
 public interface TransactionService {
 
 
     //Expenses
-    public List<Transaction> getTransactionsByType(Integer user_id, TransactionType transaction_type) throws TransactionException ;
+    public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException ;
 
     //Income
     public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException;
 
+    Double getThisMonthExpense(Integer userId) throws TransactionException;
+
+    Double getThisMonthIncome(Integer userId) throws TransactionException;
 }

@@ -40,7 +40,31 @@ public class TransactionServiceImpl implements TransactionService {
         throw new TransactionException("Transaction Type Invalid; DEBIT or CREDIT");
     }
 
-    //Expenses
+    @Override
+    public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException {
+        if(transaction_type.equalsIgnoreCase("CREDIT")){
+            return transactionRepository.findByTransactionType(user_id, TransactionType.CREDIT);
+        } else if(transaction_type.equalsIgnoreCase("DEBIT")){
+            return transactionRepository.findByTransactionType(user_id, TransactionType.DEBIT);
+        }
+        throw new TransactionException("Invalid URL");
+    }
+
+    @Override
+    public Double getThisMonthExpense(Integer userId) {
+        List<Transaction> transactions = transactionRepository.findByCurrentMonth(TransactionType.DEBIT);
+        return transactions.stream()
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+    }
+
+    @Override
+    public Double getThisMonthIncome(Integer userId) {
+        List<Transaction> transactions = transactionRepository.findByCurrentMonth(TransactionType.CREDIT);
+        return transactions.stream()
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+    }
 
     private Double addExpense(Integer user_id, Transaction transaction) throws TransactionException {
         if(Validation.validateExpense(transaction.getAmount())){
@@ -64,13 +88,6 @@ public class TransactionServiceImpl implements TransactionService {
         }
         throw new TransactionException("Invalid Income Amount!"); // maybe have this in constant file
     }
-    @Override
-    public List<Transaction> getTransactionsByType(Integer user_id, TransactionType transaction_type) throws TransactionException {
-        return transactionRepository.findByTransactionType(user_id, transaction_type);
-    }
-
-    //Income
-
 
     private Double addIncome(Integer user_id, Transaction transaction) throws TransactionException {
         if(Validation.validateIncome(transaction.getAmount())){

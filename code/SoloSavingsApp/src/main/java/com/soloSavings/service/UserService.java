@@ -17,7 +17,7 @@ import java.util.Optional;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-@Repository
-public interface UserService extends CrudRepository<User, Long> {
-
+public interface UserService {
+    public User save(User user);
+    public Double getBalance(Integer id);
 }
