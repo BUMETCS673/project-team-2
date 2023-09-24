@@ -8,11 +8,11 @@ import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.TransactionService;
 import com.soloSavings.utils.Validation;
-import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -30,17 +30,44 @@ public class TransactionServiceImpl implements TransactionService {
     TransactionRepository transactionRepository;
 
     @Override
-
     public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
         if(transaction.getTransaction_type().equals(TransactionType.CREDIT)){
             return addIncome(user_id,transaction);
-        } else {
-            return 0.0;
         }
+        if(transaction.getTransaction_type().equals(TransactionType.DEBIT)){
+            return addExpense(user_id, transaction);
+        }
+        throw new TransactionException("Transaction Type Invalid; DEBIT or CREDIT");
     }
 
     //Expenses
 
+    private Double addExpense(Integer user_id, Transaction transaction) throws TransactionException {
+        if(Validation.validateExpense(transaction.getAmount())){
+            //given user already authenticated
+            User user = userRepository.findById(user_id).get();
+
+            //verify user balance sufficient for expense
+            if (transaction.getAmount() <= user.getBalance_amount() ) {
+                // expected source and amount info already there
+                transaction.setUser_id(user_id);
+                transaction.setTransaction_date(LocalDate.now());
+                transactionRepository.save(transaction);
+
+                user.setBalance_amount(user.getBalance_amount() - transaction.getAmount());
+                user = userRepository.save(user);
+
+                return user.getBalance_amount();
+            }
+            throw new TransactionException(("Insufficient Account Balance for Expense Amount!"));
+
+        }
+        throw new TransactionException("Invalid Income Amount!"); // maybe have this in constant file
+    }
+    @Override
+    public List<Transaction> getTransactionsByType(Integer user_id, TransactionType transaction_type) throws TransactionException {
+        return transactionRepository.findByTransactionType(user_id, transaction_type);
+    }
 
     //Income
 

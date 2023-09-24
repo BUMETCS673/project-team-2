@@ -3,9 +3,11 @@ package com.soloSavings.repository;
 import com.soloSavings.model.Transaction;
 import com.soloSavings.model.helper.TransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -20,6 +22,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
 
     //Expenses
 
+    @Query("SELECT t FROM Transaction t WHERE t.user_id = ?1 and t.transaction_type = ?2")
+    List<Transaction> findByTransactionType(Integer user_id, TransactionType transaction_type);
 
     //Income
     //List<Transaction> findByTransactionType(TransactionType transactionType);
