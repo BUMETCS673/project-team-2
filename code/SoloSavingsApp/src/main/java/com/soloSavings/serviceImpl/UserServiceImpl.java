@@ -20,6 +20,21 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
+    public User getUserByName(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    @Override
+    public String getPasswordHash(String email) {
+        return userRepository.findPasswordHashByEmail(email);
+    }
+
+    @Override
     public User save(User user){
         User newUser = new User();
         newUser.setEmail(user.getEmail());

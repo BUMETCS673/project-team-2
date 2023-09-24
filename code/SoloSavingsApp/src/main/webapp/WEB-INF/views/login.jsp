@@ -54,6 +54,7 @@
             font-weight: bold;
         }
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -98,11 +99,11 @@
 
     <section>
         <form id="loginForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
             
-            <label for="password_hash">Password:</label>
-            <input type="password" id="password_hash" name="password_hash" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
             
             <button type="submit">Login</button>
         </form>
@@ -121,8 +122,8 @@
         $('#loginForm').submit(function(event) {
             event.preventDefault();
             const formData = {
-                username: $('input[name="username"]').val(),
-                password_hash: $('input[name="password_hash"]').val(),
+                email: $('input[name="email"]').val(),
+                password: $('input[name="password"]').val(),
             };
 
             $.ajax({
