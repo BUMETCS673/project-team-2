@@ -38,23 +38,23 @@ public class TransactionController {
     TransactionService transactionServiceImpl;
 
     @RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
-    public ResponseEntity<Double> addIncome (@PathVariable("id") Integer id, @RequestBody Transaction transaction){
+    public ResponseEntity<?> addTransaction (@PathVariable("id") Integer id, @RequestBody Transaction transaction){
         try{
             Double newBalance = transactionServiceImpl.addTransaction(id,transaction);
             return new ResponseEntity<>(newBalance, HttpStatus.OK);
        }
         catch (TransactionException e){
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY); // 422 code for invalid requestbody for transaction
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY); // 422 code for invalid requestbody for transaction
         }
     }
 
     @GetMapping("/{user_id}/{transaction_type}")
-    public ResponseEntity<List<Transaction>> getTransactionsByType(@PathVariable("user_id") Integer user_id, @PathVariable("transaction_type") String transaction_type) {
+    public ResponseEntity<?> getTransactionsByType(@PathVariable("user_id") Integer user_id, @PathVariable("transaction_type") String transaction_type) {
         try {
             List<Transaction> transactionsList = transactionServiceImpl.getTransactionsByType(user_id, TransactionType.valueOf(transaction_type.toUpperCase()));
             return new ResponseEntity<>(transactionsList, HttpStatus.OK);
         } catch (TransactionException e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY); // 422 code for invalid requestbody for transaction
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY); // 422 code for invalid requestbody for transaction
         }
     }
 }
