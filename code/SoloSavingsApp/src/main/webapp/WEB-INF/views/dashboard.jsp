@@ -82,7 +82,55 @@
         .rightcol {
             flex: 1;
         }
-    </style>
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #005fbb;
+        }    </style>
 </head>
 <body>
     <header>
@@ -116,6 +164,27 @@
                 <h3>Expense details</h3>
             </div>
         </div>
+        <!-- Add Income Button -->
+        <button id="add-income-btn">Add Income</button>
+        <!-- Modal -->
+        <div id="add-income-modal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Add Income</h2>
+                <form>
+                    <label for="income-source">Source:</label>
+                    <input type="text" id="income-source">
+
+                    <label for="income-amount">Amount:</label>
+                    <input type="number" id="income-amount">
+
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+        </div>
     </main>
     <footer>
         &copy; 2023 SoloSavings
@@ -136,13 +205,11 @@
         contentType: 'application/json',
         success: function(response) {
             thisMonthIncome = response;
-            $('#income-val').text("$"+thisMonthIncome);
         },
         error: function(error) {
             console.error('Something went wrong!', error);
         }
     });
-
     $.ajax({
         async: false,
         type: 'GET',
@@ -150,13 +217,12 @@
         contentType: 'application/json',
         success: function(response) {
             thisMonthExpense = response;
-            $('#expense-val').text("$"+thisMonthExpense);
+
         },
         error: function(error) {
             console.error('Something went wrong!', error);
         }
     });
-
     $.ajax({
         async: false,
         type: 'GET',
@@ -164,11 +230,58 @@
         contentType: 'application/json',
         success: function(response) {
             totalBalance = response;
-            $('#total-balance').text("$"+totalBalance);
         },
         error: function(error) {
             console.error('Something went wrong!', error);
         }
+    });
+</script>
+<script>
+    // Get modal element
+    var modal = document.getElementById("add-income-modal");
+
+    // Get "Add Income" button
+    var addIncomeBtn = document.getElementById("add-income-btn");
+
+    // When "Add Income" button clicked...
+    $("#add-income-btn").click(function() {
+
+        // Show the modal
+        modal.style.display = "block";
+
+    });
+
+    // When user clicks "x" to close modal
+    var closeModal = document.getElementsByClassName("close")[0];
+
+    closeModal.onclick = function() {
+
+        // Hide the modal
+        modal.style.display = "none";
+
+    }
+
+    // When user clicks outside modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+</script>
+
+<script>
+    $(document).ready(function() {
+
+        // Render income, expense etc values from AJAX calls
+        $('#expense-val').text("$"+thisMonthExpense);
+
+        $("#income-val").text(thisMonthIncome);
+
+        $('#total-balance').text("$"+totalBalance);
+
+        // Can access AJAX data here
+
     });
 </script>
 </html>
