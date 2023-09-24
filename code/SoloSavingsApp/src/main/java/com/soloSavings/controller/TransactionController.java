@@ -51,10 +51,30 @@ public class TransactionController {
     @GetMapping("/{user_id}/{transaction_type}")
     public ResponseEntity<?> getTransactionsByType(@PathVariable("user_id") Integer user_id, @PathVariable("transaction_type") String transaction_type) {
         try {
-            List<Transaction> transactionsList = transactionServiceImpl.getTransactionsByType(user_id, TransactionType.valueOf(transaction_type.toUpperCase()));
+            List<Transaction> transactionsList = transactionServiceImpl.getTransactionsByType(user_id, transaction_type);
             return new ResponseEntity<>(transactionsList, HttpStatus.OK);
         } catch (TransactionException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY); // 422 code for invalid requestbody for transaction
+        }
+    }
+
+    @GetMapping("monthly/expense/{user_id}")
+    public ResponseEntity<?> getThisMonthExpense(@PathVariable("user_id") Integer user_id) {
+        try {
+            Double thisMonthExpense = transactionServiceImpl.getThisMonthExpense(user_id);
+            return new ResponseEntity<>(thisMonthExpense, HttpStatus.OK);
+        } catch (TransactionException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("monthly/income/{user_id}")
+    public ResponseEntity<?> getThisMonthIncome(@PathVariable("user_id") Integer user_id) {
+        try {
+            Double thisMonthIncome = transactionServiceImpl.getThisMonthIncome(user_id);
+            return new ResponseEntity<>(thisMonthIncome, HttpStatus.OK);
+        } catch (TransactionException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NO_CONTENT);
         }
     }
 }

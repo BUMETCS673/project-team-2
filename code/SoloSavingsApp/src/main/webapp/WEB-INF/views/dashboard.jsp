@@ -30,7 +30,7 @@
             color: white;
         }
 
-        h1 {
+        h1, h2, h3, p {
             text-align: center;
         }
 
@@ -70,6 +70,18 @@
             bottom: 0;
             width: 100%;
         }
+
+        .sub-main{
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .leftcol,
+        .midcol,
+        .rightcol {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -84,37 +96,79 @@
     </header>
     <h1>SoloSavings Dashboard</h1>
     <main>
-        <section id="transactions">
-            <h2>Transactions</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- Loop through transactions and populate the table -->
-                <c:forEach items="${transactions}" var="transaction">
-                    <tr>
-                        <td><c:out value="${transaction.date}" /></td>
-                        <td><c:out value="${transaction.description}" /></td>
-                        <td><c:out value="${transaction.amount}" /></td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-        </section>
-        <section id="budget-summary">
-            <h2>Budget Summary</h2>
-            <p>Total Income: $<c:out value="${totalIncome}" /></p>
-            <p>Total Expenses: $<c:out value="${totalExpenses}" /></p>
-            <p>Remaining Budget: $<c:out value="${remainingBudget}" /></p>
-        </section>
+        <h1>Welcome to your SoloSavings Dashboard</h1>
+        <div class="sub-main">
+            <div class="leftcol">
+                <h2>Money Earned</h2>
+                <p>Your total income for this month:</p>
+                <p id="income-val"></p>
+                <h3>Income resources</h3>
+            </div>
+            <div class="midcol">
+                <h2>Remaining Balance</h2>
+                <p>Your current balance:</p>
+                <p  id="total-balance">{balance}</p>
+            </div>
+            <div class="rightcol">
+                <h2>Expenses</h2>
+                <p>Your total expense for this month:</p>
+                <p id="expense-val"></p>
+                <h3>Expense details</h3>
+            </div>
+        </div>
     </main>
     <footer>
         &copy; 2023 SoloSavings
     </footer>
 </body>
+<footer>
+    &copy; 2023 SoloSavings
+</footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    let thisMonthIncome;
+    let thisMonthExpense;
+    let totalBalance;
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/transaction/monthly/income/1', // change user_id later
+        contentType: 'application/json',
+        success: function(response) {
+            thisMonthIncome = response;
+            $('#income-val').text("$"+thisMonthIncome);
+        },
+        error: function(error) {
+            console.error('Something went wrong!', error);
+        }
+    });
+
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/transaction/monthly/expense/1', // change user_id later
+        contentType: 'application/json',
+        success: function(response) {
+            thisMonthExpense = response;
+            $('#expense-val').text("$"+thisMonthExpense);
+        },
+        error: function(error) {
+            console.error('Something went wrong!', error);
+        }
+    });
+
+    $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/user/balance/1', // change user_id later
+        contentType: 'application/json',
+        success: function(response) {
+            totalBalance = response;
+            $('#total-balance').text("$"+totalBalance);
+        },
+        error: function(error) {
+            console.error('Something went wrong!', error);
+        }
+    });
+</script>
 </html>

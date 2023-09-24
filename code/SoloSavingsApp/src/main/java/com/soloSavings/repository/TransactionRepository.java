@@ -19,13 +19,10 @@ import java.util.Optional;
  */
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
-
-    //Expenses
-
     @Query("SELECT t FROM Transaction t WHERE t.user_id = ?1 and t.transaction_type = ?2")
     List<Transaction> findByTransactionType(Integer user_id, TransactionType transaction_type);
 
-    //Income
-    //List<Transaction> findByTransactionType(TransactionType transactionType);
+    @Query("SELECT e FROM Transaction e WHERE MONTH(e.transaction_date) = MONTH(CURRENT_DATE()) AND YEAR(e.transaction_date) = YEAR(CURRENT_DATE()) AND  e.transaction_type = ?1")
+    List<Transaction> findByCurrentMonth(TransactionType trans_type);
 
 }
