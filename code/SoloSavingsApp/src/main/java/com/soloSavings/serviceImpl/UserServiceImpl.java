@@ -4,11 +4,9 @@ import com.soloSavings.config.SecurityConfig;
 import com.soloSavings.model.User;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.UserService;
+import jakarta.persistence.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl  implements UserService{
@@ -23,9 +21,27 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
+    public User getUserByName(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
+    }
+
+    @Override
+    public String getPasswordHash(String email) {
+        return userRepository.findPasswordHashByEmail(email);
+    }
+
+    @Override
     public User save(User user){
         User newUser = new User();
-        // expected username, email and plain_text_password given
+        User existing = userRepository.findUserByEmail(user.getEmail());
+        if(null != existing) {
+            throw new NonUniqueResultException("Email {}" + user.getEmail() + " already registered");
+        }
         newUser.setEmail(user.getEmail());
         newUser.setUsername(user.getUsername());
         newUser.setPassword_hash(SecurityConfig.hashedPassword(user.getPassword_hash()));

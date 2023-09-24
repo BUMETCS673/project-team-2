@@ -3,6 +3,7 @@ package com.soloSavings.service;
 import com.soloSavings.model.User;
 import com.soloSavings.repository.UserRepository;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,11 @@ import java.util.Optional;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
+
 public interface UserService {
     public User save(User user);
     public Double getBalance(Integer id);
+    public String getPasswordHash(String email);
+    public User getUserByName(String username);
+    public User getUserByEmail(String email);
 }

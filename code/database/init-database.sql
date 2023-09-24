@@ -47,6 +47,14 @@ CREATE TABLE IF NOT EXISTS transactions (
   FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=INNODB;
 
+/* Creating user
+ * Username: Generic
+ * Email: generic@solosavings.com
+ * PW: Password1
+ */
+INSERT INTO `users`(`username`, `email`, `password_hash`) 
+  VALUES ('Generic','generic@solosavings.com','$2a$10$WlA2JTZny2QNuwC0zbLivuDCFTRAomBQu8x6cpems260z9dRu.RZG');
+
 /*
 CREATE TABLE IF NOT EXISTS income (
  income_id INT NOT NULL AUTO_INCREMENT,
