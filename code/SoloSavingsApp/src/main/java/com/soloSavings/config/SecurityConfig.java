@@ -3,8 +3,8 @@ package com.soloSavings.config;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.soloSavings.model.User;
-import com.soloSavings.serviceImpl.TokenManagerServiceImpl;
-import com.soloSavings.utils.TokenFilter;
+//import com.soloSavings.serviceImpl.TokenManagerServiceImpl;
+//import com.soloSavings.utils.TokenFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,6 +56,7 @@ public class SecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(withDefaults());
+        //http.addFilter(new TokenFilter());
         return http.build();
     }
 

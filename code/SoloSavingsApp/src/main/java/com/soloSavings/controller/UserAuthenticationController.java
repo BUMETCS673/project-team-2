@@ -4,9 +4,9 @@ import com.soloSavings.config.SecurityConfig;
 import com.soloSavings.model.Login;
 //import com.soloSavings.model.Token;
 import com.soloSavings.model.User;
-import com.soloSavings.repository.UserRepository;
+//import com.soloSavings.service.TokenManagerService;
 import com.soloSavings.service.UserService;
-import com.soloSavings.serviceImpl.UserServiceImpl;
+import jakarta.persistence.NonUniqueResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +29,20 @@ public class UserAuthenticationController {
 
     @Autowired
     private UserService userService;
-
+    /*
+    @Autowired
+    private TokenManagerService tokenManagerService;
+*/
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
+    public ResponseEntity registerUser(@RequestBody User user) {
         logger.info("Request to create a new user: {}", user);
-        User result = userService.save(user);
-        return ResponseEntity.ok().body(result);
+        try {
+            User result = userService.save(user);
+            return ResponseEntity.ok().body("user registered");
+        } catch (NonUniqueResultException e) {
+            logger.info(e.getMessage());
+            return new ResponseEntity<>("email " + user.getEmail() + " already registered", HttpStatus.FORBIDDEN);
+        }
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
