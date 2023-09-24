@@ -24,16 +24,13 @@ import java.security.NoSuchAlgorithmException;
 @RequestMapping("/api")
 public class UserAuthenticationController {
     private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationController.class);
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<User> registerUser(@RequestBody User user) throws NoSuchAlgorithmException {
-        logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Request to create a new user: {}", user);
-        //User newUser = new User(user.getUsername(), user.getEmail(), user.getPassword());
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        logger.info("Request to create a new user: {}", user);
         User result = userService.save(user);
         return ResponseEntity.ok().body(result);
     }

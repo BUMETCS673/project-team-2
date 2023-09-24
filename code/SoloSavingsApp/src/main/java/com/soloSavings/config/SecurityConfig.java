@@ -46,4 +46,9 @@ public class SecurityConfig {
         PasswordEncoder encoder = passwordEncoder();
         return encoder.encode(plaintTextPassword);
     }
+
+    public static boolean checkPassword(String plaintTextPassword) {
+        PasswordEncoder encoder = passwordEncoder();
+        return encoder.matches(plaintTextPassword, "Hashed Password Here");
+    }
 }
