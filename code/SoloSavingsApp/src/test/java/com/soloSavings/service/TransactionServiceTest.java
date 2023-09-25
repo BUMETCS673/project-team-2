@@ -97,16 +97,15 @@ public class TransactionServiceTest {
         Transaction transaction = new Transaction(1, 1, "Expense", TransactionType.DEBIT, 50.00, LocalDate.now());
 
         User mockUserBefore = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 100.00, LocalDate.now());
-        User mockUserAfter = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 50.00, LocalDate.now());
 
         //When
         when(userRepository.findById(user_id)).thenReturn(Optional.of(mockUserBefore));
         when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
-        when(userRepository.save(any(User.class))).thenReturn(mockUserAfter);
+        when(userRepository.save(any(User.class))).thenReturn(mockUserBefore);
+        Double expectedAmount = transactionService.addTransaction(1,transaction);
 
         //Then
-        Double expectedAmount = 50.00;
-        assertEquals(expectedAmount, mockUserAfter.getBalance_amount());
+        assertEquals(expectedAmount, mockUserBefore.getBalance_amount());
     }
 
     @Test
