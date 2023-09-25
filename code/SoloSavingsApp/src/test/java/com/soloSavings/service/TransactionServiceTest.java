@@ -18,6 +18,7 @@ import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +45,7 @@ public class TransactionServiceTest {
         Double actualAmount = transactionService.addTransaction(user.getUser_id(),trans);
 
         //Then
-        Assertions.assertEquals(expectedAmount,actualAmount);
+        assertEquals(expectedAmount,actualAmount);
     }
     @Test
     public void testAddIncomeError() throws TransactionException {
@@ -105,7 +106,7 @@ public class TransactionServiceTest {
 
         //Then
         Double expectedAmount = 50.00;
-        Assertions.assertEquals(expectedAmount, mockUserAfter.getBalance_amount());
+        assertEquals(expectedAmount, mockUserAfter.getBalance_amount());
     }
 
     @Test
@@ -123,7 +124,7 @@ public class TransactionServiceTest {
         Double actualAmount = transactionService.getThisMonthExpense(1);
 
         //Then
-        Assertions.assertEquals(expectedAmount,actualAmount);
+        assertEquals(expectedAmount,actualAmount);
     }
 
     @Test
@@ -141,6 +142,51 @@ public class TransactionServiceTest {
         Double actualAmount = transactionService.getThisMonthIncome(1);
 
         //Then
-        Assertions.assertEquals(expectedAmount,actualAmount);
+        assertEquals(expectedAmount,actualAmount);
     }
+
+    @Test
+    public void testGetTransactionsByTypeCredit() throws TransactionException {
+        List<Transaction> creditTransactions = new ArrayList<>();
+        Transaction trans = new Transaction(1,1,null, TransactionType.CREDIT,100.00,null);
+        Transaction trans2 = new Transaction(2,1,null, TransactionType.CREDIT,100.55,null);
+        creditTransactions.add(trans); creditTransactions.add(trans2);
+        // Mock
+        when(transactionRepository.findByTransactionType(1, TransactionType.CREDIT))
+                .thenReturn(creditTransactions);
+
+        // Act
+        List<Transaction> result = transactionService.getTransactionsByType(1, "CREDIT");
+
+        // Assert
+        assertEquals(creditTransactions, result);
+    }
+
+    @Test
+    public void testGetTransactionsByTypeDebit() throws TransactionException {
+        List<Transaction> debitTransactions = new ArrayList<>(); // Initialize your debit transactions
+        Transaction trans = new Transaction(1,1,null, TransactionType.DEBIT,100.00,null);
+        Transaction trans2 = new Transaction(2,1,null, TransactionType.DEBIT,100.55,null);
+        debitTransactions.add(trans); debitTransactions.add(trans2);
+        // Mock the behavior of your repository for debit transactions
+        when(transactionRepository.findByTransactionType(1, TransactionType.DEBIT))
+                .thenReturn(debitTransactions);
+
+        // Act
+        List<Transaction> result = transactionService.getTransactionsByType(1, "DEBIT");
+
+        // Assert
+        assertEquals(debitTransactions, result);
+    }
+
+    @Test
+    public void testGetTransactionsByTypeInvalid() throws TransactionException {
+        Integer userId = 1;
+        String transactionType = "INVALID_TYPE";
+
+        Assertions.assertThrows(TransactionException.class, () -> {
+            transactionService.getTransactionsByType(userId, transactionType);
+        });
+    }
+
 }
