@@ -1,4 +1,4 @@
-package com.soloSavings.service;
+package com.soloSavings.unit.service;
 
 import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Transaction;
@@ -12,13 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class TransactionServiceTest {
     @Mock
     UserRepository userRepository;
@@ -54,5 +58,41 @@ public class TransactionServiceTest {
         Assertions.assertThrows(TransactionException.class, () -> {
             transactionService.addTransaction(user.getUser_id(),trans);
         });
+    }
+
+    @Test
+    public void testGetThisMonthExpense(){
+        //Given
+        Double expectedAmount = 200.55;
+        List<Transaction> transactions = new ArrayList<>();
+        Transaction trans = new Transaction(null,null,null, null,100.00,null);
+        Transaction trans2 = new Transaction(null,null,null, null,100.55,null);
+        transactions.add(trans);
+        transactions.add(trans2);
+
+        //When
+        when(transactionRepository.findByCurrentMonth(any(TransactionType.class))).thenReturn(transactions);
+        Double actualAmount = transactionService.getThisMonthExpense(1);
+
+        //Then
+        Assertions.assertEquals(expectedAmount,actualAmount);
+    }
+
+    @Test
+    public void testGetThisMonthIncome(){
+        //Given
+        Double expectedAmount = 200.55;
+        List<Transaction> transactions = new ArrayList<>();
+        Transaction trans = new Transaction(null,null,null, null,100.00,null);
+        Transaction trans2 = new Transaction(null,null,null, null,100.55,null);
+        transactions.add(trans);
+        transactions.add(trans2);
+
+        //When
+        when(transactionRepository.findByCurrentMonth(any(TransactionType.class))).thenReturn(transactions);
+        Double actualAmount = transactionService.getThisMonthIncome(1);
+
+        //Then
+        Assertions.assertEquals(expectedAmount,actualAmount);
     }
 }
