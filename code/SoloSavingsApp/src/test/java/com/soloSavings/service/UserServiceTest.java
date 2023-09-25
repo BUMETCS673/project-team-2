@@ -53,23 +53,43 @@ public class UserServiceTest {
     public void testGetPasswordHash(){
         //When
         when(userRepository.save(any(User.class))).thenReturn(user);
-        when(userRepository.findById(user.getUser_id())).thenReturn(Optional.of(user));
+        when(userRepository.findPasswordHashByEmail(user.getEmail())).thenReturn("passwordHash");
         User userSaved = userService.save(user);
+        String pw_hash = userService.getPasswordHash("test@gmail.com");
+
+        //Then
+        assertEquals(userSaved.getPassword_hash(),pw_hash);
     }
 
     @Test
     public void testGetUsersByEmail(){
+        //When
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.findUserByEmail(user.getEmail())).thenReturn(user);
+//        when(userService.save(user)).thenReturn(user);
 
+        //Then
+        assertEquals(user,userService.getUserByEmail(user.getEmail()));
     }
 
     @Test
     public void testGetUserByName(){
+        //When
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.findByUsername(user.getUsername())).thenReturn(user);
 
+        //Then
+        assertEquals(user,userService.getUserByName(user.getUsername()));
     }
 
     @Test
     public void testGetBalance(){
+        //When
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(userRepository.findById(user.getUser_id())).thenReturn(Optional.of(user));
 
+        //Then
+        assertEquals(10.00,userService.getBalance(user.getUser_id()));
     }
 
 }
