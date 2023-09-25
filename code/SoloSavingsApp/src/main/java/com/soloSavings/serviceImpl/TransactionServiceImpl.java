@@ -86,7 +86,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new TransactionException(("Insufficient Account Balance for Expense Amount!"));
 
         }
-        throw new TransactionException("Invalid Income Amount!"); // maybe have this in constant file
+        throw new TransactionException("Invalid Expense Amount!"); // maybe have this in constant file
     }
 
     private Double addIncome(Integer user_id, Transaction transaction) throws TransactionException {
