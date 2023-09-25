@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
-public class TransactionControllerTest {
+public class UserAuthenticationControllerTest {
 
     @InjectMocks
     TransactionController transController;
