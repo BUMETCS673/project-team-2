@@ -4,7 +4,6 @@ import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Transaction;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.service.TransactionService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -125,12 +123,10 @@ public class TransactionControllerTest {
     public void testGetThisMonthExpense() throws TransactionException {
         // Arrange
         Integer userId = 1;
-        Double thisMonthExpense = 500.0; // Set your expected this month's expense here
+        Double thisMonthExpense = 500.0;
 
-        // Mock the behavior of your service
+        // Mock
         when(transService.getThisMonthExpense(userId)).thenReturn(thisMonthExpense);
-
-        // Act
         ResponseEntity<?> response = transController.getThisMonthExpense(userId);
 
         // Assert
