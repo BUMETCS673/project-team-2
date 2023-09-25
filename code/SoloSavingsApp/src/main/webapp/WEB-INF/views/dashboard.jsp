@@ -102,7 +102,7 @@
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%;
+            width: 40%;
         }
 
         /* Close Button */
@@ -133,62 +133,86 @@
         }    </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/solosavings" style="color: white;">Home</a></li>
-                <li><a href="/solosavings/login" style="color: white;">Login</a></li>
-                <li><a href="/solosavings/register" style="color: white;">Register</a></li>
-            </ul>
-        </nav>
-    </header>
-    <h1>SoloSavings Dashboard</h1>
-    <main>
-        <h1>Welcome to your SoloSavings Dashboard</h1>
-        <div class="sub-main">
-            <div class="leftcol">
-                <h2>Money Earned</h2>
-                <p>Your total income for this month:</p>
-                <p id="income-val"></p>
-                <h3>Income resources</h3>
-            </div>
-            <div class="midcol">
-                <h2>Remaining Balance</h2>
-                <p>Your current balance:</p>
-                <p  id="total-balance">{balance}</p>
-            </div>
-            <div class="rightcol">
-                <h2>Expenses</h2>
-                <p>Your total expense for this month:</p>
-                <p id="expense-val"></p>
-                <h3>Expense details</h3>
-            </div>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/solosavings" style="color: white;">Home</a></li>
+            <li><a href="/solosavings/login" style="color: white;">Login</a></li>
+            <li><a href="/solosavings/register" style="color: white;">Register</a></li>
+        </ul>
+    </nav>
+</header>
+<h1>SoloSavings Dashboard</h1>
+<main>
+    <h1>Welcome to your SoloSavings Dashboard</h1>
+    <div class="sub-main">
+        <div class="leftcol">
+            <h2>Money Earned</h2>
+            <p>Your total income for this month:</p>
+            <p id="income-val"></p>
+            <h3>Income resources</h3>
         </div>
-        <!-- Add Income Button -->
-        <button id="add-income-btn">Add Income</button>
-        <!-- Modal -->
-        <div id="add-income-modal" class="modal">
-
-            <!-- Modal content -->
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Add Income</h2>
-                <form>
-                    <label for="income-source">Source:</label>
-                    <input type="text" id="income-source">
-
-                    <label for="income-amount">Amount:</label>
-                    <input type="number" id="income-amount">
-
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
-
+        <div class="midcol">
+            <h2>Remaining Balance</h2>
+            <p>Your current balance:</p>
+            <p  id="total-balance">{balance}</p>
         </div>
-    </main>
-    <footer>
-        &copy; 2023 SoloSavings
-    </footer>
+        <div class="rightcol">
+            <h2>Expenses</h2>
+            <p>Your total expense for this month:</p>
+            <p id="expense-val"></p>
+            <h3>Expense details</h3>
+        </div>
+    </div>
+
+    <%--income button and modal--%>
+    <!-- Add Income Button -->
+    <button id="add-income-btn">Add Income</button>
+    <!-- Modal -->
+    <div id="add-income-modal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Income</h2>
+            <form>
+                <label for="income-source">Source:</label>
+                <input type="text" id="income-source">
+
+                <label for="income-amount">Amount:</label>
+                <input type="number" id="income-amount">
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <%--expense button and modal--%>
+    <!-- Add Income Button -->
+    <button id="add-expense-btn">Add Expense</button>
+    <!-- Modal -->
+    <div id="add-expense-modal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Income</h2>
+            <form>
+                <label for="income-source">Source:</label>
+                <input type="text" id="expense-source">
+
+                <label for="income-amount">Amount:</label>
+                <input type="number" id="expense-amount">
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+    </div>
+</main>
+<footer>
+    &copy; 2023 SoloSavings
+</footer>
 </body>
 <footer>
     &copy; 2023 SoloSavings
@@ -263,7 +287,7 @@
 
     // When user clicks outside modal, close it
     window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target === modal) {
             modal.style.display = "none";
         }
     }
