@@ -1,9 +1,11 @@
 package com.soloSavings.controller;
 
+import com.soloSavings.config.JwtUtil;
 import com.soloSavings.config.SecurityConfig;
+import com.soloSavings.model.JwtResponse;
 import com.soloSavings.model.Login;
-//import com.soloSavings.model.Token;
 import com.soloSavings.model.User;
+//import com.soloSavings.model.Token;
 //import com.soloSavings.service.TokenManagerService;
 import com.soloSavings.service.UserService;
 import jakarta.persistence.NonUniqueResultException;
@@ -12,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 /*
@@ -37,27 +40,28 @@ public class UserAuthenticationController {
     public ResponseEntity registerUser(@RequestBody User user) {
         logger.info("Request to create a new user: {}", user);
         try {
-            User result = userService.save(user);
-            return ResponseEntity.ok().body("user registered");
+            userService.save(user);
+            return ResponseEntity.ok().body("The user account with email " + user.getEmail() + " has successfully created");
         } catch (NonUniqueResultException e) {
             logger.info(e.getMessage());
-            return new ResponseEntity<>("email " + user.getEmail() + " already registered", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The email " + user.getEmail() + " already registered.", HttpStatus.FORBIDDEN);
         }
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity loginUser(@RequestBody Login loginData) {
-        logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Request to log in an user: {}", loginData.email());
-        // REMOVE ME
-        logger.info("And password: {}", loginData.password());
+        logger.info("Request to log in as the user: {}", loginData.email());
         String db_password_hash = userService.getPasswordHash(loginData.email());
         if(SecurityConfig.checkPassword(db_password_hash, loginData.password())) {
-            //Token token = new Token(loginData.email());
-            //tokenManagerService.add_token(token);
-            //return new ResponseEntity<>(token.getUuid().toString(), HttpStatus.OK);
-            return new ResponseEntity(HttpStatus.OK);
+            logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!PASS PASSWORD CHECKING!!!!!!!!!!!!!!!!!!");
+            User user = userService.getUserByEmail(loginData.email());
+            logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!: {}", user.getUsername());
+            final String token = JwtUtil.generateToken();
+            JwtResponse jwtResponse = new JwtResponse(token);
+
+            return ResponseEntity.ok().body(jwtResponse);
         } else {
-            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Something goes wrong, log in is not successful, please try again.", HttpStatus.UNAUTHORIZED);
         }
     }
 }

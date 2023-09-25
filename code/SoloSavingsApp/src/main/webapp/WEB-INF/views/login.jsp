@@ -137,6 +137,7 @@
                     window.location.replace("/dashboard");
                 },
                 error: function(error) {
+                    alert(error.responseText);
                     console.error('Login failed:', error);
                 }
             });

@@ -29,8 +29,8 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated();
                 })
                 //.securityMatcher("/api/**") //Any request with pattern "/api/**" needs to be authenticated
+                // TODO: need to add a filter
                 .securityMatcher("/dashboard/**")   //Any URL with pattern "/dashboard/**" needs to be authenticated
-                .addFilter(new JwtFilter(authenticationManager()))
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -38,10 +38,6 @@ public class SecurityConfig {
                 .formLogin(withDefaults());     //better to change to our own login form
 
         return http.build();
-    }
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return authenticationManager();
     }
 
     @Bean
