@@ -337,9 +337,7 @@
 
         // Render income, expense etc values from AJAX calls
         $('#expense-val').text("$"+thisMonthExpense);
-
         $("#income-val").text("$"+thisMonthIncome);
-
         $('#total-balance').text("$"+totalBalance);
 
         // Handle income form submission
@@ -362,15 +360,11 @@
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
-                    // Handle success, if needed
                     console.log("Income added successfully");
-                    // You can also close the modal here
                     $("#add-income-modal").hide();
                     location.reload();
                 },
                 error: function(error) {
-                    // Handle errors, if needed
-                    console.log(error)
                     console.error("Error adding income", error);
                 }
             });
@@ -398,13 +392,10 @@
                 success: function(response) {
                     // Handle success, if needed
                     console.log("Expense added successfully");
-                    // You can also close the modal here
                     $("#add-expense-modal").hide();
-                    //location.reload();
+                    location.reload();
                 },
                 error: function(error) {
-                    // Handle errors, if needed
-                    console.log(error)
                     console.error("Error adding income", error);
                 }
             });
