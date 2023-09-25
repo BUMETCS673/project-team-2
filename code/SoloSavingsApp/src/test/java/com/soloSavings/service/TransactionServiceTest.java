@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -26,6 +27,8 @@ public class TransactionServiceTest {
     TransactionRepository transactionRepository;
     @InjectMocks
     TransactionServiceImpl transactionService;
+
+
     @Test
     public void testAddIncome() throws TransactionException {
         //Given
@@ -54,5 +57,54 @@ public class TransactionServiceTest {
         Assertions.assertThrows(TransactionException.class, () -> {
             transactionService.addTransaction(user.getUser_id(),trans);
         });
+    }
+
+    @Test
+    public void testAddExpenseInvalidAmount() throws TransactionException {
+        //Given
+        Integer user_id = 1;
+        Transaction transaction = new Transaction(1, 1, "Expense", TransactionType.DEBIT, -1.00, LocalDate.now());
+
+        when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
+
+        //Then
+        Assertions.assertThrows(TransactionException.class, () -> {
+            transactionService.addTransaction(user_id, transaction);
+        });
+    }
+
+    @Test
+    public void testAddExpenseInSufficientBalance() throws TransactionException {
+        //Given
+        Integer user_id = 1;
+        Transaction transaction = new Transaction(1, 1, "Expense", TransactionType.DEBIT, 1000.00, LocalDate.now());
+
+        User mockUser = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 100.00, LocalDate.now());
+        //When
+        when(userRepository.findById(user_id)).thenReturn(Optional.of(mockUser));
+
+        //Then
+        Assertions.assertThrows(TransactionException.class, () -> {
+            transactionService.addTransaction(user_id, transaction);
+        });
+    }
+
+    @Test
+    public void testAddExpense() throws TransactionException {
+        //Given
+        Integer user_id = 1;
+        Transaction transaction = new Transaction(1, 1, "Expense", TransactionType.DEBIT, 50.00, LocalDate.now());
+
+        User mockUserBefore = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 100.00, LocalDate.now());
+        User mockUserAfter = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 50.00, LocalDate.now());
+
+        //When
+        when(userRepository.findById(user_id)).thenReturn(Optional.of(mockUserBefore));
+        when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
+        when(userRepository.save(any(User.class))).thenReturn(mockUserAfter);
+
+        //Then
+        Double expectedAmount = 50.00;
+        Assertions.assertEquals(expectedAmount, mockUserAfter.getBalance_amount());
     }
 }
