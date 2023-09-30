@@ -1,15 +1,12 @@
 package com.soloSavings.integration;
 
-import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Login;
 import com.soloSavings.model.Transaction;
 import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
-import jakarta.persistence.NonUniqueResultException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

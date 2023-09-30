@@ -1,6 +1,5 @@
 package com.soloSavings.controller;
 
-import com.soloSavings.controller.UserAuthenticationController;
 import com.soloSavings.exceptions.UserAuthenticationException;
 import com.soloSavings.model.Login;
 import com.soloSavings.model.User;
@@ -12,9 +11,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
