@@ -134,7 +134,7 @@
                 success: function(response) {
                     console.log('Login successful:', response);
                     alert("Authentication passed successfully, redirect to your dashboard.")
-                    window.location.replace("/dashboard");
+                    window.location.replace("/solosavings/dashboard");
                 },
                 error: function(error) {
                     console.error('Login failed:', error);
