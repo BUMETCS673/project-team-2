@@ -6,7 +6,11 @@ import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.UserService;
 import jakarta.persistence.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl  implements UserService{
@@ -21,13 +25,26 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
-    public User getUserByName(String username) {
-        return userRepository.findByUsername(username);
+    public UserDetails getUserByName(String username) {
+        User user = userRepository.findByUsername(username);
+        if(null == user)
+            throw new UsernameNotFoundException("User could not be found with username: " + username);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword_hash(),
+                new ArrayList<>());
+
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+    public UserDetails getUserByEmail(String email) throws UsernameNotFoundException{
+        User user = userRepository.findUserByEmail(email);
+        if(null == user)
+            throw new UsernameNotFoundException("User could not be found with email " + email);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword_hash(),
+                new ArrayList<>());
     }
 
     @Override
@@ -46,5 +63,16 @@ public class UserServiceImpl  implements UserService{
         newUser.setUsername(user.getUsername());
         newUser.setPassword_hash(SecurityConfig.hashedPassword(user.getPassword_hash()));
         return userRepository.save(newUser);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if(null == user)
+            throw new UsernameNotFoundException("User could not be found with username " + username);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword_hash(),
+                new ArrayList<>());
     }
 }

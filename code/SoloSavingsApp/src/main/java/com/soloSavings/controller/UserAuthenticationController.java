@@ -1,5 +1,6 @@
 package com.soloSavings.controller;
 
+import com.soloSavings.config.JwtFilter;
 import com.soloSavings.config.JwtUtil;
 import com.soloSavings.config.SecurityConfig;
 import com.soloSavings.model.JwtResponse;
@@ -14,7 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 /*
@@ -32,10 +37,13 @@ public class UserAuthenticationController {
 
     @Autowired
     private UserService userService;
-    /*
+
     @Autowired
-    private TokenManagerService tokenManagerService;
-*/
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity registerUser(@RequestBody User user) {
         logger.info("Request to create a new user: {}", user);
@@ -50,18 +58,15 @@ public class UserAuthenticationController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity loginUser(@RequestBody Login loginData) {
-        logger.info("Request to log in as the user: {}", loginData.email());
-        String db_password_hash = userService.getPasswordHash(loginData.email());
-        if(SecurityConfig.checkPassword(db_password_hash, loginData.password())) {
-            logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!PASS PASSWORD CHECKING!!!!!!!!!!!!!!!!!!");
-            User user = userService.getUserByEmail(loginData.email());
-            logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!: {}", user.getUsername());
-            final String token = JwtUtil.generateToken();
-            JwtResponse jwtResponse = new JwtResponse(token);
-
-            return ResponseEntity.ok().body(jwtResponse);
-        } else {
-            return new ResponseEntity<>("Something goes wrong, log in is not successful, please try again.", HttpStatus.UNAUTHORIZED);
+        logger.info("Request to log in as the user: {}", loginData.username());
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.username(), loginData.password()));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
+
+        UserDetails userDetails = userService.getUserByName(loginData.username());
+        String token = jwtUtil.generateToken(userDetails.getUsername());
+        return ResponseEntity.ok(token);
     }
 }

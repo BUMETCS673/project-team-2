@@ -195,6 +195,18 @@
 </footer>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    let jwt = null;
+    function setAuthHeader() {
+        var jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        if(jwtToken && null == jwt) {
+            console.log("Found JWT cookie");
+            jwt = jwtToken;
+        } else {
+            console.log("Failed to find JWT cookie");
+            jwt = null;
+        }
+    }
+
     let thisMonthIncome;
     let thisMonthExpense;
     let totalBalance;
@@ -203,6 +215,9 @@
         type: 'GET',
         url: '/transaction/monthly/income/1', // change user_id later
         contentType: 'application/json',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('Authorization', 'Bearer', jwt);
+        },
         success: function(response) {
             thisMonthIncome = response;
         },
@@ -215,6 +230,9 @@
         type: 'GET',
         url: '/transaction/monthly/expense/1', // change user_id later
         contentType: 'application/json',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('Authorization', 'Bearer', jwt);
+        },
         success: function(response) {
             thisMonthExpense = response;
 
@@ -228,6 +246,9 @@
         type: 'GET',
         url: '/user/balance/1', // change user_id later
         contentType: 'application/json',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('Authorization', 'Bearer', jwt);
+        },
         success: function(response) {
             totalBalance = response;
         },
@@ -235,8 +256,7 @@
             console.error('Something went wrong!', error);
         }
     });
-</script>
-<script>
+
     // Get modal element
     var modal = document.getElementById("add-income-modal");
 
@@ -268,9 +288,6 @@
         }
     }
 
-</script>
-
-<script>
     $(document).ready(function() {
 
         // Render income, expense etc values from AJAX calls

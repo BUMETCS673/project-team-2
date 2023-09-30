@@ -1,12 +1,15 @@
 package com.soloSavings.config;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKey;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.SecureRandom;
@@ -14,59 +17,56 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
-@Service
-public class JwtUtil {
+@Component
+public class JwtUtil implements Serializable {
 
-    @Value("${jwt.secret}")
-    private static Key secret;
-
-    @Value("${jwt.expiration}")
-    private static Long expiration;
+    private static final String SECRET = "694a28b26c854d7eaf1bd2c72aef58acc216edee0fc845a882b0aba8b545df69";
+    private static final Long EXPIRATION = 86400L;
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
 
-    public static String generateToken() {
-        byte[] randomBytes = new byte[24];
-        secureRandom.nextBytes(randomBytes);
-        return base64Encoder.encodeToString(randomBytes);
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        // TODO(will): Use non-deprecated functions...
+        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
+    }
+
+    public String generateToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, username);
+    }
+
+    private String createToken(Map<String, Object> claims, String subject) {
+        // TODO(will): Use non-deprecated functions
+        SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     // Validate a JWT token
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         if (token == null || token.isEmpty()) {
             return false;
         }
 
-        // Split the token into header, payload, and signature
-        String[] parts = token.split("\\.");
-        if (parts.length != 3) {
-            return false;
-        }
-
-        String header = parts[0];
-        String payload = parts[1];
-        String signature = parts[2];
-
-        // Verify the signature - TODO Need correct algorithm
-//        String expectedSignature = ??? ;
-//        if (!signature.equals(expectedSignature)) {
-//            return false;
-//        }
-
-        // Decode the payload to check the expiration date
-        String decodedPayload = decodeBase64(payload);
-        try {
-            long expirationTime = Long.parseLong(decodedPayload.split("\"exp\":")[1].split(",")[0]);
-            if (expirationTime < new Date().getTime()) {
-                return false; // Token is expired
-            }
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            return false; // Invalid payload format
-        }
-
-        return true;
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private String decodeBase64(String data) {
@@ -80,11 +80,11 @@ public class JwtUtil {
     }
 
     private Date getExpirationDateFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token).getBody().getExpiration();
+        return Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token).getBody().getExpiration();
     }
 
     private String getUsernameFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     private long getExpirationDate() {
