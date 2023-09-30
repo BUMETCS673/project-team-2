@@ -48,7 +48,6 @@ public class TransactionApiIntegrationTest {
         commonUser = new User(null,"common",commonUserEmail,"Password1",LocalDate.now(),1000.00,LocalDate.now());
         commonUser = userRepository.save(commonUser);
     }
-
     @AfterEach
     public void cleanup(){
         List<Transaction> trans = transactionRepository.findAllByUserId(commonUser.getUser_id());
