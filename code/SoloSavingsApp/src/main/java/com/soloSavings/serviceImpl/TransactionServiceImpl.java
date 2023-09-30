@@ -79,6 +79,7 @@ public class TransactionServiceImpl implements TransactionService {
                 transactionRepository.save(transaction);
 
                 user.setBalance_amount(user.getBalance_amount() - transaction.getAmount());
+                user.setLast_updated(LocalDate.now());
                 user = userRepository.save(user);
 
                 return user.getBalance_amount();
@@ -100,6 +101,7 @@ public class TransactionServiceImpl implements TransactionService {
             transactionRepository.save(transaction);
 
             user.setBalance_amount(user.getBalance_amount() + transaction.getAmount());
+            user.setLast_updated(LocalDate.now());
             user = userRepository.save(user);
 
             return user.getBalance_amount();
