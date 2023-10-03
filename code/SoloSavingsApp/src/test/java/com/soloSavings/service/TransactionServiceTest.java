@@ -111,12 +111,12 @@ public class TransactionServiceTest {
     @Test
     public void testGetThisMonthExpense(){
         //Given
-        Double expectedAmount = 200.55;
         List<Transaction> transactions = new ArrayList<>();
-        Transaction trans = new Transaction(null,null,null, null,100.00,null);
+        Transaction trans1 = new Transaction(null,null,null, null,100.00,null);
         Transaction trans2 = new Transaction(null,null,null, null,100.55,null);
-        transactions.add(trans);
+        transactions.add(trans1);
         transactions.add(trans2);
+        Double expectedAmount = trans1.getAmount()+trans2.getAmount();
 
         //When
         when(transactionRepository.findByCurrentMonth(any(TransactionType.class))).thenReturn(transactions);
@@ -129,12 +129,12 @@ public class TransactionServiceTest {
     @Test
     public void testGetThisMonthIncome(){
         //Given
-        Double expectedAmount = 200.55;
         List<Transaction> transactions = new ArrayList<>();
-        Transaction trans = new Transaction(null,null,null, null,100.00,null);
+        Transaction trans1 = new Transaction(null,null,null, null,100.00,null);
         Transaction trans2 = new Transaction(null,null,null, null,100.55,null);
-        transactions.add(trans);
+        transactions.add(trans1);
         transactions.add(trans2);
+        Double expectedAmount = trans1.getAmount()+trans2.getAmount();
 
         //When
         when(transactionRepository.findByCurrentMonth(any(TransactionType.class))).thenReturn(transactions);
@@ -150,31 +150,25 @@ public class TransactionServiceTest {
         Transaction trans = new Transaction(1,1,null, TransactionType.CREDIT,100.00,null);
         Transaction trans2 = new Transaction(2,1,null, TransactionType.CREDIT,100.55,null);
         creditTransactions.add(trans); creditTransactions.add(trans2);
-        // Mock
+
         when(transactionRepository.findByTransactionType(1, TransactionType.CREDIT))
                 .thenReturn(creditTransactions);
-
-        // Act
         List<Transaction> result = transactionService.getTransactionsByType(1, "CREDIT");
 
-        // Assert
         assertEquals(creditTransactions, result);
     }
 
     @Test
     public void testGetTransactionsByTypeDebit() throws TransactionException {
-        List<Transaction> debitTransactions = new ArrayList<>(); // Initialize your debit transactions
+        List<Transaction> debitTransactions = new ArrayList<>();
         Transaction trans = new Transaction(1,1,null, TransactionType.DEBIT,100.00,null);
         Transaction trans2 = new Transaction(2,1,null, TransactionType.DEBIT,100.55,null);
         debitTransactions.add(trans); debitTransactions.add(trans2);
-        // Mock the behavior of your repository for debit transactions
+
         when(transactionRepository.findByTransactionType(1, TransactionType.DEBIT))
                 .thenReturn(debitTransactions);
-
-        // Act
         List<Transaction> result = transactionService.getTransactionsByType(1, "DEBIT");
 
-        // Assert
         assertEquals(debitTransactions, result);
     }
 

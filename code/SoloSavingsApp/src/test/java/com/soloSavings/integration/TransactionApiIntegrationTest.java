@@ -67,7 +67,7 @@ public class TransactionApiIntegrationTest {
         ResponseEntity<String> response = restTemplate.postForEntity("/transaction/add/{id}", transaction, String.class, commonUser.getUser_id());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-        assertThat(response.getBody()).isEqualTo("Invalid Income Amount!");
+        assertThat(response.getBody()).isEqualTo("Invalid transaction amount, Please input correct transaction amount!");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class TransactionApiIntegrationTest {
         ResponseEntity<String> response = restTemplate.postForEntity("/transaction/add/{id}", transaction, String.class, commonUser.getUser_id());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-        assertThat(response.getBody()).isEqualTo("Insufficient Account Balance for Expense Amount!");
+        assertThat(response.getBody()).isEqualTo("Invalid transaction amount, Please input correct transaction amount!");
     }
 
     @Test
@@ -148,9 +148,11 @@ public class TransactionApiIntegrationTest {
     public void testGetThisMonthIncome() {
         Transaction tran1 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,150.0, LocalDate.now());
         Transaction tran2 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,150.0, null);
+        Transaction tran3 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,100.0, LocalDate.now());
         transactionRepository.save(tran1);
         transactionRepository.save(tran2);
-        Double expectedIncome = 150.0;
+        transactionRepository.save(tran3);
+        Double expectedIncome = tran1.getAmount()+tran3.getAmount();
 
         ResponseEntity<Double> response = restTemplate.getForEntity("/transaction/monthly/income/{user_id}", Double.class, commonUser.getUser_id());
 

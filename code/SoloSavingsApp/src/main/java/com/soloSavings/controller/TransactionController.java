@@ -30,10 +30,8 @@ import java.util.Optional;
 @RequestMapping("transaction")
 public class TransactionController {
 
-    //Expenses
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    //Income
     @Autowired
     TransactionService transactionServiceImpl;
 

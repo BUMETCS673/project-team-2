@@ -30,17 +30,6 @@ public class TransactionServiceImpl implements TransactionService {
     TransactionRepository transactionRepository;
 
     @Override
-    public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
-        if(transaction.getTransaction_type().equals(TransactionType.CREDIT)){
-            return addIncome(user_id,transaction);
-        }
-        if(transaction.getTransaction_type().equals(TransactionType.DEBIT)){
-            return addExpense(user_id, transaction);
-        }
-        throw new TransactionException("Transaction Type Invalid; DEBIT or CREDIT");
-    }
-
-    @Override
     public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException {
         if(transaction_type.equalsIgnoreCase("CREDIT")){
             return transactionRepository.findByTransactionType(user_id, TransactionType.CREDIT);
@@ -65,48 +54,27 @@ public class TransactionServiceImpl implements TransactionService {
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
-
-    private Double addExpense(Integer user_id, Transaction transaction) throws TransactionException {
-        if(Validation.validateExpense(transaction.getAmount())){
-            //given user already authenticated
-            User user = userRepository.findById(user_id).get();
-
-            //verify user balance sufficient for expense
-            if (transaction.getAmount() <= user.getBalance_amount() ) {
-                // expected source and amount info already there
-                transaction.setUser_id(user_id);
-                transaction.setTransaction_date(LocalDate.now());
-                transactionRepository.save(transaction);
-
-                user.setBalance_amount(user.getBalance_amount() - transaction.getAmount());
-                user.setLast_updated(LocalDate.now());
-                user = userRepository.save(user);
-
-                return user.getBalance_amount();
-            }
-            throw new TransactionException(("Insufficient Account Balance for Expense Amount!"));
-
-        }
-        throw new TransactionException("Invalid Expense Amount!"); // maybe have this in constant file
-    }
-
-    private Double addIncome(Integer user_id, Transaction transaction) throws TransactionException {
-        if(Validation.validateIncome(transaction.getAmount())){
-            //given user already authenticated
-            User user = userRepository.findById(user_id).get();
-
-            // expected source and amount info already there
+    @Override
+    public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found"));
+        if(Validation.validateTransaction(user.getBalance_amount(),transaction.getAmount(),transaction.getTransaction_type())){
             transaction.setUser_id(user_id);
             transaction.setTransaction_date(LocalDate.now());
             transactionRepository.save(transaction);
 
-            user.setBalance_amount(user.getBalance_amount() + transaction.getAmount());
+            user.setBalance_amount(getNewUserBalance(user,transaction));
             user.setLast_updated(LocalDate.now());
             user = userRepository.save(user);
-
             return user.getBalance_amount();
+        } else {
+            throw new TransactionException("Invalid transaction amount, Please input correct transaction amount!");
         }
-        throw new TransactionException("Invalid Income Amount!"); // maybe have this in constant file
     }
-
+    private Double getNewUserBalance(User user, Transaction transaction){
+        if(transaction.getTransaction_type().equals(TransactionType.CREDIT)){
+            return user.getBalance_amount() + transaction.getAmount();
+        } else {
+            return user.getBalance_amount() - transaction.getAmount();
+        }
+    }
 }
