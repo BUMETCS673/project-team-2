@@ -25,26 +25,20 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
-    public UserDetails getUserByName(String username) {
+    public User getUserByName(String username) {
         User user = userRepository.findByUsername(username);
         if(null == user)
             throw new UsernameNotFoundException("User could not be found with username: " + username);
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword_hash(),
-                new ArrayList<>());
+        return user;
 
     }
 
     @Override
-    public UserDetails getUserByEmail(String email) throws UsernameNotFoundException{
+    public User getUserByEmail(String email) throws UsernameNotFoundException{
         User user = userRepository.findUserByEmail(email);
         if(null == user)
             throw new UsernameNotFoundException("User could not be found with email " + email);
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword_hash(),
-                new ArrayList<>());
+        return user;
     }
 
     @Override
@@ -53,7 +47,7 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
-    public User save(User user){
+    public void save(User user){
         User newUser = new User();
         User existing = userRepository.findUserByEmail(user.getEmail());
         if(null != existing) {
@@ -62,7 +56,7 @@ public class UserServiceImpl  implements UserService{
         newUser.setEmail(user.getEmail());
         newUser.setUsername(user.getUsername());
         newUser.setPassword_hash(SecurityConfig.hashedPassword(user.getPassword_hash()));
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
     }
 
     @Override

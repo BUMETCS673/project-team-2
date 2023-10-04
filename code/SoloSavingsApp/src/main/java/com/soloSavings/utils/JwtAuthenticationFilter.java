@@ -24,23 +24,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
     private JwtUtil jwtUtil;
+    static final String JWT_TOKEN_STARTER = "Bearer ";
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
-
+        logger.info("Processing URI: " + request.getRequestURI());
+        final var jwtHeader = request.getHeader("authorization");
         String username = null;
         String jwtToken = null;
 
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer")) {
-            jwtToken = authorizationHeader.substring(7);
+        if(jwtHeader != null && jwtHeader.startsWith(JWT_TOKEN_STARTER)) {
+            jwtToken = jwtHeader.substring(JWT_TOKEN_STARTER.length());
             try {
                 username = jwtUtil.extractUsername(jwtToken);
             } catch (Exception e) {
-                logger.error("Failed to unpacking the jwtToken");
+                logger.error("Failed to unpacking the jwtToken with exception: " + e.getMessage());
             }
+        } else {
+            logger.info("Missing JWTToken");
         }
 
         if (username != null && null == SecurityContextHolder.getContext().getAuthentication()) {

@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -43,23 +44,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                //.csrf(Customizer.withDefaults()) // TODO(Will): I don't have time to fix CSRF right now...
                 .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(new AntPathRequestMatcher("/**")).permitAll(); // Need to allow access to the landing page
                     auth.requestMatchers(new AntPathRequestMatcher("/api/login")).permitAll();
                     auth.requestMatchers(new AntPathRequestMatcher("/api/register")).permitAll();
-                    auth.requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated();
                     auth.requestMatchers(new AntPathRequestMatcher("/solosavings/**")).permitAll(); //Any URL with pattern "/solosavings/**" do not need to be authenticated
-                    auth.anyRequest().authenticated();
+                    auth.requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated();
                 })
-                //.securityMatcher("/api/**") //Any request with pattern "/api/**" needs to be authenticated
-                // TODO: need to add a filter
-                .securityMatcher("/dashboard/**")   //Any URL with pattern "/dashboard/**" needs to be authenticated
+                .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .httpBasic(Customizer.withDefaults())
+                .httpBasic(withDefaults())
                 .formLogin(withDefaults());     //better to change to our own login form
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

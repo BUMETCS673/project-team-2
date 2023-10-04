@@ -195,29 +195,34 @@
 </footer>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    let jwt = null;
+    let jwt = "";
     function setAuthHeader() {
-        var jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-        if(jwtToken && null == jwt) {
-            console.log("Found JWT cookie");
+        const jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        if(jwtToken) {
             jwt = jwtToken;
+            console.log("Found JWT cookie: " + jwt);
+
         } else {
             console.log("Failed to find JWT cookie");
-            jwt = null;
+            alert("You must login before accessing the dashboard");
+            window.location.replace("/solosavings/login");
         }
     }
+    setAuthHeader();
 
     let thisMonthIncome;
     let thisMonthExpense;
     let totalBalance;
+    $.ajaxSetup({
+        headers: {
+            'Authorization': "Bearer " + jwt
+        }
+    })
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/transaction/monthly/income/1', // change user_id later
+        url: '/api/transaction/monthly/income',
         contentType: 'application/json',
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('Authorization', 'Bearer', jwt);
-        },
         success: function(response) {
             thisMonthIncome = response;
         },
@@ -228,11 +233,8 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/transaction/monthly/expense/1', // change user_id later
+        url: '/api/transaction/monthly/expense',
         contentType: 'application/json',
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('Authorization', 'Bearer', jwt);
-        },
         success: function(response) {
             thisMonthExpense = response;
 
@@ -244,11 +246,8 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/user/balance/1', // change user_id later
+        url: '/api/user/balance',
         contentType: 'application/json',
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader('Authorization', 'Bearer', jwt);
-        },
         success: function(response) {
             totalBalance = response;
         },
@@ -283,7 +282,7 @@
 
     // When user clicks outside modal, close it
     window.onclick = function(event) {
-        if (event.target == modal) {
+        if (event.target === modal) {
             modal.style.display = "none";
         }
     }

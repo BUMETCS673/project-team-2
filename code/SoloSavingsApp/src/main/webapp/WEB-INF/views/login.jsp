@@ -136,11 +136,9 @@
                 data: JSON.stringify(formData),
                 success: function(response) {
                     console.log('Login successful:', response);
-                    alert("Authentication passed successfully, redirect to your dashboard.")
-                    var cookie = new Cookie("jwtToken", response);
-                    cookie.save();
-                    setJwtInCookie();
-                    window.location.replace("/dashboard");
+                    setJwtInCookie(response);
+                    alert("Authentication passed successfully, redirect to your dashboard.");
+                    window.location.replace("/solosavings/dashboard");
                 },
                 error: function(error) {
                     alert(error.responseText);

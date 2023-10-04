@@ -22,8 +22,8 @@ import java.util.function.Function;
 @Component
 public class JwtUtil implements Serializable {
 
-    private static final String SECRET = "694a28b26c854d7eaf1bd2c72aef58acc216edee0fc845a882b0aba8b545df69";
-    private static final Long EXPIRATION = 86400L;
+    private static final byte[] SECRET = "694a28b26c854d7eaf1bd2c72aef58acc216edee0fc845a882b0aba8b545df69".getBytes(StandardCharsets.UTF_8);
+    private static final Long EXPIRATION = (long) (30 * 60 * 1000); // 30 minutes
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
@@ -49,7 +49,7 @@ public class JwtUtil implements Serializable {
 
     private String createToken(Map<String, Object> claims, String subject) {
         // TODO(will): Use non-deprecated functions
-        SecretKey key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+        SecretKey key = Keys.hmacShaKeyFor(SECRET);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
@@ -69,11 +69,6 @@ public class JwtUtil implements Serializable {
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
-    private String decodeBase64(String data) {
-        byte[] decodedBytes = Base64.getDecoder().decode(data);
-        return new String(decodedBytes, StandardCharsets.UTF_8);
-    }
-
     private Boolean isTokenExpired(String token) {
         final Date expirationDate = getExpirationDateFromToken(token);
         return expirationDate.before(new Date());
@@ -81,13 +76,5 @@ public class JwtUtil implements Serializable {
 
     private Date getExpirationDateFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token).getBody().getExpiration();
-    }
-
-    private String getUsernameFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token).getBody().getSubject();
-    }
-
-    private long getExpirationDate() {
-        return new Date().getTime() + 3600 * 1000; // 1 hour in milliseconds
     }
 }
