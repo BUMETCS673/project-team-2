@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -73,6 +74,19 @@ public class TransactionController {
             return new ResponseEntity<>(thisMonthIncome, HttpStatus.OK);
         } catch (TransactionException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("analytics/monthly/{type}/{year}/{user_id}")
+    public ResponseEntity<?> getMonthlyAnalyticsByYear(
+            @PathVariable("type") TransactionType transactionType,
+            @PathVariable("year") Integer year,
+            @PathVariable("user_id") Integer user_id) {
+        try {
+            List<Map<Object, Object>> incomes = transactionServiceImpl.getMonthlyIncomeByYear(user_id,year,transactionType);
+            return new ResponseEntity<>(incomes, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

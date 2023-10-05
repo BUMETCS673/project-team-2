@@ -333,7 +333,7 @@
 </script>
 
 <script>
-    $(document).ready(function() {
+     $(document).ready(function() {
 
         // Render income, expense etc values from AJAX calls
         $('#expense-val').text("$"+thisMonthExpense);

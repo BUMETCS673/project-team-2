@@ -7,12 +7,16 @@ import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.TransactionService;
+import com.soloSavings.utils.Constants;
 import com.soloSavings.utils.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -54,6 +58,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
+
     @Override
     public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
         User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found"));
@@ -75,6 +80,28 @@ public class TransactionServiceImpl implements TransactionService {
             return user.getBalance_amount() + transaction.getAmount();
         } else {
             return user.getBalance_amount() - transaction.getAmount();
+        }
+    }
+
+    @Override
+    public List<Map<Object, Object>> getMonthlyIncomeByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
+        try{
+            List<Map<Object, Object>> list = new ArrayList<>();
+            Map<Object,Object> map = null;
+            double income = 0.0;
+            for(int i = 1; i <= 12; i++){
+                map = new HashMap<Object,Object>();
+                List<Transaction> transactions = transactionRepository.findByMonthAndType(i,year,transactionType);
+                income = transactions.stream()
+                        .mapToDouble(Transaction::getAmount)
+                        .sum();
+                map.put("label", Constants.listOfMonth[i-1]);
+                map.put("y",income);
+                list.add(map);
+            }
+            return list;
+        } catch (Exception e){
+            throw new TransactionException("Internal Service Error, Please try again later!");
         }
     }
 }
