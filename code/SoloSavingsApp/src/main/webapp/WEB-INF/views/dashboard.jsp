@@ -242,16 +242,164 @@
         </div>
 
     </div>
+    <div class="comments-section">
+        <h2 style="clear: both">Comments</h2>
+        <textarea id="comment-input" placeholder="Write your comment here" style="width: 85%;float: left"></textarea>
+        <button id="submit-comment" style="width: 10%;float: left;margin-top:5px;margin-left: 15px;">Submit</button>
+        <div id="comments-list" style="clear: both">
+
+        </div>
+    </div>
+
 </main>
-<footer>
-    &copy; 2023 SoloSavings
-</footer>
+
 </body>
 <footer>
     &copy; 2023 SoloSavings
 </footer>
+<style>
+    footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: relative;
+        width: 100%;
+        margin-top: 20px;
+    }
+    .comments-section {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #comment-input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        resize: none;
+    }
+
+    #submit-comment {
+        background-color: #007acc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    #submit-comment:hover {
+        background-color: #005fbb;
+    }
+
+    #comments-list {
+        margin-top: 10px;
+    }
+
+    .comment {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            url: "/comments/list",
+            contentType: 'application/json',
+            success: function(response) {
+                displayComments(response);
+            },
+            error: function(error) {
+                console.error("Error getting comments", error);
+            }
+        });
+
+
+        function displayComments(comments) {
+            const commentsList = $("#comments-list");
+
+            commentsList.empty();
+
+            $.each(comments, function(index, comment) {
+                    const commentHtml =
+                    '<div class="comment">'+
+                        '<p>'+ comment.content +'</p>'+
+                        '<button class="edit-comment" id="+'+comment.id+'" style="margin-left: 40%";>Edit</button>'+
+                        '<button class="delete-comment" id="+'+comment.id+'" style="margin-left: 20px;">Delete</button>'+
+                    '</div>';
+                    $("#comments-list").append(commentHtml);
+            });
+        }
+    });
+
+        $("#submit-comment").click(function() {
+            const commentText = $("#comment-input").val();
+            const commentData = {
+                content: commentText
+            };
+            $.ajax({
+                type: "POST",
+                url: "/comments/add", // Replace with your actual server endpoint
+                contentType: 'application/json',
+                data: JSON.stringify(commentData),
+                success: function(response) {
+                    console.log("Income added successfully");
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error("Error adding income", error);
+                }
+            });
+        });
+
+
+        $("#comments-list").on("click", ".edit-comment", function() {
+            const commentId = $(this).attr("id");
+            const commentDiv = $(this).closest(".comment");
+            const commentText = commentDiv.find("p").text();
+            const editedCommentText = prompt("Edit your comment:", commentText);
+            const updateData = {
+                id:$(this).attr("id"),
+                content: editedCommentText
+            };
+            $.ajax({
+                type: "POST",
+                url: "/comments/add", // Replace with your actual server endpoint
+                contentType: 'application/json',
+                data: JSON.stringify(updateData),
+                success: function(response) {
+                    console.log("Income added successfully");
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error("Error adding income", error);
+                }
+            });
+
+        });
+
+        $("#comments-list").on("click", ".delete-comment", function() {
+            const commentId = $(this).attr("id");
+            $.ajax({
+                type: "POST",
+                url: "/comments/del/"+commentId, // Replace with your actual server endpoint
+                contentType: 'application/json',
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(error) {
+                }
+            });
+        });
+
+
+
     let thisMonthIncome;
     let thisMonthExpense;
     let totalBalance;

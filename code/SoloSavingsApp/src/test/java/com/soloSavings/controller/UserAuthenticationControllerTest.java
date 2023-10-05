@@ -61,13 +61,13 @@ public class UserAuthenticationControllerTest {
 
 
     }
-
+    
     @Test
-    public void testLoginUserWrongPassword() throws UserAuthenticationException {
+    public void testLoginUserWrongPassword(HttpServletRequest request) throws UserAuthenticationException {
         // if user is not registered or password is incorrect
         Login loginData = new Login("test@solosavings.com", "hhhh");
         when(userService.getPasswordHash(anyString())).thenReturn("wrong");
-        ResponseEntity<?> response = userAuthController.loginUser(loginData);
+        ResponseEntity<?> response = userAuthController.loginUser(loginData,request);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }

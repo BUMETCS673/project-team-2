@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba8333ed-18f5-4098-9cd0-3e697cfbaf88" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/CommentsController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/Comments.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/CommentsRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/CommentsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/CommentsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/UserAuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/UserAuthenticationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/dashboard.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/dashboard.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/login.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/controller/UserAuthenticationControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/controller/UserAuthenticationControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/database/init-database.sql" beforeDir="false" afterPath="$PROJECT_DIR$/code/database/init-database.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +23,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -27,28 +40,39 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2Vl6TIAAZm42gZJda4gJECaljcD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;SpringBootBackend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "ZhaoXin-Comments",
+    "last_opened_file_path": "C:/New folder/code/project-team-2/code/SoloSavingsApp/src/main/webapp/WEB-INF/views",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\New folder\code\project-team-2\code\SoloSavingsApp\src\main\webapp\WEB-INF\views" />
+      <recent name="C:\New folder\code\project-team-2\code\SoloSavingsApp\src\main\java\com\soloSavings\controller" />
+      <recent name="C:\New folder\code\project-team-2\code\SoloSavingsApp\src\main\java\com\soloSavings\serviceImpl" />
+      <recent name="C:\New folder\code\project-team-2\code\SoloSavingsApp\src\main\java\com\soloSavings\service" />
+      <recent name="C:\New folder\code\project-team-2\code\SoloSavingsApp\src\main\java\com\soloSavings\repository" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="ACTIVE_PROFILES" />

@@ -92,3 +92,10 @@ CREATE TABLE IF NOT EXISTS expenses (
  * INSERT INTO `income`(`income_id`, `user_id`, `source`, `amount`, `income_date`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]')
  * INSERT INTO `expenses`(`expense_id`, `user_id`, `category`, `amount`, `expense_date`) VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]')
  */
+
+ CREATE TABLE `comments` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `content` varchar(255) DEFAULT NULL,
+   `user_id` int(11) DEFAULT NULL,
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=306 DEFAULT CHARSET=utf8;

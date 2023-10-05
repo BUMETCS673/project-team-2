@@ -7,12 +7,16 @@ import com.soloSavings.model.User;
 //import com.soloSavings.service.TokenManagerService;
 import com.soloSavings.service.UserService;
 import jakarta.persistence.NonUniqueResultException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.desktop.PreferencesEvent;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -46,11 +50,14 @@ public class UserAuthenticationController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity loginUser(@RequestBody Login loginData) {
+    public ResponseEntity loginUser(@RequestBody Login loginData, HttpServletRequest request) {
         logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Request to log in an user: {}", loginData.email());
         // REMOVE ME
         logger.info("And password: {}", loginData.password());
         String db_password_hash = userService.getPasswordHash(loginData.email());
+        User userByEmail = userService.getUserByEmail(loginData.email());
+        HttpSession session = request.getSession();
+        session.setAttribute("userId",userByEmail.getUser_id());
         if(SecurityConfig.checkPassword(db_password_hash, loginData.password())) {
             //Token token = new Token(loginData.email());
             //tokenManagerService.add_token(token);
