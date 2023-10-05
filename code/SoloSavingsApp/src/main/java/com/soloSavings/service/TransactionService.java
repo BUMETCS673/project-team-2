@@ -5,6 +5,7 @@ import com.soloSavings.model.Transaction;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -28,4 +29,6 @@ public interface TransactionService {
     Double getThisMonthExpense(Integer userId) throws TransactionException;
 
     Double getThisMonthIncome(Integer userId) throws TransactionException;
+    public Optional<Transaction> getTransactionsForUser(Integer userId) ;
+    
 }
