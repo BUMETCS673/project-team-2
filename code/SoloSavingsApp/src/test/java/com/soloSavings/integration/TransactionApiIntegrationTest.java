@@ -1,26 +1,29 @@
 package com.soloSavings.integration;
 
+import com.soloSavings.exceptions.TransactionException;
+import com.soloSavings.model.Login;
 import com.soloSavings.model.Transaction;
 import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
+import com.soloSavings.service.TransactionService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
+import org.springframework.http.*;
 import java.time.LocalDate;
 import java.util.List;
-
+import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
+@Profile("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TransactionApiIntegrationTest {
 
     @Autowired
@@ -28,32 +31,38 @@ public class TransactionApiIntegrationTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private TransactionService transactionService;
+    @Autowired
     private TransactionRepository transactionRepository;
-
     private User commonUser;
+    HttpHeaders headers;
+    @BeforeAll
+    public void setUpUserAuth(){
+        String commonUserEmail = "common@gmail.com";
+        commonUser = new User(null,"common",commonUserEmail,"Password1",LocalDate.now(),0.0,LocalDate.now());
+        restTemplate.postForEntity("/api/register", commonUser, String.class);
+
+        Login login = new Login(commonUser.getUsername(),commonUser.getPassword_hash());
+
+        ResponseEntity<String> loginResponse = restTemplate.postForEntity("/api/login", login, String.class);
+        headers = new HttpHeaders();
+        headers.setBearerAuth(Objects.requireNonNull(loginResponse.getBody()));
+
+    }
     @BeforeEach
     public void setup(){
-        String commonUserEmail = "common@email";
-        if(null != userRepository.findUserByEmail(commonUserEmail)){
-            userRepository.delete(userRepository.findByUsername(commonUserEmail));
-        }
-        commonUser = new User(null,"common",commonUserEmail,"Password1",LocalDate.now(),1000.00,LocalDate.now());
-        commonUser = userRepository.save(commonUser);
+        commonUser = userRepository.findByUsername(commonUser.getUsername());
+        commonUser.setBalance_amount(1000.00);
+        userRepository.save(commonUser);
     }
-    @AfterEach
-    public void cleanup(){
-        List<Transaction> trans = transactionRepository.findAllByUserId(commonUser.getUser_id());
-        if(null != trans){
-            transactionRepository.deleteAll(trans);
-        }
-        userRepository.delete(commonUser);
-    }
+
     @Test
     public void testAddIncomeTransaction() {
         Transaction transaction = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,100.0, LocalDate.now());
         Double expectedIncome = commonUser.getBalance_amount() + 100.0;
 
-        ResponseEntity<Double> response = restTemplate.postForEntity("/transaction/add/{id}", transaction, Double.class, commonUser.getUser_id());
+        HttpEntity<Transaction> request = new HttpEntity<>(transaction, headers);
+        ResponseEntity<Double> response = restTemplate.postForEntity("/api/transaction/add", request, Double.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedIncome);
@@ -63,7 +72,8 @@ public class TransactionApiIntegrationTest {
     public void testAddIncomeTransactionInvalidAmount() {
         Transaction transaction = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,-100.0, LocalDate.now());
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/transaction/add/{id}", transaction, String.class, commonUser.getUser_id());
+        HttpEntity<Transaction> request = new HttpEntity<>(transaction, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/transaction/add", request, String.class, commonUser.getUser_id());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(response.getBody()).isEqualTo("Invalid transaction amount, Please input correct transaction amount!");
@@ -74,7 +84,8 @@ public class TransactionApiIntegrationTest {
         Transaction transaction = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,100.0, LocalDate.now());
         Double expectedExpense = commonUser.getBalance_amount() - 100.0;
 
-        ResponseEntity<Double> response = restTemplate.postForEntity("/transaction/add/{id}", transaction, Double.class, commonUser.getUser_id());
+        HttpEntity<Transaction> request = new HttpEntity<>(transaction, headers);
+        ResponseEntity<Double> response = restTemplate.postForEntity("/api/transaction/add", request, Double.class, commonUser.getUser_id());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedExpense);
@@ -84,7 +95,8 @@ public class TransactionApiIntegrationTest {
         Double invalidExpense = commonUser.getBalance_amount() + 1;
         Transaction transaction = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,invalidExpense, LocalDate.now());
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/transaction/add/{id}", transaction, String.class, commonUser.getUser_id());
+        HttpEntity<Transaction> request = new HttpEntity<>(transaction, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("/api/transaction/add", request, String.class, commonUser.getUser_id());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(response.getBody()).isEqualTo("Invalid transaction amount, Please input correct transaction amount!");
@@ -100,23 +112,26 @@ public class TransactionApiIntegrationTest {
         transactionRepository.save(tran3);
         Integer expectedNumDebit = 2;
 
-        ResponseEntity<List> response = restTemplate.getForEntity("/transaction/{user_id}/{transaction_type}", List.class, commonUser.getUser_id(),"DEBIT");
+        HttpEntity<Transaction> request = new HttpEntity<>(headers);
+        ResponseEntity<List> response = restTemplate.exchange("/api/transaction/DEBIT", HttpMethod.GET,request,List.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().size()).isEqualTo(expectedNumDebit);
     }
 
     @Test
-    public void testGetTransactionByTypeCredit() {
+    public void testGetTransactionByTypeCredit() throws TransactionException {
+        int initialNumCreditTrans = transactionService.getTransactionsByType(commonUser.getUser_id(),"CREDIT").size();
         Transaction tran1 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,150.0, null);
         Transaction tran2 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,150.0, null);
         Transaction tran3 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,150.0, null);
         transactionRepository.save(tran1);
         transactionRepository.save(tran2);
         transactionRepository.save(tran3);
-        Integer expectedNumCredit = 2;
+        Integer expectedNumCredit = initialNumCreditTrans + 2;
 
-        ResponseEntity<List> response = restTemplate.getForEntity("/transaction/{user_id}/{transaction_type}", List.class, commonUser.getUser_id(),"CREDIT");
+        HttpEntity<Transaction> request = new HttpEntity<>(headers);
+        ResponseEntity<List> response = restTemplate.exchange("/api/transaction/CREDIT", HttpMethod.GET,request,List.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().size()).isEqualTo(expectedNumCredit);
@@ -124,36 +139,43 @@ public class TransactionApiIntegrationTest {
     @Test
     public void testGetTransactionByTypeWithInvalidType() {
         String invalidTransactionType = "WRONG";
-        ResponseEntity<String> response = restTemplate.getForEntity("/transaction/{user_id}/{transaction_type}", String.class, 0,invalidTransactionType);
+
+        HttpEntity<Transaction> request = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange("/api/transaction/"+invalidTransactionType, HttpMethod.GET,request,String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @Test
-    public void testGetThisMonthExpense() {
+    public void testGetThisMonthExpense() throws TransactionException {
+        Double initThisMonthExpense = transactionService.getThisMonthExpense(commonUser.getUser_id());
         Transaction tran1 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,150.0, LocalDate.now());
         Transaction tran2 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,150.0, null);
         transactionRepository.save(tran1);
         transactionRepository.save(tran2);
-        Double expectedExpense = 150.0;
+        Double expectedExpense = initThisMonthExpense + tran1.getAmount();
 
-        ResponseEntity<Double> response = restTemplate.getForEntity("/transaction/monthly/expense/{user_id}", Double.class, commonUser.getUser_id());
+        HttpEntity<Transaction> request = new HttpEntity<>(headers);
+        ResponseEntity<Double> response = restTemplate.exchange("/api/transaction/monthly/expense", HttpMethod.GET,request,Double.class);
+
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedExpense);
     }
 
     @Test
-    public void testGetThisMonthIncome() {
+    public void testGetThisMonthIncome() throws TransactionException {
+        Double initThisMonthIncome = transactionService.getThisMonthIncome(commonUser.getUser_id());
         Transaction tran1 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,150.0, LocalDate.now());
         Transaction tran2 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,150.0, null);
         Transaction tran3 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,100.0, LocalDate.now());
         transactionRepository.save(tran1);
         transactionRepository.save(tran2);
         transactionRepository.save(tran3);
-        Double expectedIncome = tran1.getAmount()+tran3.getAmount();
+        Double expectedIncome = initThisMonthIncome+tran1.getAmount()+tran3.getAmount();
 
-        ResponseEntity<Double> response = restTemplate.getForEntity("/transaction/monthly/income/{user_id}", Double.class, commonUser.getUser_id());
+        HttpEntity<Transaction> request = new HttpEntity<>(headers);
+        ResponseEntity<Double> response = restTemplate.exchange("/api/transaction/monthly/income", HttpMethod.GET,request,Double.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedIncome);

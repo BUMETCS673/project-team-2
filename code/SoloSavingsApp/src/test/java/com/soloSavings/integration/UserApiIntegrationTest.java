@@ -6,25 +6,24 @@ import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
 @Profile("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserApiIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
@@ -33,31 +32,33 @@ public class UserApiIntegrationTest {
     @Autowired
     private TransactionRepository transactionRepository;
     private User commonUser;
+    HttpHeaders headers;
+    @BeforeAll
+    public void setUpUserAuth(){
+        String commonUserEmail = "common@gmail.com";
+        commonUser = new User(null,"common",commonUserEmail,"Password1",LocalDate.now(),0.0,LocalDate.now());
+        restTemplate.postForEntity("/api/register", commonUser, String.class);
 
+        Login login = new Login(commonUser.getUsername(),commonUser.getPassword_hash());
+
+        ResponseEntity<String> loginResponse = restTemplate.postForEntity("/api/login", login, String.class);
+        headers = new HttpHeaders();
+        headers.setBearerAuth(Objects.requireNonNull(loginResponse.getBody()));
+    }
     @BeforeEach
     public void setCommonUser(){
-        String commonUserEmail = "common@email";
-        if(null != userRepository.findUserByEmail(commonUserEmail)){
-            userRepository.delete(userRepository.findByUsername(commonUserEmail));
-        }
-        commonUser = new User(null,"common",commonUserEmail,"Password1",LocalDate.now(),1000.00,LocalDate.now());
-        commonUser = userRepository.save(commonUser);
-    }
-    @AfterEach
-    public void deleteTransactionsAndUser(){
-        List<Transaction> trans = transactionRepository.findAllByUserId(commonUser.getUser_id());
-        if(null != trans){
-            transactionRepository.deleteAll(trans);
-        }
-        userRepository.delete(commonUser);
+        commonUser = userRepository.findByUsername(commonUser.getUsername());
     }
     @Test
     public void testGetTotalBalance() {
         Transaction transaction = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,100.0, LocalDate.now());
         Double expectedBalance = commonUser.getBalance_amount() + 100.0;
 
-        restTemplate.postForEntity("/transaction/add/{id}", transaction, Double.class, commonUser.getUser_id());
-        ResponseEntity<Double> response2 = restTemplate.getForEntity("/user/balance/{id}", Double.class, commonUser.getUser_id());
+        HttpEntity<Transaction> request = new HttpEntity<>(transaction, headers);
+        restTemplate.postForEntity("/api/transaction/add", request, Double.class, commonUser.getUser_id());
+
+        HttpEntity<Transaction> request2 = new HttpEntity<>(headers);
+        ResponseEntity<Double> response2 = restTemplate.exchange("/api/user/balance", HttpMethod.GET,request2, Double.class);
 
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response2.getBody()).isEqualTo(expectedBalance);
@@ -66,7 +67,7 @@ public class UserApiIntegrationTest {
     @Test
     public void testRegister() {
         User newUser = new User(null,"newUser","newUser@gmail","Password1",LocalDate.now(),1000.00,LocalDate.now());
-        String expectedMessage = "user registered";
+        String expectedMessage = "The user account with email newUser@gmail has successfully created";
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/register", newUser, String.class);
 
@@ -77,7 +78,7 @@ public class UserApiIntegrationTest {
 
     @Test
     public void testRegisterAlreadyExistError() {
-        String expectedMessage = String.format("email %s already registered",commonUser.getEmail());
+        String expectedMessage = String.format("The email %s already registered.",commonUser.getEmail());
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/register", commonUser, String.class);
 
@@ -88,8 +89,8 @@ public class UserApiIntegrationTest {
     @Test
     public void testLogin() {
         User loginUser = new User(null,"loginUser","loginUser@gmail","Password1",LocalDate.now(),1000.00,LocalDate.now());
-        Login login = new Login(loginUser.getEmail(),loginUser.getPassword_hash());
-        String expectedMessage = "user registered";
+        Login login = new Login(loginUser.getUsername(),loginUser.getPassword_hash());
+        String expectedMessage = String.format("The user account with email %s has successfully created",loginUser.getEmail());
 
         ResponseEntity<String> registerResponse = restTemplate.postForEntity("/api/register", loginUser, String.class);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/api/login", login, String.class);

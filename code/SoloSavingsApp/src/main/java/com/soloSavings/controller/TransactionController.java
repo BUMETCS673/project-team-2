@@ -1,11 +1,8 @@
 package com.soloSavings.controller;
 
 import com.soloSavings.Application;
-import com.soloSavings.config.JwtUtil;
-import com.soloSavings.config.SecurityConfig;
 import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Transaction;
-import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
 import org.slf4j.Logger;
@@ -15,9 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
 
 
 
@@ -41,7 +36,7 @@ public class TransactionController {
     @Autowired
     SecurityContext securityContext;
 
-    @RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTransaction (@RequestBody Transaction transaction){
         securityContext.setContext(SecurityContextHolder.getContext());
         try{
