@@ -1,8 +1,6 @@
 package com.soloSavings.controller;
 
 import com.soloSavings.Application;
-import com.soloSavings.config.JwtUtil;
-import com.soloSavings.config.SecurityConfig;
 import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Transaction;
 import com.soloSavings.model.helper.TransactionType;
@@ -15,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -34,16 +32,14 @@ import java.util.Optional;
 @RequestMapping("/api/transaction")
 public class TransactionController {
 
-    //Expenses
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    //Income
     @Autowired
     TransactionService transactionServiceImpl;
     @Autowired
     SecurityContext securityContext;
 
-    @RequestMapping(value = "/add/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<?> addTransaction (@RequestBody Transaction transaction){
         securityContext.setContext(SecurityContextHolder.getContext());
         try{
@@ -93,6 +89,22 @@ public class TransactionController {
         } catch (TransactionException e) {
             securityContext.dispose();
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("analytics/monthly/{type}/{year}")
+    public ResponseEntity<?> getMonthlyAnalyticsByYear(
+            @PathVariable("type") TransactionType transactionType,
+            @PathVariable("year") Integer year) {
+        securityContext.setContext(SecurityContextHolder.getContext());
+        try {
+            List<Map<Object, Object>> incomes = transactionServiceImpl
+                    .getMonthlyAnalyticsByYear(securityContext.getCurrentUser().getUser_id(),
+                            year,
+                            transactionType);
+            return new ResponseEntity<>(incomes, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

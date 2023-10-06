@@ -1,4 +1,7 @@
 package com.soloSavings.utils;
+
+import java.util.List;
+
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
  * Boston University MET CS 673 - Software Engineering
@@ -8,4 +11,5 @@ package com.soloSavings.utils;
  * Team 2 - SoloSavings Application
  */
 public class Constants {
+    public static final String[] listOfMonth = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 }

@@ -2,19 +2,22 @@ package com.soloSavings.controller;
 
 import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Transaction;
+import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
+import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
+import static org.mockito.ArgumentMatchers.any;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 
@@ -25,15 +28,31 @@ public class TransactionControllerTest {
     TransactionController transController;
     @Mock
     TransactionService transService;
-
+    @Mock
+    SecurityContext securityContext;
+    User user;
+    @BeforeEach
+    void setup(){
+        user = User.builder().user_id(1)
+                .username("test")
+                .email("test@gmail.com")
+                .password_hash("passwordHash")
+                .registration_date(null)
+                .balance_amount(10.00)
+                .last_updated(null)
+                .build();
+        doNothing().when(securityContext).setContext(any(
+                org.springframework.security.core.context.SecurityContext.class));
+        when(securityContext.getCurrentUser()).thenReturn(user);
+        doNothing().when(securityContext).dispose();
+    }
     @Test
     public void testAddTrandaction() throws TransactionException {
         Double balance = 100.00;
         Transaction tran = new Transaction(1,1,"", TransactionType.CREDIT,balance,null);
-        transController.addTransaction(1,tran);
 
-        when(transService.addTransaction(1,tran)).thenReturn(balance);
-        ResponseEntity<?> response = transController.addTransaction(1,tran);
+        when(transService.addTransaction(user.getUser_id(),tran)).thenReturn(balance);
+        ResponseEntity<?> response = transController.addTransaction(tran);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(balance, response.getBody());
@@ -41,15 +60,14 @@ public class TransactionControllerTest {
 
     @Test
     public void testAddTransactionWithInvalidRequest() throws TransactionException {
-        Integer userId = 1;
         Transaction transaction = new Transaction();
         String errorMessage = "Invalid transaction";
 
         // Mock
-        when(transService.addTransaction(userId, transaction))
+        when(transService.addTransaction(user.getUser_id(), transaction))
                 .thenThrow(new TransactionException(errorMessage));
 
-        ResponseEntity<?> response = transController.addTransaction(userId, transaction);
+        ResponseEntity<?> response = transController.addTransaction(transaction);
 
         // Assert
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
@@ -58,7 +76,6 @@ public class TransactionControllerTest {
 
     @Test
     public void testGetTransactionsByType() throws TransactionException {
-        Integer userId = 1;
         Transaction tran1 = new Transaction(1,1,"", TransactionType.CREDIT,100.00,null);
         Transaction tran2 = new Transaction(2,1,"", TransactionType.CREDIT,200.00,null);
         String transactionType = "expense";
@@ -66,8 +83,8 @@ public class TransactionControllerTest {
         trans.add(tran1); trans.add(tran2);
 
         // Mock
-        when(transService.getTransactionsByType(userId, transactionType)).thenReturn(trans);
-        ResponseEntity<?> response = transController.getTransactionsByType(userId, transactionType);
+        when(transService.getTransactionsByType(user.getUser_id(), transactionType)).thenReturn(trans);
+        ResponseEntity<?> response = transController.getTransactionsByType(transactionType);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -76,15 +93,14 @@ public class TransactionControllerTest {
 
     @Test
     public void testGetTransactionsByTypeWithInvalidRequest() throws TransactionException {
-        Integer userId = 1;
         String transactionType = "invalidType";
         String errorMessage = "Invalid transaction type";
 
         // Mock
-        when(transService.getTransactionsByType(userId, transactionType))
+        when(transService.getTransactionsByType(user.getUser_id(), transactionType))
                 .thenThrow(new TransactionException(errorMessage));
 
-        ResponseEntity<?> response = transController.getTransactionsByType(userId, transactionType);
+        ResponseEntity<?> response = transController.getTransactionsByType(transactionType);
 
         // Assert
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
@@ -92,12 +108,11 @@ public class TransactionControllerTest {
     }
     @Test
     public void testGetThisMonthIncome() throws TransactionException {
-        Integer userId = 1;
         Double thisMonthIncome = 1000.0; // Set your expected this month's income here
 
         // Mock
-        when(transService.getThisMonthIncome(userId)).thenReturn(thisMonthIncome);
-        ResponseEntity<?> response = transController.getThisMonthIncome(userId);
+        when(transService.getThisMonthIncome(user.getUser_id())).thenReturn(thisMonthIncome);
+        ResponseEntity<?> response = transController.getThisMonthIncome();
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -105,14 +120,13 @@ public class TransactionControllerTest {
     }
     @Test
     public void testGetThisMonthIncomeWithInvalidRequest() throws TransactionException {
-        Integer userId = 1;
         String errorMessage = "Invalid request";
 
         // Mock
-        when(transService.getThisMonthIncome(userId))
+        when(transService.getThisMonthIncome(user.getUser_id()))
                 .thenThrow(new TransactionException(errorMessage));
 
-        ResponseEntity<?> response = transController.getThisMonthIncome(userId);
+        ResponseEntity<?> response = transController.getThisMonthIncome();
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -122,12 +136,11 @@ public class TransactionControllerTest {
     @Test
     public void testGetThisMonthExpense() throws TransactionException {
         // Arrange
-        Integer userId = 1;
         Double thisMonthExpense = 500.0;
 
         // Mock
-        when(transService.getThisMonthExpense(userId)).thenReturn(thisMonthExpense);
-        ResponseEntity<?> response = transController.getThisMonthExpense(userId);
+        when(transService.getThisMonthExpense(user.getUser_id())).thenReturn(thisMonthExpense);
+        ResponseEntity<?> response = transController.getThisMonthExpense();
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -135,14 +148,13 @@ public class TransactionControllerTest {
     }
     @Test
     public void testGetThisMonthExpenseWithInvalidRequest() throws TransactionException {
-        Integer userId = 1;
         String errorMessage = "Invalid request";
 
         // Mock
-        when(transService.getThisMonthExpense(userId))
+        when(transService.getThisMonthExpense(user.getUser_id()))
                 .thenThrow(new TransactionException(errorMessage));
 
-        ResponseEntity<?> response = transController.getThisMonthExpense(userId);
+        ResponseEntity<?> response = transController.getThisMonthExpense();
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());

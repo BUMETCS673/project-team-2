@@ -48,11 +48,11 @@ public class UserServiceImpl  implements UserService{
 
     @Override
     public void save(User user){
-        User newUser = new User();
         User existing = userRepository.findUserByEmail(user.getEmail());
         if(null != existing) {
             throw new NonUniqueResultException("Email {}" + user.getEmail() + " already registered");
         }
+        User newUser = new User();
         newUser.setEmail(user.getEmail());
         newUser.setUsername(user.getUsername());
         newUser.setPassword_hash(SecurityConfig.hashedPassword(user.getPassword_hash()));
