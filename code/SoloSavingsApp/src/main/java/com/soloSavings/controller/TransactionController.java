@@ -3,6 +3,7 @@ package com.soloSavings.controller;
 import com.soloSavings.Application;
 import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Transaction;
+import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
 import org.slf4j.Logger;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 
@@ -86,6 +89,22 @@ public class TransactionController {
         } catch (TransactionException e) {
             securityContext.dispose();
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("analytics/monthly/{type}/{year}")
+    public ResponseEntity<?> getMonthlyAnalyticsByYear(
+            @PathVariable("type") TransactionType transactionType,
+            @PathVariable("year") Integer year) {
+        securityContext.setContext(SecurityContextHolder.getContext());
+        try {
+            List<Map<Object, Object>> incomes = transactionServiceImpl
+                    .getMonthlyAnalyticsByYear(securityContext.getCurrentUser().getUser_id(),
+                            year,
+                            transactionType);
+            return new ResponseEntity<>(incomes, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

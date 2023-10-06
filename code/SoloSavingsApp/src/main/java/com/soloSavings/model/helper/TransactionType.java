@@ -2,9 +2,8 @@ package com.soloSavings.model.helper;
 
 public enum TransactionType {
 
-    DEBIT("DEBIT"),
-    CREDIT("DEBIT");
+    DEBIT,
+    CREDIT
 
-    TransactionType(String debit) {
-    }
+
 }
