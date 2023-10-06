@@ -92,7 +92,7 @@ public class TransactionServiceImpl implements TransactionService {
             // populate data into 12 months buckets
             for(int i = 1; i <= 12; i++){
                 map = new HashMap<Object,Object>();
-                List<Transaction> transactions = transactionRepository.findByMonthAndType(i,year,transactionType);
+                List<Transaction> transactions = transactionRepository.findByMonthAndType(i,year,transactionType,userId);
                 income = transactions.stream()
                         .mapToDouble(Transaction::getAmount)
                         .sum();
