@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+
 import java.time.LocalDate;
 
 
@@ -23,11 +24,12 @@ import java.time.LocalDate;
  * Team 2 - SoloSavings Application
  */
 
-@Entity
-@Table(name = "users")
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
