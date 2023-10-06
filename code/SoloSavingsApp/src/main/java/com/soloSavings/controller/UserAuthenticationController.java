@@ -69,4 +69,16 @@ public class UserAuthenticationController {
         String token = jwtUtil.generateToken(userDetails.getUsername());
         return ResponseEntity.ok(token);
     }
+
+    @RequestMapping(value = "/forget-password", method = RequestMethod.POST)
+    public ResponseEntity forgetPassword(@RequestBody Login loginData) {
+        logger.info("Request to send forget password link as the user: {}", loginData.username());
+        try {
+            UserDetails userDetails = userService.loadUserByUsername(loginData.username());
+            String token = jwtUtil.generateToken(userDetails.getUsername());
+            return ResponseEntity.ok("User found, email sent");
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not found");
+        }
+    }
 }
