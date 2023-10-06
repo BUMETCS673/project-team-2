@@ -183,6 +183,7 @@
                     window.location.replace("/dashboard");
                 },
                 error: function(error) {
+                    alert(error.responseText);
                     console.error('Registration failed:', error);
                 }
             });

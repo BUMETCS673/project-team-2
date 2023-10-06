@@ -7,13 +7,17 @@ import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.TransactionService;
+import com.soloSavings.utils.Constants;
 import com.soloSavings.utils.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -47,6 +51,7 @@ import java.util.Optional;
     }
 
     @Override
+
     public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException {
         if(transaction_type.equalsIgnoreCase("CREDIT")){
             return transactionRepository.findByTransactionType(user_id, TransactionType.CREDIT);
@@ -72,49 +77,54 @@ import java.util.Optional;
                 .sum();
     }
 
-    private Double addExpense(Integer user_id, Transaction transaction) throws TransactionException {
-        if(Validation.validateExpense(transaction.getAmount())){
-            //given user already authenticated
-            User user = userRepository.findById(user_id).get();
-
-            //verify user balance sufficient for expense
-            if (transaction.getAmount() <= user.getBalance_amount() ) {
-                // expected source and amount info already there
-                transaction.setUser_id(user_id);
-                transaction.setTransaction_date(LocalDate.now());
-                transactionRepository.save(transaction);
-
-                user.setBalance_amount(user.getBalance_amount() - transaction.getAmount());
-                user = userRepository.save(user);
-
-                return user.getBalance_amount();
-            }
-            throw new TransactionException(("Insufficient Account Balance for Expense Amount!"));
-
-        }
-        throw new TransactionException("Invalid Expense Amount!"); // maybe have this in constant file
-    }
-
-    private Double addIncome(Integer user_id, Transaction transaction) throws TransactionException {
-        if(Validation.validateIncome(transaction.getAmount())){
-            //given user already authenticated
-            User user = userRepository.findById(user_id).get();
-
-            // expected source and amount info already there
+    @Override
+    public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
+        if(Validation.validateTransaction(user.getBalance_amount(),transaction.getAmount(),transaction.getTransaction_type())){
             transaction.setUser_id(user_id);
             transaction.setTransaction_date(LocalDate.now());
             transactionRepository.save(transaction);
 
-            user.setBalance_amount(user.getBalance_amount() + transaction.getAmount());
+            user.setBalance_amount(getNewUserBalance(user,transaction));
+            user.setLast_updated(LocalDate.now());
             user = userRepository.save(user);
-
             return user.getBalance_amount();
+        } else {
+            throw new TransactionException("Invalid transaction amount, Please input correct transaction amount!");
         }
-        throw new TransactionException("Invalid Income Amount!"); // maybe have this in constant file
+    }
+    private Double getNewUserBalance(User user, Transaction transaction){
+        if(transaction.getTransaction_type().equals(TransactionType.CREDIT)){
+            return user.getBalance_amount() + transaction.getAmount();
+        } else {
+            return user.getBalance_amount() - transaction.getAmount();
+        }
     }
     
     public Optional<Transaction> getTransactionsForUser(Integer userId) {
         return transactionRepository.findById(userId);
     }
 
+    @Override
+    public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
+        try{
+            List<Map<Object, Object>> list = new ArrayList<>();
+            Map<Object,Object> map = null;
+            double income = 0.0;
+            // populate data into 12 months buckets
+            for(int i = 1; i <= 12; i++){
+                map = new HashMap<Object,Object>();
+                List<Transaction> transactions = transactionRepository.findByMonthAndType(i,year,transactionType,userId);
+                income = transactions.stream()
+                        .mapToDouble(Transaction::getAmount)
+                        .sum();
+                map.put("label", Constants.listOfMonth[i-1]);
+                map.put("y",income);
+                list.add(map);
+            }
+            return list;
+        } catch (Exception e){
+            throw new TransactionException("Internal Service Error, Please try again later!");
+        }
+    }
 }

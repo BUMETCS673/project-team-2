@@ -99,8 +99,8 @@
 
     <section>
         <form id="loginForm">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
             
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
@@ -118,11 +118,14 @@
 </footer>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    function setJwtInCookie(jwtResponse) {
+        document.cookie = "jwtToken=" + jwtResponse;
+    }
     $(document).ready(function() {
         $('#loginForm').submit(function(event) {
             event.preventDefault();
             const formData = {
-                email: $('input[name="email"]').val(),
+                username: $('input[name="username"]').val(),
                 password: $('input[name="password"]').val(),
             };
 
@@ -133,10 +136,12 @@
                 data: JSON.stringify(formData),
                 success: function(response) {
                     console.log('Login successful:', response);
-                    alert("Authentication passed successfully, redirect to your dashboard.")
-                    window.location.replace("/dashboard");
+                    setJwtInCookie(response);
+                    alert("Authentication passed successfully, redirect to your dashboard.");
+                    window.location.replace("/solosavings/dashboard");
                 },
                 error: function(error) {
+                    alert(error.responseText);
                     console.error('Login failed:', error);
                 }
             });
