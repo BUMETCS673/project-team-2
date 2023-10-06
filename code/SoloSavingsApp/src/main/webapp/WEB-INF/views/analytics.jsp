@@ -99,8 +99,12 @@
         }
     }
     setAuthHeader();
-
-    $(function() {
+    $.ajaxSetup({
+        headers: {
+            'Authorization': "Bearer " + jwt
+        }
+    })
+    $(document).ready(function() {
         let incomesData;
         let expensesData;
 
@@ -112,7 +116,7 @@
         function getIncomesData() {
             return $.ajax({
                 type: 'GET',
-                url: '/transaction/analytics/monthly/CREDIT/2023/1', // change user_id later
+                url: '/api/transaction/analytics/monthly/CREDIT/2023', // change user_id later
                 contentType: 'application/json',
                 success: function(response) {
                     const gsonObj = new Gson();
@@ -127,7 +131,7 @@
         function getExpensesData() {
             return $.ajax({
                 type: 'GET',
-                url: '/transaction/analytics/monthly/DEBIT/2023/1', // change user_id later
+                url: '/api/transaction/analytics/monthly/DEBIT/2023', // change user_id later
                 contentType: 'application/json',
                 success: function(response) {
                     const gsonObj = new Gson();
@@ -148,9 +152,6 @@
             const chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
                 theme: "light1",
-                // title: {
-                //     text: "Monthly income and expense for this year"
-                // },
                 axisY: {
                     title: "US $",
                     includeZero: true
@@ -160,8 +161,7 @@
                     intervalType: "month",
                     stripLines: {
                         interval: 4
-                    },
-                    labelAutoFit: false
+                    }
                 },
                 toolTip: {
                     shared: true
