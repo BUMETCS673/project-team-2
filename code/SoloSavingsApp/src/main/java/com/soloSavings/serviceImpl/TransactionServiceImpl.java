@@ -84,11 +84,12 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Map<Object, Object>> getMonthlyIncomeByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
+    public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
         try{
             List<Map<Object, Object>> list = new ArrayList<>();
             Map<Object,Object> map = null;
             double income = 0.0;
+            // populate data into 12 months buckets
             for(int i = 1; i <= 12; i++){
                 map = new HashMap<Object,Object>();
                 List<Transaction> transactions = transactionRepository.findByMonthAndType(i,year,transactionType);

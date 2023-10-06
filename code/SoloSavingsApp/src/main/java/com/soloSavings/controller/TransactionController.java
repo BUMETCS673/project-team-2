@@ -83,7 +83,7 @@ public class TransactionController {
             @PathVariable("year") Integer year,
             @PathVariable("user_id") Integer user_id) {
         try {
-            List<Map<Object, Object>> incomes = transactionServiceImpl.getMonthlyIncomeByYear(user_id,year,transactionType);
+            List<Map<Object, Object>> incomes = transactionServiceImpl.getMonthlyAnalyticsByYear(user_id,year,transactionType);
             return new ResponseEntity<>(incomes, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);

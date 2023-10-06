@@ -1,44 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.google.gson.JsonObject"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
-
-<%--<%--%>
-<%--    Gson gsonObj = new Gson();--%>
-<%--    Map<Object,Object> map = null;--%>
-<%--    List<Map<Object,Object>> list = new ArrayList<Map<Object,Object>>();--%>
-
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2008–09"); map.put("y", 209.7); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2009–10"); map.put("y", 198.3); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2010–11"); map.put("y", 206.1); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2011–12"); map.put("y", 224.8); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2012–13"); map.put("y", 238.2); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2013–14"); map.put("y", 271.6); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2014–15"); map.put("y", 290.2); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2015–16"); map.put("y", 319); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2016–17"); map.put("y", 332.9); list.add(map);--%>
-
-<%--    String dataPoints1 = gsonObj.toJson(list);--%>
-
-<%--    list = new ArrayList<Map<Object,Object>>();--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2008–09"); map.put("y", 136.4); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2009–10"); map.put("y", 135); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2010–11"); map.put("y", 143.3); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2011–12"); map.put("y", 162.6); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2012–13"); map.put("y", 173.1); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2013–14"); map.put("y", 206.6); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2014–15"); map.put("y", 225.2); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2015–16"); map.put("y", 254); list.add(map);--%>
-<%--    map = new HashMap<Object,Object>(); map.put("label", "2016–17"); map.put("y", 267.9); list.add(map);--%>
-
-<%--    String dataPoints2 = gsonObj.toJson(list);--%>
-<%--    String thisYearIncomes = null;--%>
-<%--    String thisYearExpenses;--%>
-<%--%>--%>
 
 <!DOCTYPE html>
 <html>
@@ -121,7 +82,6 @@
     &copy; 2023 SoloSavings
 </footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdn.canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script>
     $(function() {
         let incomesData;
@@ -138,9 +98,8 @@
                 url: '/transaction/analytics/monthly/CREDIT/2023/1', // change user_id later
                 contentType: 'application/json',
                 success: function(response) {
+                    const gsonObj = new Gson();
                     incomesData = gsonObj.toJson(response);
-                    console.log(response)
-                    console.log(incomesData)
                 },
                 error: function(error) {
                     console.error('Something went wrong!', error);
@@ -154,6 +113,7 @@
                 url: '/transaction/analytics/monthly/DEBIT/2023/1', // change user_id later
                 contentType: 'application/json',
                 success: function(response) {
+                    const gsonObj = new Gson();
                     expensesData = gsonObj.toJson(response);
                 },
                 error: function(error) {
@@ -188,13 +148,13 @@
                 data: [{
                     type: "column",
                     name: "income",
-                    yValueFormatString: "#0.0# million tonnes",
+                    yValueFormatString: "$#0.00#",
                     showInLegend: true,
                     dataPoints: incomes
                 }, {
                     type: "column",
                     name: "expense",
-                    yValueFormatString: "#0.## million tonnes",
+                    yValueFormatString: "$#0.00#",
                     showInLegend: true,
                     dataPoints: expenses
                 }]
@@ -203,11 +163,7 @@
         }
 
         function toggleDataSeries(e) {
-            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-            } else {
-                e.dataSeries.visible = true;
-            }
+            e.dataSeries.visible = !(typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible);
             chart.render();
         }
 

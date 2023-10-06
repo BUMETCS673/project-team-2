@@ -19,17 +19,13 @@ import java.util.Map;
 
 @Service
 public interface TransactionService {
+    List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException ;
 
-
-    //Expenses
-    public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException ;
-
-    //Income
-    public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException;
+    Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException;
 
     Double getThisMonthExpense(Integer userId) throws TransactionException;
 
     Double getThisMonthIncome(Integer userId) throws TransactionException;
 
-    List<Map<Object, Object>> getMonthlyIncomeByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
+    List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
 }
