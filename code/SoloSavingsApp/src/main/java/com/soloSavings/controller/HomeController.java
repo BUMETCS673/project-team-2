@@ -40,12 +40,7 @@ public class HomeController {
         logger.info("Login to SoloSavings Application");
         return "login";
     }
-
-    @GetMapping("/login")
-    public String needAuth() {
-        return "needAuth";
-    }
-
+    
     @GetMapping("/solosavings/dashboard")
     public String dashboard() {
         return "dashboard";
