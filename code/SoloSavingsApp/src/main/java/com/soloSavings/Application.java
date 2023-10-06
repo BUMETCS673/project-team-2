@@ -19,7 +19,6 @@ public class Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-
 		// Log a message when the application starts
 		logger.info("SoloSavings Spring backend has been started");
 	}

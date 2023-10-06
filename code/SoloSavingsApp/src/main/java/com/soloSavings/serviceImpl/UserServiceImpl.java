@@ -6,7 +6,11 @@ import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.UserService;
 import jakarta.persistence.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl  implements UserService{
@@ -22,12 +26,19 @@ public class UserServiceImpl  implements UserService{
 
     @Override
     public User getUserByName(String username) {
-        return userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        if(null == user)
+            throw new UsernameNotFoundException("User could not be found with username: " + username);
+        return user;
+
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+    public User getUserByEmail(String email) throws UsernameNotFoundException{
+        User user = userRepository.findUserByEmail(email);
+        if(null == user)
+            throw new UsernameNotFoundException("User could not be found with email " + email);
+        return user;
     }
 
     @Override
@@ -36,7 +47,7 @@ public class UserServiceImpl  implements UserService{
     }
 
     @Override
-    public User save(User user){
+    public void save(User user){
         User newUser = new User();
         User existing = userRepository.findUserByEmail(user.getEmail());
         if(null != existing) {
@@ -45,6 +56,17 @@ public class UserServiceImpl  implements UserService{
         newUser.setEmail(user.getEmail());
         newUser.setUsername(user.getUsername());
         newUser.setPassword_hash(SecurityConfig.hashedPassword(user.getPassword_hash()));
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if(null == user)
+            throw new UsernameNotFoundException("User could not be found with username " + username);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword_hash(),
+                new ArrayList<>());
     }
 }
