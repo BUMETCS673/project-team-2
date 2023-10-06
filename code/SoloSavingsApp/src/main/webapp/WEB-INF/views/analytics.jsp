@@ -47,7 +47,7 @@
     }
 
     main {
-      max-width: 800px;
+      max-width: 60%;
       margin: 0 auto;
       padding: 2rem;
       background-color: #fff;
@@ -72,9 +72,11 @@
     </ul>
   </nav>
 </header>
-
+<div>
+    <h1>View your monthly analytics this year</h1>
+</div>
 <main>
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <div id="chartContainer" style="height: 400px; width: 100%;"></div>
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 </main>
 </body>
@@ -131,12 +133,20 @@
             const chart = new CanvasJS.Chart("chartContainer", {
                 animationEnabled: true,
                 theme: "light1",
-                title: {
-                    text: "Monthly income and expense for this year"
-                },
+                // title: {
+                //     text: "Monthly income and expense for this year"
+                // },
                 axisY: {
                     title: "US $",
                     includeZero: true
+                },
+                axisX: {
+                    interval: 1,
+                    intervalType: "month",
+                    stripLines: {
+                        interval: 4
+                    },
+                    labelAutoFit: false
                 },
                 toolTip: {
                     shared: true

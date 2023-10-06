@@ -61,10 +61,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
-        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found"));
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
         if(Validation.validateTransaction(user.getBalance_amount(),transaction.getAmount(),transaction.getTransaction_type())){
             transaction.setUser_id(user_id);
-            transaction.setTransaction_date(LocalDate.now());
+            //transaction.setTransaction_date(LocalDate.now());
             transactionRepository.save(transaction);
 
             user.setBalance_amount(getNewUserBalance(user,transaction));
