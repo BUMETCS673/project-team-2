@@ -1,11 +1,13 @@
 package com.soloSavings.utils;
 
-public class Validation {
-    public static boolean validateIncome(Double income){
-        return income > 0;
-    }
+import com.soloSavings.model.helper.TransactionType;
 
-    public static boolean validateExpense(Double expense){
-        return expense > 0;
+public class Validation {
+    public static boolean validateTransaction(Double userBal, Double amount, TransactionType transType){
+        if(transType.equals(TransactionType.CREDIT)){
+            return amount > 0;
+        } else {
+            return amount > 0 && amount < userBal;
+        }
     }
 }

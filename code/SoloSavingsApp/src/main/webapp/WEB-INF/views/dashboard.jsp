@@ -252,7 +252,6 @@
     </div>
 
 </main>
-
 </body>
 <footer>
     &copy; 2023 SoloSavings
@@ -307,6 +306,21 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    let jwt = "";
+    function setAuthHeader() {
+        const jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        if(jwtToken) {
+            jwt = jwtToken;
+            console.log("Found JWT cookie: " + jwt);
+
+        } else {
+            console.log("Failed to find JWT cookie");
+            alert("You must login before accessing the dashboard");
+            window.location.replace("/solosavings/login");
+        }
+    }
+    setAuthHeader();
+
     $(document).ready(function() {
         $.ajax({
             type: "GET",
@@ -403,10 +417,15 @@
     let thisMonthIncome;
     let thisMonthExpense;
     let totalBalance;
+    $.ajaxSetup({
+        headers: {
+            'Authorization': "Bearer " + jwt
+        }
+    })
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/transaction/monthly/income/1', // change user_id later
+        url: '/api/transaction/monthly/income',
         contentType: 'application/json',
         success: function(response) {
             thisMonthIncome = response;
@@ -418,7 +437,7 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/transaction/monthly/expense/1', // change user_id later
+        url: '/api/transaction/monthly/expense',
         contentType: 'application/json',
         success: function(response) {
             thisMonthExpense = response;
@@ -431,7 +450,7 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/user/balance/1', // change user_id later
+        url: '/api/user/balance',
         contentType: 'application/json',
         success: function(response) {
             totalBalance = response;
@@ -440,8 +459,7 @@
             console.error('Something went wrong!', error);
         }
     });
-</script>
-<script>
+
     // Get modal element
     var incomeModal = document.getElementById("add-income-modal");
     var expenseModal = document.getElementById("add-expense-modal");
@@ -478,9 +496,6 @@
         }
     }
 
-</script>
-
-<script>
     $(document).ready(function() {
 
         // Render income, expense etc values from AJAX calls
@@ -504,7 +519,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/transaction/add/1", // Replace with your actual server endpoint
+                url: "/api/transaction/add", // Replace with your actual server endpoint
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
@@ -534,7 +549,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/transaction/add/1", // Replace with your actual server endpoint
+                url: "/api/transaction/add", // Replace with your actual server endpoint
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {

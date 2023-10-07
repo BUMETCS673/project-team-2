@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   transaction_id INT NOT NULL AUTO_INCREMENT,
   user_id INT NOT NULL,
   source VARCHAR(255) NOT NULL,
-  transaction_type ENUM('credit', 'debit') NOT NULL,
+  transaction_type ENUM('CREDIT', 'DEBIT') NOT NULL,
   amount DECIMAL(18,2) NOT NULL,
   transaction_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(transaction_id),

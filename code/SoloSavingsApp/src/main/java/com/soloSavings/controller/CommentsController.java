@@ -4,11 +4,13 @@ import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Comments;
 import com.soloSavings.model.Transaction;
 import com.soloSavings.service.CommentsService;
+import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +21,15 @@ import java.util.List;
 public class CommentsController {
     @Autowired
     CommentsService commentsService;
+    @Autowired
+    SecurityContext securityContext;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<?> addComments (HttpServletRequest request, @RequestBody Comments comments){
-            Integer userId=(Integer)request.getSession().getAttribute("userId");
-            comments.setUser_id(userId);
+            securityContext.setContext(SecurityContextHolder.getContext());
+            comments.setUser_id(securityContext.getCurrentUser().getUser_id());
             commentsService.add(comments);
+            securityContext.dispose();
             return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -47,11 +52,13 @@ public class CommentsController {
     @GetMapping( "/list")
     @ResponseBody
     public ResponseEntity<List<Comments>> listComments (HttpServletRequest request){
-        Integer userId=(Integer)request.getSession().getAttribute("userId");
-        List<Comments> commentsList = commentsService.allList(userId);
+        securityContext.setContext(SecurityContextHolder.getContext());
+        List<Comments> commentsList = commentsService.allList(securityContext.getCurrentUser().getUser_id());
         if (commentsList != null && !commentsList.isEmpty()) {
+            securityContext.dispose();
             return new ResponseEntity<>(commentsList, HttpStatus.OK);
         } else {
+            securityContext.dispose();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

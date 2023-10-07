@@ -13,7 +13,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -41,24 +42,25 @@ public class UserServiceTest {
     @Test
     public void testSave(){
         //When
+        when(userRepository.findUserByEmail(anyString())).thenReturn(null);
         when(userRepository.save(any(User.class))).thenReturn(user);
-        User userSaved = userService.save(user);
+        userService.save(user);
 
         //Then
-        assertEquals(user,userSaved);
+        verify(userRepository, times(1)).save(any(User.class));
 
     }
 
     @Test
     public void testGetPasswordHash(){
         //When
-        when(userRepository.save(any(User.class))).thenReturn(user);
-        when(userRepository.findPasswordHashByEmail(user.getEmail())).thenReturn("passwordHash");
-        User userSaved = userService.save(user);
+        String expected = "passwordHash";
+        when(userRepository.findPasswordHashByEmail(user.getEmail())).thenReturn(expected);
         String pw_hash = userService.getPasswordHash("test@gmail.com");
 
         //Then
-        assertEquals(userSaved.getPassword_hash(),pw_hash);
+        assertEquals(expected,pw_hash);
+        verify(userRepository, times(1)).findPasswordHashByEmail(anyString());
     }
 
     @Test
