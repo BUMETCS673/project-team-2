@@ -38,17 +38,6 @@ import java.util.Map;
 	        this.transactionRepository = transactionRepository;
 	    }
 
- // Modified Code (Exception Handling)
-    @Override
-    public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
-        if (transaction.getTransaction_type().equals(TransactionType.CREDIT)) {
-            return addIncome(user_id, transaction);
-        }
-        if (transaction.getTransaction_type().equals(TransactionType.DEBIT)) {
-            return addExpense(user_id, transaction);
-        }
-        throw new TransactionException("Invalid Transaction Type: Only 'DEBIT' or 'CREDIT' allowed.");
-    }
 
     @Override
 
