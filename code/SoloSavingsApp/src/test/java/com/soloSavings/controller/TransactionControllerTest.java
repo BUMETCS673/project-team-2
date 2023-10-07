@@ -6,19 +6,40 @@ import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
+import com.soloSavings.serviceImpl.TransactionServiceImpl;
+
+import jakarta.annotation.Resource;
+
+
 import static org.mockito.ArgumentMatchers.any;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.plugins.MockMaker;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest
@@ -28,6 +49,12 @@ public class TransactionControllerTest {
     TransactionController transController;
     @Mock
     TransactionService transService;
+    
+
+    @Mock
+    private TransactionServiceImpl transactionServiceImpl;
+
+
     @Mock
     SecurityContext securityContext;
     User user;
@@ -160,4 +187,41 @@ public class TransactionControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertEquals(errorMessage, response.getBody());
     }
+    
+    
+    @Test
+    public void testGetTransactionsForUser() {
+        // Initialize mockito annotations
+        MockitoAnnotations.openMocks(this);
+
+        // Mocked user ID
+        Integer userId = 1;
+
+        // Create a sample Transaction object
+        Transaction sampleTransaction = new Transaction();
+        sampleTransaction.setTransaction_id(1);
+        sampleTransaction.setUser_id(userId);
+        sampleTransaction.setSource("stealing");
+        // ... Set other properties as needed
+
+        // Mock the behavior of transactionServiceImpl
+        when(transactionServiceImpl.getTransactionsForUser(userId))
+            .thenReturn(Optional.of(sampleTransaction));
+
+        // Call the method you want to test
+        Optional<Transaction> result = transactionServiceImpl.getTransactionsForUser(userId);
+
+        // Assertions
+        assertTrue(result.isPresent()); // Check if the result is present (not empty)
+        Transaction retrievedTransaction = result.get(); // Get the retrieved Transaction
+        assertEquals(userId, retrievedTransaction.getUser_id());
+        assertEquals("stealing", retrievedTransaction.getSource());
+        // ... Add more assertions for other properties as needed
+    }
 }
+
+
+
+
+
+ 

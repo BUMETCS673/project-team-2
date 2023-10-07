@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map;
 
 /*
@@ -26,14 +27,31 @@ import java.util.Map;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-@Service
-public class TransactionServiceImpl implements TransactionService {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    TransactionRepository transactionRepository;
+	@Service
+	public class TransactionServiceImpl implements TransactionService {
+	    private final UserRepository userRepository;
+	    private final TransactionRepository transactionRepository;
+
+	    @Autowired
+	    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
+	        this.userRepository = userRepository;
+	        this.transactionRepository = transactionRepository;
+	    }
+
+ // Modified Code (Exception Handling)
+    @Override
+    public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
+        if (transaction.getTransaction_type().equals(TransactionType.CREDIT)) {
+            return addIncome(user_id, transaction);
+        }
+        if (transaction.getTransaction_type().equals(TransactionType.DEBIT)) {
+            return addExpense(user_id, transaction);
+        }
+        throw new TransactionException("Invalid Transaction Type: Only 'DEBIT' or 'CREDIT' allowed.");
+    }
 
     @Override
+
     public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException {
         if(transaction_type.equalsIgnoreCase("CREDIT")){
             return transactionRepository.findByTransactionType(user_id, TransactionType.CREDIT);
@@ -81,6 +99,10 @@ public class TransactionServiceImpl implements TransactionService {
         } else {
             return user.getBalance_amount() - transaction.getAmount();
         }
+    }
+    
+    public Optional<Transaction> getTransactionsForUser(Integer userId) {
+        return transactionRepository.findById(userId);
     }
 
     @Override
