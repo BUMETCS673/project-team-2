@@ -104,6 +104,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.js"></script>
 <script>
 
     let jwt = "";
@@ -126,28 +129,6 @@
         }
     })
 
-
-    // let table = new DataTable('#transactionHistoryDataTable', {
-    //     ajax: {
-    //         url: '/api/transaction/history',
-    //         type: 'GET',
-    //         dataSrc: ""
-    //     },
-    //     columns: [
-    //         {data: 'transaction_id'},
-    //         {data: 'transaction_date'},
-    //         {data: 'source'},
-    //         {data: 'transaction_type'},
-    //         {data: 'amount'},
-    //         {"data": null, "defaultContent": "<button>Delete</button>"}
-    //
-    //     ],
-    //     processing: true,
-    //     serverSide: true,
-    //     ordering: true,
-    //     searching: true
-    // });
-
     var table = $('#transactionHistoryDataTable').DataTable({
         "sAjaxSource": "/api/transaction/history",
         "sAjaxDataProp": "",
@@ -166,56 +147,43 @@
     table.on('click', 'button', function (e) {
         let transaction_id = e.target.closest('tr').firstChild.innerText;
 
-        alert(transaction_id);
-        deleteTransaction(transaction_id);
-
-    });
-
-    $(document).ready(function() {
-        let transactionHistory;
-
-        async function fetchData() {
-            transactionHistory = await getTransactionHistory();
-        }
-
-        function getTransactionHistory() {
-            return $.ajax({
-                type: 'GET',
-                url: '/api/transaction/history',
-                contentType: 'application/json',
-                success: function(response) {
-                    transactionHistory = response;
-                    console.log(transactionHistory);
-
+        // Confirm box
+        bootbox.confirm({
+            title: 'Delete Transaction Record?',
+            message: 'Do you really want to delete this transaction record now? This cannot be undone.',
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
                 },
-                error: function(error) {
-                    console.error('Something went wrong!', error);
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
                 }
-            });
-        }
-        async function init() {
-            await fetchData();
-        }
-        init();
+            },
+            callback: function (result) {
+                if (result) {
+                    //console.log("Delete selected");
+                    deleteTransaction(transaction_id);
+                }
+            }
+        });
+
     });
 
-    function deleteTransaction(transaction_id){
-        console.log("deleting transaction " + transaction_id);
+   function deleteTransaction(transaction_id){
         return $.ajax({
             type: 'DELETE',
             url: '/api/transaction/delete/' + transaction_id,
             contentType: 'application/json',
             success: function(response) {
-
-                console.log(response);
+                //console.log(response);
                 window.location.reload();
-
             },
             error: function(error) {
                 console.error('Something went wrong!', error);
+                bootbox.alert(error);
             }
         });
-
     }
+
 </script>
 </html>

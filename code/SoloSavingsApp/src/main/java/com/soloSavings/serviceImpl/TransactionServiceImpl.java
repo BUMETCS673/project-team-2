@@ -27,24 +27,24 @@ import java.util.Map;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-	@Service
-	public class TransactionServiceImpl implements TransactionService {
-	    private final UserRepository userRepository;
-	    private final TransactionRepository transactionRepository;
+@Service
+public class TransactionServiceImpl implements TransactionService {
+    private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
 
-	    @Autowired
-	    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
-	        this.userRepository = userRepository;
-	        this.transactionRepository = transactionRepository;
-	    }
+    @Autowired
+    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
+        this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
+    }
 
 
     @Override
 
     public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException {
-        if(transaction_type.equalsIgnoreCase("CREDIT")){
+        if (transaction_type.equalsIgnoreCase("CREDIT")) {
             return transactionRepository.findByTransactionType(user_id, TransactionType.CREDIT);
-        } else if(transaction_type.equalsIgnoreCase("DEBIT")){
+        } else if (transaction_type.equalsIgnoreCase("DEBIT")) {
             return transactionRepository.findByTransactionType(user_id, TransactionType.DEBIT);
         }
         throw new TransactionException("Invalid URL");
@@ -69,12 +69,12 @@ import java.util.Map;
     @Override
     public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
         User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
-        if(Validation.validateTransaction(user.getBalance_amount(),transaction.getAmount(),transaction.getTransaction_type())){
+        if (Validation.validateTransaction(user.getBalance_amount(), transaction.getAmount(), transaction.getTransaction_type())) {
             transaction.setUser_id(user_id);
             transaction.setTransaction_date(LocalDate.now());
             transactionRepository.save(transaction);
 
-            user.setBalance_amount(getNewUserBalance(user,transaction));
+            user.setBalance_amount(getNewUserBalance(user, transaction));
             user.setLast_updated(LocalDate.now());
             user = userRepository.save(user);
             return user.getBalance_amount();
@@ -91,36 +91,43 @@ import java.util.Map;
 
     }
 
-    public Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException{
+    public Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException {
         User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
         Transaction transaction = transactionRepository.findById(transaction_id).orElseThrow(() -> new TransactionException("Transaction not found!"));
-        transactionRepository.deleteById(transaction_id);
-        //return updateUserBalance(user, transaction);
-        user.setBalance_amount(getUserBalanceAfterRemoval(user,transaction));
-        user.setLast_updated(LocalDate.now());
-        user = userRepository.save(user);
-        return user.getBalance_amount();
+        if (transaction.isCredit() && getUserBalanceAfterRemoval(user, transaction) > 0) {
+            transactionRepository.deleteById(transaction_id);
+            return updateUserBalance(user, transaction, "remove");
+
+        } else {
+            throw new TransactionException("Income transaction required to cover expense. Can not delete this transaction. Please review!");
+        }
+
 
     }
 
-    private Double getUserBalanceAfterRemoval(User user, Transaction transaction){
-        if(transaction.isCredit()){
+    private Double getUserBalanceAfterRemoval(User user, Transaction transaction) {
+        if (transaction.isCredit()) {
             return user.getBalance_amount() - transaction.getAmount();
         } else {
             return user.getBalance_amount() + transaction.getAmount();
         }
     }
 
-    private Double getNewUserBalance(User user, Transaction transaction){
-        if(transaction.isCredit()){
+    private Double getNewUserBalance(User user, Transaction transaction) {
+        if (transaction.isCredit()) {
             return user.getBalance_amount() + transaction.getAmount();
         } else {
             return user.getBalance_amount() - transaction.getAmount();
         }
     }
 
-    private Double updateUserBalance(User user, Transaction transaction) {
-        user.setBalance_amount(getNewUserBalance(user,transaction));
+    private Double updateUserBalance(User user, Transaction transaction, String updateAction) {
+
+        if (updateAction.equals("add")) {
+            user.setBalance_amount(getNewUserBalance(user, transaction));
+        } else {
+            user.setBalance_amount(getUserBalanceAfterRemoval(user, transaction));
+        }
         user.setLast_updated(LocalDate.now());
         user = userRepository.save(user);
         return user.getBalance_amount();
@@ -132,23 +139,23 @@ import java.util.Map;
 
     @Override
     public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
-        try{
+        try {
             List<Map<Object, Object>> list = new ArrayList<>();
-            Map<Object,Object> map = null;
+            Map<Object, Object> map = null;
             double income = 0.0;
             // populate data into 12 months buckets
-            for(int i = 1; i <= 12; i++){
-                map = new HashMap<Object,Object>();
-                List<Transaction> transactions = transactionRepository.findByMonthAndType(i,year,transactionType,userId);
+            for (int i = 1; i <= 12; i++) {
+                map = new HashMap<Object, Object>();
+                List<Transaction> transactions = transactionRepository.findByMonthAndType(i, year, transactionType, userId);
                 income = transactions.stream()
                         .mapToDouble(Transaction::getAmount)
                         .sum();
-                map.put("label", Constants.listOfMonth[i-1]);
-                map.put("y",income);
+                map.put("label", Constants.listOfMonth[i - 1]);
+                map.put("y", income);
                 list.add(map);
             }
             return list;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new TransactionException("Internal Service Error, Please try again later!");
         }
     }
