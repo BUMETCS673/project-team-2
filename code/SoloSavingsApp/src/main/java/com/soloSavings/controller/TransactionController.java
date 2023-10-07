@@ -56,7 +56,7 @@ public class TransactionController {
     TransactionService transactionServiceImpl;
     
     @Autowired
-     CsvExportService csvExportService;
+    CsvExportService csvExportService;
 
     @Autowired
     SecurityContext securityContext;
@@ -68,7 +68,7 @@ public class TransactionController {
             Double newBalance = transactionServiceImpl.addTransaction(securityContext.getCurrentUser().getUser_id(), transaction);
             securityContext.dispose();
             return new ResponseEntity<>(newBalance, HttpStatus.OK);
-       }
+        }
         catch (TransactionException e){
             securityContext.dispose();
             return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY); // 422 code for invalid requestbody for transaction

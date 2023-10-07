@@ -6,42 +6,22 @@ import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
-import com.soloSavings.serviceImpl.TransactionServiceImpl;
-
-import jakarta.annotation.Resource;
-
-
 import static org.mockito.ArgumentMatchers.any;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.plugins.MockMaker;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-
 @SpringBootTest
 public class TransactionControllerTest {
 
@@ -49,12 +29,6 @@ public class TransactionControllerTest {
     TransactionController transController;
     @Mock
     TransactionService transService;
-    
-
-    @Mock
-    private TransactionServiceImpl transactionServiceImpl;
-
-
     @Mock
     SecurityContext securityContext;
     User user;
@@ -65,7 +39,7 @@ public class TransactionControllerTest {
                 .email("test@gmail.com")
                 .password_hash("passwordHash")
                 .registration_date(null)
-                .balance_amount(10.00)
+                .balance_amount(1000.00)
                 .last_updated(null)
                 .build();
         doNothing().when(securityContext).setContext(any(
@@ -74,11 +48,11 @@ public class TransactionControllerTest {
         doNothing().when(securityContext).dispose();
     }
     @Test
-    public void testAddTrandaction() throws TransactionException {
+    public void testAddTransaction() throws TransactionException {
         Double balance = 100.00;
         Transaction tran = new Transaction(1,1,"", TransactionType.CREDIT,balance,null);
 
-        when(transService.addTransaction(user.getUser_id(),tran)).thenReturn(balance);
+        when(transService.addTransaction(any(Integer.class),any(Transaction.class))).thenReturn(balance);
         ResponseEntity<?> response = transController.addTransaction(tran);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -205,11 +179,11 @@ public class TransactionControllerTest {
         // ... Set other properties as needed
 
         // Mock the behavior of transactionServiceImpl
-        when(transactionServiceImpl.getTransactionsForUser(userId))
+        when(transService.getTransactionsForUser(userId))
             .thenReturn(Optional.of(sampleTransaction));
 
         // Call the method you want to test
-        Optional<Transaction> result = transactionServiceImpl.getTransactionsForUser(userId);
+        Optional<Transaction> result = transService.getTransactionsForUser(userId);
 
         // Assertions
         assertTrue(result.isPresent()); // Check if the result is present (not empty)

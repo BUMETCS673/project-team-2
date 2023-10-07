@@ -27,16 +27,16 @@ import java.util.Map;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-	@Service
-	public class TransactionServiceImpl implements TransactionService {
-	    private final UserRepository userRepository;
-	    private final TransactionRepository transactionRepository;
+@Service
+public class TransactionServiceImpl implements TransactionService {
+    private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
 
-	    @Autowired
-	    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
-	        this.userRepository = userRepository;
-	        this.transactionRepository = transactionRepository;
-	    }
+    @Autowired
+    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
+        this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
+    }
 
 
     @Override
