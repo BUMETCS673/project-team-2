@@ -82,14 +82,50 @@ import java.util.Map;
             throw new TransactionException("Invalid transaction amount, Please input correct transaction amount!");
         }
     }
+
+    @Override
+
+    public List<Transaction> getTransactionsByUser(Integer user_id) throws TransactionException {
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
+        return transactionRepository.findByTransactionUser(user_id);
+
+    }
+
+    public Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException{
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
+        Transaction transaction = transactionRepository.findById(transaction_id).orElseThrow(() -> new TransactionException("Transaction not found!"));
+        transactionRepository.deleteById(transaction_id);
+        //return updateUserBalance(user, transaction);
+        user.setBalance_amount(getUserBalanceAfterRemoval(user,transaction));
+        user.setLast_updated(LocalDate.now());
+        user = userRepository.save(user);
+        return user.getBalance_amount();
+
+    }
+
+    private Double getUserBalanceAfterRemoval(User user, Transaction transaction){
+        if(transaction.isCredit()){
+            return user.getBalance_amount() - transaction.getAmount();
+        } else {
+            return user.getBalance_amount() + transaction.getAmount();
+        }
+    }
+
     private Double getNewUserBalance(User user, Transaction transaction){
-        if(transaction.getTransaction_type().equals(TransactionType.CREDIT)){
+        if(transaction.isCredit()){
             return user.getBalance_amount() + transaction.getAmount();
         } else {
             return user.getBalance_amount() - transaction.getAmount();
         }
     }
-    
+
+    private Double updateUserBalance(User user, Transaction transaction) {
+        user.setBalance_amount(getNewUserBalance(user,transaction));
+        user.setLast_updated(LocalDate.now());
+        user = userRepository.save(user);
+        return user.getBalance_amount();
+    }
+
     public Optional<Transaction> getTransactionsForUser(Integer userId) {
         return transactionRepository.findById(userId);
     }

@@ -1,6 +1,7 @@
 package com.soloSavings.serviceImpl;
 
 import com.soloSavings.config.SecurityConfig;
+import com.soloSavings.model.Transaction;
 import com.soloSavings.model.User;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.UserService;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Service
@@ -18,6 +20,8 @@ public class UserServiceImpl  implements UserService{
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    TransactionServiceImpl transactionServiceImpl;
     @Override
     public Double getBalance(Integer id) {
         User user = userRepository.findById(id).get();
@@ -40,6 +44,7 @@ public class UserServiceImpl  implements UserService{
             throw new UsernameNotFoundException("User could not be found with email " + email);
         return user;
     }
+
 
     @Override
     public String getPasswordHash(String email) {

@@ -22,7 +22,11 @@ import java.util.Map;
 public interface TransactionService {
     List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException ;
 
+    List<Transaction> getTransactionsByUser(Integer user_id) throws TransactionException ;
+
     Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException;
+
+    Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException;
 
     Double getThisMonthExpense(Integer userId) throws TransactionException;
 

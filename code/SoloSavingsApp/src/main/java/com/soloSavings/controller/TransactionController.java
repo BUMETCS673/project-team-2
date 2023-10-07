@@ -9,12 +9,15 @@ import com.soloSavings.service.TransactionService;
 import com.soloSavings.serviceImpl.CsvExportService;
 
 
+import com.soloSavings.serviceImpl.TransactionServiceImpl;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -155,6 +158,34 @@ public class TransactionController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("delete/{transaction_id}")
+    public ResponseEntity<String> deleteTransaction(@PathVariable("transaction_id") Integer transaction_id){
+        logger.info("****Attempting to delete transaction_id " + transaction_id);
+        securityContext.setContext(SecurityContextHolder.getContext());
+        try {
+            Integer user_id = securityContext.getCurrentUser().getUser_id();
+            Double userBal = transactionServiceImpl.deleteTransaction(user_id, transaction_id);
+            return new ResponseEntity<>("Transaction Successfully Deleted. User Balance is " + userBal , HttpStatus.OK);
+        } catch (TransactionException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @GetMapping("history")
+    public ResponseEntity<?> getTransactionsHistory() {
+       securityContext.setContext(SecurityContextHolder.getContext());
+        try {
+            Integer user_id = securityContext.getCurrentUser().getUser_id();
+            logger.info("Getting Transaction History for " + user_id);
+
+            List<Transaction> transactionsHistory = transactionServiceImpl.getTransactionsByUser(user_id);
+            return new ResponseEntity<>(transactionsHistory, HttpStatus.OK);
+        } catch (TransactionException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
 }
 
     

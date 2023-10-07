@@ -194,6 +194,10 @@
 
         <!-- Add Income Button -->
         <button class="add-expense-btn">Add Expense</button>
+
+        <!-- View Transaction History -->
+        <button class="view-transactions-btn">View Transactions</button>
+
     </div>
     <%--income button and modal--%>
 
@@ -251,6 +255,7 @@
     &copy; 2023 SoloSavings
 </footer>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     let jwt = "";
     function setAuthHeader() {
@@ -325,6 +330,10 @@
     $(".add-expense-btn").click(function() {
         // Show the modal
         expenseModal.style.display = "block";
+    });
+    $(".view-transactions-btn").click(function() {
+        console.log("view transaction history page...");
+        window.location.replace("/solosavings/transactionHistory");
     });
 
     // When user clicks the close button for income modal
@@ -412,7 +421,7 @@
                     location.reload();
                 },
                 error: function(error) {
-                    console.error("Error adding income", error);
+                    console.error("Error adding expense", error);
                 }
             });
         });
