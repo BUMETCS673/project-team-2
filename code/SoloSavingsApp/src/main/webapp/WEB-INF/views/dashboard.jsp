@@ -372,7 +372,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/transaction/add/1", // Replace with your actual server endpoint
+                url: "/api/transaction/add", // Replace with your actual server endpoint
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
@@ -402,7 +402,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/transaction/add/1", // Replace with your actual server endpoint
+                url: "/api/transaction/add", // Replace with your actual server endpoint
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
