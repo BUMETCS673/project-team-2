@@ -135,13 +135,12 @@
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
-                    console.log('Login successful:', response);
                     setJwtInCookie(response);
                     alert("Authentication passed successfully, redirect to your dashboard.");
                     window.location.replace("/solosavings/dashboard");
                 },
                 error: function(error) {
-                    alert(error.responseText);
+                    alert("Authentication failed, please try again");
                     console.error('Login failed:', error);
                 }
             });

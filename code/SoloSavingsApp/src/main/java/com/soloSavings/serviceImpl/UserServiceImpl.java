@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByUsername(username);
         if(null == user)
             throw new UsernameNotFoundException("User could not be found with username " + username);
-        userRepository.updatePasswordByUsername(newPassword, username);
+        String hashedPassword = SecurityConfig.hashedPassword(newPassword);
+        userRepository.updatePasswordByUsername(hashedPassword, username);
     }
 
     @Override

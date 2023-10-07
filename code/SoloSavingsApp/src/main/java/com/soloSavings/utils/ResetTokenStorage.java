@@ -14,10 +14,6 @@ public class ResetTokenStorage {
         tokenMap.put(userName, token);
     }
 
-    public String retrieveToken(String userName) {
-        return tokenMap.get(userName);
-    }
-
     public String retrieveUsername(String token) {
         for (Map.Entry<String, String> entry : tokenMap.entrySet()) {
             if (entry.getValue().equals(token)) {

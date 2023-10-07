@@ -1,4 +1,4 @@
 package com.soloSavings.model;
 
-public record ResetPassword(String token, String newPassword) {
+public record ResetPassword(String token, String username, String password) {
 }

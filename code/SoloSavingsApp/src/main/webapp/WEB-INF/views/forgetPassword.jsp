@@ -132,7 +132,7 @@
                 data: JSON.stringify(formData),
                 success: function(response) {
                     console.log('User found, email sent:', response);
-                    alert("User found, email sent, please check your inbox (and spam folder) for instructions to reset password. Please DO NOT close the browser.");
+                    alert("User found, email sent. \nPlease check your inbox (and spam folder) for instructions. \nPlease DO NOT close the browser.");
                     window.location.replace("/solosavings/reset-password");
                 },
                 error: function(error) {

@@ -60,7 +60,7 @@ public class UserAuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.username(), loginData.password()));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
 
         UserDetails userDetails = userService.loadUserByUsername(loginData.username());
@@ -89,22 +89,15 @@ public class UserAuthenticationController {
 
     @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
     public ResponseEntity resetPassword(@RequestBody ResetPassword resetPasswordData) {
-        logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         try {
             String userName = passwordResetService.retrieveUserName(resetPasswordData.token());
-            logger.info("RESETTING PASSWORD FOR: ", userName);
-//            if (user == null || user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
-//                // Token is invalid or expired, handle accordingly
-//            }
-
-//            // Update the user's password
-//            userService.updatePassword(user, newPassword);
-//
-//            // Invalidate the token
-//            user.setResetToken(null);
-//            user.setResetTokenExpiry(null);
-//            userService.save(user);
-            return ResponseEntity.ok("Password reset successfully");
+            if (userName.equals(resetPasswordData.username())) {
+                userService.setUserNewPassword(userName, resetPasswordData.password());
+                passwordResetService.deleteTokenStorageRecord(userName);
+                return ResponseEntity.ok("Password reset successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Something went wrong.");
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong.");
         }

@@ -26,32 +26,12 @@ public class PasswordResetService {
         emailService.sendPasswordResetEmail(userEmail, resetToken);
     }
 
-    public boolean isTokenValid(String token) {
-        String userName = tokenStorage.retrieveUsername(token);
-        System.out.println(userName);
-        return userName != null;
-    }
-
     public String retrieveUserName(String token) {
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        tokenStorage.printTokenMap();
         String userName = tokenStorage.retrieveUsername(token);
-        System.out.println(userName);
         return userName;
     }
-//
-//    public void resetPassword(String token, String newPassword) {
-//        // Retrieve the user ID associated with the token
-//        Long userId = tokenStorage.retrieveUserId(token);
-//
-//        if (userId != null) {
-//            // Reset the user's password using the new password
-//            resetUserPassword(userId, newPassword);
-//
-//            // Remove the token from memory (since it has been used)
-//            tokenStorage.removeToken(token);
-//        }
-//    }
 
-    // Other methods for generating tokens, sending emails, and resetting passwords
+    public void deleteTokenStorageRecord(String userName) {
+        tokenStorage.removeTokenRecord(userName);
+    }
 }

@@ -104,8 +104,12 @@
 </header>
 <h1>Reset Password</h1>
 <form id="resetForm">
-    <label for="reset_token">Reset Token:</label>
-    <input type="text" id="reset_token" name="reset_token" required>
+    <label for="token">Reset Token:</label>
+    <input type="text" id="token" name="token" required>
+    <br>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
     <br>
 
     <label for="password">New Password:</label>
@@ -147,7 +151,8 @@
             event.preventDefault();
             if(!isValidationCheckPassed()) return;
             const formData = {
-                reset_token: $('input[name="reset_token"]').val(),
+                token: $('input[name="token"]').val(),
+                username: $('input[name="username"]').val(),
                 password: $('input[name="password"]').val(),
             };
 
