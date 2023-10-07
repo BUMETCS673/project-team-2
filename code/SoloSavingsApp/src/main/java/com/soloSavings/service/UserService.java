@@ -18,4 +18,5 @@ public interface UserService extends UserDetailsService {
     public String getPasswordHash(String email);
     public User getUserByName(String username);
     public User getUserByEmail(String email);
+    public void setUserNewPassword(String username, String newPassword);
 }

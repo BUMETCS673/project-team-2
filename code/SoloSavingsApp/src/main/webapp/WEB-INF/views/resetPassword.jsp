@@ -104,9 +104,6 @@
 </header>
 <h1>Reset Password</h1>
 <form id="resetForm">
-    <input type="hidden" name="token" value="<%= request.getParameter("token") %>">
-    <!-- You should include a hidden field for the reset token -->
-
     <label for="reset_token">Reset Token:</label>
     <input type="text" id="reset_token" name="reset_token" required>
     <br>

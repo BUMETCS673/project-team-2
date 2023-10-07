@@ -17,9 +17,8 @@ public class EmailServiceImpl implements EmailService {
         mailMessage.setFrom("notification.solosavings@gmail.com");
         mailMessage.setTo(toEmail);
         mailMessage.setSubject("Reset Password with Solo-Savings");
-        mailMessage.setText("To reset your password, click the link below:\n"
-                + "http://localhost:8888/solosavings/reset-password?token=" + resetToken);
-        System.out.println("I AM HERE!!!");
+        mailMessage.setText("To reset your password, please copy paste the reset token to the reset password form:\n"
+                + resetToken);
 
         javaMailSender.send(mailMessage);
     }

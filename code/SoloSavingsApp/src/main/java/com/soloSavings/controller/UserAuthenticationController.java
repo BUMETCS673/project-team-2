@@ -1,15 +1,11 @@
 package com.soloSavings.controller;
 
-import com.soloSavings.config.JwtFilter;
 import com.soloSavings.config.JwtUtil;
-import com.soloSavings.config.SecurityConfig;
-import com.soloSavings.model.JwtResponse;
 import com.soloSavings.model.Login;
+import com.soloSavings.model.ResetPassword;
 import com.soloSavings.model.User;
-//import com.soloSavings.model.Token;
-//import com.soloSavings.service.TokenManagerService;
-import com.soloSavings.service.EmailService;
 import com.soloSavings.service.UserService;
+import com.soloSavings.serviceImpl.PasswordResetService;
 import jakarta.persistence.NonUniqueResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -43,7 +35,7 @@ public class UserAuthenticationController {
     private UserService userService;
 
     @Autowired
-    private EmailService emailService;
+    private PasswordResetService passwordResetService;
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -82,10 +74,8 @@ public class UserAuthenticationController {
             UserDetails userDetails = userService.loadUserByUsername(loginData.username());
             try {
                 User userInfo = userService.getUserByName(userDetails.getUsername());
-                String resetToken = UUID.randomUUID().toString();
                 logger.info("Request to send forget password link as the user: {}", loginData.username());
-                emailService.sendPasswordResetEmail(userInfo.getEmail(), resetToken);
-                logger.info("!!!!!!!!!!!!!!!!!!!EMAIL SENT TO: ", userInfo.getEmail());
+                passwordResetService.initiatePasswordReset(userInfo.getUsername(), userInfo.getEmail());
             } catch (Exception e) {
                 e.printStackTrace();
                 e.getMessage();
@@ -93,27 +83,30 @@ public class UserAuthenticationController {
             }
             return ResponseEntity.ok("User found, email sent");
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not found.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong.");
         }
     }
 
     @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
-    public String resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword) {
-        // Check if the token is valid
-//        User user = userService.findByResetToken(token);
-//        if (user == null || user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
-//            // Token is invalid or expired, handle accordingly
-//        }
+    public ResponseEntity resetPassword(@RequestBody ResetPassword resetPasswordData) {
+        logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        try {
+            String userName = passwordResetService.retrieveUserName(resetPasswordData.token());
+            logger.info("RESETTING PASSWORD FOR: ", userName);
+//            if (user == null || user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+//                // Token is invalid or expired, handle accordingly
+//            }
+
+//            // Update the user's password
+//            userService.updatePassword(user, newPassword);
 //
-//        // Update the user's password
-//        userService.updatePassword(user, newPassword);
-//
-//        // Invalidate the token
-//        user.setResetToken(null);
-//        user.setResetTokenExpiry(null);
-//        userService.save(user);
-//
-//        // Redirect to a login page or a success page
-        return "redirect:/login";
+//            // Invalidate the token
+//            user.setResetToken(null);
+//            user.setResetTokenExpiry(null);
+//            userService.save(user);
+            return ResponseEntity.ok("Password reset successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong.");
+        }
     }
 }
