@@ -6,6 +6,8 @@ import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,10 +20,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class TransactionControllerTest {
 
@@ -180,14 +181,14 @@ public class TransactionControllerTest {
 
         // Mock the behavior of transactionServiceImpl
         when(transService.getTransactionsForUser(userId))
-            .thenReturn(Optional.of(sampleTransaction));
+            .thenReturn(List.of(sampleTransaction));
 
         // Call the method you want to test
-        Optional<Transaction> result = transService.getTransactionsForUser(userId);
+        List<Transaction> result = transService.getTransactionsForUser(userId);
 
         // Assertions
-        assertTrue(result.isPresent()); // Check if the result is present (not empty)
-        Transaction retrievedTransaction = result.get(); // Get the retrieved Transaction
+        assertFalse(result.isEmpty()); // Check if the result is present (not empty)
+        Transaction retrievedTransaction = result.get(0); // Get the retrieved Transaction
         assertEquals(userId, retrievedTransaction.getUser_id());
         assertEquals("stealing", retrievedTransaction.getSource());
         // ... Add more assertions for other properties as needed

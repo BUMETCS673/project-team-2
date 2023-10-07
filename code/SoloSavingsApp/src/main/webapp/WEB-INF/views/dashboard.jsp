@@ -194,6 +194,9 @@
 
         <!-- Add Income Button -->
         <button class="add-expense-btn">Add Expense</button>
+                <button id="transaction-history-button">Transaction History</button>
+        
+        
     </div>
     <%--income button and modal--%>
 
@@ -372,7 +375,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/transaction/add/1", // Replace with your actual server endpoint
+                url: "/api/transaction/add", // Replace with your actual server endpoint
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
@@ -402,7 +405,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/transaction/add/1", // Replace with your actual server endpoint
+                url: "/api/transaction/add", // Replace with your actual server endpoint
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
@@ -417,6 +420,30 @@
             });
         });
 
+    });
+    
+    $("#transaction-history-button").click(function() {
+        console.log("Button clicked"); // Add this line for debugging
+        $.ajax({
+            type: "GET",
+            url: "/api/transaction/export/csv", // Replace with the actual URL, e.g., "/solosavings/123/export/csv"
+            	success: function(response) {
+            	    console.log("Transaction history exported successfully");
+            	    // Create a hidden anchor element and set the href attribute to the response data
+            	    const anchor = document.createElement("a");
+            	    anchor.href = URL.createObjectURL(new Blob([response]));
+
+            	    // Set the download attribute to specify the filename
+            	    anchor.setAttribute("download", "transaction_history.csv");
+
+            	    // Trigger a click event on the anchor element to initiate the download
+            	    anchor.click();
+            	},
+            error: function(error) {
+                console.error("Error exporting transaction history", error);
+                // Handle the error, e.g., show an error message to the user.
+            }
+        });
     });
 </script>
 </html>

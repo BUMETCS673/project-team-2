@@ -5,6 +5,7 @@ import com.soloSavings.model.Transaction;
 import com.soloSavings.model.helper.TransactionType;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
@@ -27,8 +28,9 @@ public interface TransactionService {
     Double getThisMonthExpense(Integer userId) throws TransactionException;
 
     Double getThisMonthIncome(Integer userId) throws TransactionException;
-    public Optional<Transaction> getTransactionsForUser(Integer userId) ;
-    
+    public List<Transaction> getTransactionsForUser(Integer userId) ;
+    public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException ;
+
 
     List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
 }
