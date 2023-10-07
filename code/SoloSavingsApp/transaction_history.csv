@@ -1,4 +1,0 @@
-Transaction ID,User ID,Source,Transaction Type,Amount,Transaction Date
-2852,79,well,CREDIT,100.00,2023-10-06
-2853,79,well,CREDIT,1000.00,2023-10-06
-2854,79,lost bet,DEBIT,1000.00,2023-10-06
