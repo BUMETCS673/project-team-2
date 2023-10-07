@@ -117,29 +117,35 @@ public class TransactionController {
         }
         
     }
-    @GetMapping("/{user_id}/export/csv")
-    public ResponseEntity<Resource> exportTransactionsToCsv(@PathVariable("user_id") Integer userId) throws IOException {
-        Optional<Transaction> transactions = transactionServiceImpl.getTransactionsForUser(userId);
+    @GetMapping("/export/csv")
+    public ResponseEntity<?> exportTransactionsToCsv() throws IOException {
+        securityContext.setContext(SecurityContextHolder.getContext());
 
-        // Generate CSV file
-        String csvFilePath = "transaction_history.csv";
-        csvExportService.exportToCsv(transactions, csvFilePath);
+            Integer user_id = securityContext.getCurrentUser().getUser_id();
 
-        // Read the content of the CSV file
-        byte[] csvFileContent = Files.readAllBytes(Paths.get(csvFilePath));
 
-        // Create a Resource object for the CSV file
-        ByteArrayResource resource = new ByteArrayResource(csvFileContent);
+            Optional<Transaction> transactions = transactionServiceImpl.getTransactionsForUser(user_id);
 
-        // Set content disposition to trigger a download
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transaction_history.csv");
+            // Generate CSV file
+            String csvFilePath = "transaction_history.csv";
+            csvExportService.exportToCsv(transactions, csvFilePath);
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(csvFileContent.length)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
+            // Read the content of the CSV file
+            byte[] csvFileContent = Files.readAllBytes(Paths.get(csvFilePath));
+
+            // Create a Resource object for the CSV file
+            ByteArrayResource resource = new ByteArrayResource(csvFileContent);
+
+            // Set content disposition to trigger a download
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transaction_history.csv");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(csvFileContent.length)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(resource);
+
     }
 
  

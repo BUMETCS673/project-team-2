@@ -13,11 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Map;
+import java.util.*;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -94,10 +90,11 @@ public class TransactionServiceImpl implements TransactionService {
     public Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException {
         User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
         Transaction transaction = transactionRepository.findById(transaction_id).orElseThrow(() -> new TransactionException("Transaction not found!"));
-        if (transaction.isCredit() && getUserBalanceAfterRemoval(user, transaction) > 0) {
+        if (!Objects.equals(transaction.getUser_id(), user_id)) {
+            throw new TransactionException("Invalid Transaction Request");
+        } else if (transaction.isCredit() && getUserBalanceAfterRemoval(user, transaction) > 0) {
             transactionRepository.deleteById(transaction_id);
             return updateUserBalance(user, transaction, "remove");
-
         } else {
             throw new TransactionException("Income transaction required to cover expense. Can not delete this transaction. Please review!");
         }
@@ -138,7 +135,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
+    public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType
+            transactionType) throws TransactionException {
         try {
             List<Map<Object, Object>> list = new ArrayList<>();
             Map<Object, Object> map = null;
