@@ -125,7 +125,7 @@
         $('#loginForm').submit(function(event) {
             event.preventDefault();
             const formData = {
-                username: $('input[name="username"]').val(),
+                username: $('input[name="username"]').val().toLowerCase(),
                 password: $('input[name="password"]').val(),
             };
 

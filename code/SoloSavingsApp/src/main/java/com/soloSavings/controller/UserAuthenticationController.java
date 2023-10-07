@@ -8,6 +8,7 @@ import com.soloSavings.model.Login;
 import com.soloSavings.model.User;
 //import com.soloSavings.model.Token;
 //import com.soloSavings.service.TokenManagerService;
+import com.soloSavings.service.EmailService;
 import com.soloSavings.service.UserService;
 import jakarta.persistence.NonUniqueResultException;
 import org.slf4j.Logger;
@@ -21,6 +22,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -38,6 +42,8 @@ public class UserAuthenticationController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EmailService emailService;
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -75,10 +81,35 @@ public class UserAuthenticationController {
         logger.info("Request to send forget password link as the user: {}", loginData.username());
         try {
             UserDetails userDetails = userService.loadUserByUsername(loginData.username());
-            String token = jwtUtil.generateToken(userDetails.getUsername());
+            User userInfo = userService.getUserByName(userDetails.getUsername());
+            String resetToken = UUID.randomUUID().toString();
+            System.out.println("!!!!!!!!!!!!!!!!!!!!" + userInfo.getEmail() + resetToken);
             return ResponseEntity.ok("User found, email sent");
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not found");
         }
+    }
+
+    @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
+    public String resetPassword(@RequestParam("token") String token, @RequestParam("password") String newPassword) {
+        // Check if the token is valid
+//        User user = userService.findByResetToken(token);
+//        if (user == null || user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+//            // Token is invalid or expired, handle accordingly
+//        }
+//
+//        // Update the user's password
+//        userService.updatePassword(user, newPassword);
+//
+//        // Send a confirmation email
+//        emailService.sendPasswordResetEmail(user.getEmail(), token);
+//
+//        // Invalidate the token
+//        user.setResetToken(null);
+//        user.setResetTokenExpiry(null);
+//        userService.save(user);
+//
+//        // Redirect to a login page or a success page
+        return "redirect:/login";
     }
 }

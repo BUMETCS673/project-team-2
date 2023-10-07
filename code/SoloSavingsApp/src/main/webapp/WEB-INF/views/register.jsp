@@ -167,7 +167,7 @@
             if(!isValidationCheckPassed()) return;
 
             const formData = {
-                username: $('input[name="username"]').val(),
+                username: $('input[name="username"]').val().toLowerCase(),
                 password_hash: $('input[name="password_hash"]').val(),
                 email: $('input[name="email"]').val()
             };
