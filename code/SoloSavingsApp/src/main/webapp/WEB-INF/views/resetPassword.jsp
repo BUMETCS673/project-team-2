@@ -121,41 +121,6 @@
 
     <input type="submit" value="Reset Password">
 </form>
-<%
-    if (request.getMethod().equals("POST")) {
-        // Retrieve the username or email submitted in the form
-        String username = request.getParameter("username");
-
-        // Check if the username or email is valid and exists in your database
-        // You should implement this logic according to your database schema
-
-        if (isValid(username)) {
-            // Generate a temporary reset token (you can use a library for this)
-            String resetToken = UUID.randomUUID().toString();
-
-            // Send an email with the reset link containing the resetToken
-            // You should implement this part using JavaMail or another email library
-
-            // For demonstration purposes, we'll print the resetToken here
-            %>
-                <p>A password reset link has been sent to your email.</p>
-                <p>Please check your inbox (and spam folder) for instructions.</p>
-                <p>Reset Token: <%= resetToken %></p>
-            <%
-            } else {
-                // Handle the case where the username or email is not valid
-            %>
-                <p>Invalid username. Please try again.</p>
-            <%
-        }
-    }
-%>
-<%!
-    private boolean isValid(String username) {
-        if (username == null) return false;
-        return false;
-    }
-%>
 </body>
 <footer>
     &copy; 2023 SoloSavings. All rights reserved.
@@ -200,8 +165,8 @@
                     window.location.replace("/solosavings/login");
                 },
                 error: function(error) {
-                    alert(error.responseText);
-                    console.error('Reset password failed:', error);
+                    alert('Something went wrong, please try again.');
+                    console.error('Something went wrong:', error);
                 }
             });
         });

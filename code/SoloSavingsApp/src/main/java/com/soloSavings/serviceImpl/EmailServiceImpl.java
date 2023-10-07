@@ -14,10 +14,12 @@ public class EmailServiceImpl implements EmailService {
 
     public void sendPasswordResetEmail(String toEmail, String resetToken) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom("notification.solosavings@gmail.com");
         mailMessage.setTo(toEmail);
-        mailMessage.setSubject("Password Reset Request");
+        mailMessage.setSubject("Reset Password with Solo-Savings");
         mailMessage.setText("To reset your password, click the link below:\n"
-                + "http://your-app-url/reset-password?token=" + resetToken);
+                + "http://localhost:8888/solosavings/reset-password?token=" + resetToken);
+        System.out.println("I AM HERE!!!");
 
         javaMailSender.send(mailMessage);
     }

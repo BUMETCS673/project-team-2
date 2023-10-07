@@ -78,15 +78,22 @@ public class UserAuthenticationController {
 
     @RequestMapping(value = "/forget-password", method = RequestMethod.POST)
     public ResponseEntity forgetPassword(@RequestBody Login loginData) {
-        logger.info("Request to send forget password link as the user: {}", loginData.username());
         try {
             UserDetails userDetails = userService.loadUserByUsername(loginData.username());
-            User userInfo = userService.getUserByName(userDetails.getUsername());
-            String resetToken = UUID.randomUUID().toString();
-            System.out.println("!!!!!!!!!!!!!!!!!!!!" + userInfo.getEmail() + resetToken);
+            try {
+                User userInfo = userService.getUserByName(userDetails.getUsername());
+                String resetToken = UUID.randomUUID().toString();
+                logger.info("Request to send forget password link as the user: {}", loginData.username());
+                emailService.sendPasswordResetEmail(userInfo.getEmail(), resetToken);
+                logger.info("!!!!!!!!!!!!!!!!!!!EMAIL SENT TO: ", userInfo.getEmail());
+            } catch (Exception e) {
+                e.printStackTrace();
+                e.getMessage();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Issue with sending email.");
+            }
             return ResponseEntity.ok("User found, email sent");
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not found");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not found.");
         }
     }
 
@@ -100,9 +107,6 @@ public class UserAuthenticationController {
 //
 //        // Update the user's password
 //        userService.updatePassword(user, newPassword);
-//
-//        // Send a confirmation email
-//        emailService.sendPasswordResetEmail(user.getEmail(), token);
 //
 //        // Invalidate the token
 //        user.setResetToken(null);

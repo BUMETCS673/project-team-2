@@ -132,13 +132,13 @@
                 data: JSON.stringify(formData),
                 success: function(response) {
                     console.log('User found, email sent:', response);
-                    alert("User found, please check your email.");
+                    alert("User found, email sent, please check your inbox (and spam folder) for instructions to reset password.");
                     window.location.replace("/solosavings/reset-password");
                 },
                 error: function(error) {
-                    alert('Something went wrong, user is not found, please try again.');
+                    alert('Something went wrong, please try again.');
                     $('#forgetForm')[0].reset();
-                    console.error('User is not found:', error);
+                    console.error('Something went wrong:', error);
                 }
             });
         });
