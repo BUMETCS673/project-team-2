@@ -25,6 +25,28 @@
             font-weight: bold;
         }
 
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 20%;
+        }
+
         footer {
             background-color: #333;
             color: white;
@@ -41,10 +63,51 @@
             padding: 0;
         }
 
+        /* Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
         nav ul li {
             display: inline;
             margin-right: 20px;
             color: white;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #005fbb;
+        }
+        .buttons {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-spend-btn, .add-save-btn{
+            margin: 10px;
+        }
+
+        #add-spend-form, #add-save-form {
+            text-align: center;
         }
 
         main {
@@ -53,6 +116,13 @@
             padding: 2rem;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group, .add-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center-align content horizontally within each form group */
+            margin-bottom: 20px; /* Add some vertical spacing between form groups */
         }
 
         h1, h2, h3, p {
@@ -92,6 +162,55 @@
             </tr>
             </thead>
         </table>
+    </div>
+    <div class="buttons">
+        <!-- Add Budget Goal -->
+        <button class="add-spend-btn">Add Budget Goal (Spend)</button>
+        <button class="add-save-btn">Add Budget Goal (Save)</button>
+    </div>
+
+    <!-- Add Budget Goal Spend Modal -->
+    <div id="add-spend-modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Your Budget Goal</h2>
+            <form id="add-spend-form">
+                <div class="form-group">
+                    <label for="spend-source">Source:</label>
+                    <input type="text" class="spend-source" id="spend-source">
+                </div>
+                <div class="form-group">
+                    <label for="spend-amount">Amount:</label>
+                    <input type="number" step="any" class="spend-amount" id="spend-amount">
+                </div>
+                <div class="form-group">
+                    <button class="submit-spend-btn" id="submit-spend-btn" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Budget Goal Save Modal -->
+    <div id="add-save-modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Your Budget Goal</h2>
+            <form id="add-save-form">
+                <div class="form-group">
+                    <label for="save-source">Source:</label>
+                    <input type="text" class="save-source" id="save-source">
+                </div>
+                <div class="form-group">
+                    <label for="save-amount">Amount:</label>
+                    <input type="number" step="any" class="save-amount" id="save-amount">
+                </div>
+                <div class="form-group">
+                    <button class="submit-save-btn" id="submit-save-btn" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 </main>
@@ -136,7 +255,7 @@
             { "mData": "budgetGoalType"},
             { "mData": "source" },
             { "mData": "targetAmount" },
-            { "mData": null },
+            { "mData": null, "defaultContent": "TODO" },
             {"mData": null, "defaultContent": "<button>Delete</button>"}
         ]
     })
@@ -163,6 +282,98 @@
                     deleteBudgetGoal(budgetgoal_id);
                 }
             }
+        });
+
+    });
+
+    var spendModal = document.getElementById("add-spend-modal");
+
+    $(".add-spend-btn").click(function() {
+        // Show the modal
+        spendModal.style.display = "block";
+    });
+
+    // When user clicks the close button for budget goal spend modal
+    var closespendModal = spendModal.getElementsByClassName("close")[0];
+    closespendModal.onclick = function() {
+        // Hide the spend modal
+        spendModal.style.display = "none";
+    };
+
+    var saveModal = document.getElementById("add-save-modal");
+
+    $(".add-save-btn").click(function() {
+        // Show the modal
+        saveModal.style.display = "block";
+    });
+
+    // When user clicks the close button for budget goal save modal
+    var closesaveModal = saveModal.getElementsByClassName("close")[0];
+    closesaveModal.onclick = function() {
+        // Hide the save modal
+        saveModal.style.display = "none";
+    };
+
+    $(document).ready(function() {
+
+        // Handle spend form submission
+        $("#add-spend-form").submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            const spendAmount = parseFloat(document.getElementById("spend-amount").value);
+            const spendSource = document.getElementById("spend-source").value;
+            const formData = {
+                id: null,
+                userId: null,
+                budgetGoalType: "SPEND",
+                source: spendSource,
+                targetAmount: spendAmount,
+                startDate: null
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/budgetgoal/add", // Replace with your actual server endpoint
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    console.log("Budget goal added successfully");
+                    $("#add-spend-modal").hide();
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error("Error budget goal", error);
+                }
+            });
+        });
+
+        // Handle save form submission
+        $("#add-save-form").submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+            const saveAmount = parseFloat(document.getElementById("save-amount").value);
+            const saveSource = document.getElementById("save-source").value;
+            const formData = {
+                id: null,
+                userId: null,
+                budgetGoalType: "SAVE",
+                source: saveSource,
+                targetAmount: saveAmount,
+                startDate: null
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/budgetgoal/add", // Replace with your actual server endpoint
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    console.log("Budget goal added successfully");
+                    $("#add-save-modal").hide();
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error("Error budget goal", error);
+                }
+            });
         });
 
     });
