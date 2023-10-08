@@ -33,4 +33,6 @@ public interface TransactionService {
 
 
     List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
+
+    Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType);
 }

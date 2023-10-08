@@ -7,8 +7,9 @@ import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.TransactionService;
-import com.soloSavings.utils.Constants;
 import com.soloSavings.utils.Validation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Map;
+
+import static com.soloSavings.utils.Constants.LIST_OF_MONTHS;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -29,17 +31,18 @@ import java.util.Map;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-	@Service
-	public class TransactionServiceImpl implements TransactionService {
-	    private final UserRepository userRepository;
-	    private final TransactionRepository transactionRepository;
+@Service
+public class TransactionServiceImpl implements TransactionService {
 
-	    @Autowired
-	    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
-	        this.userRepository = userRepository;
-	        this.transactionRepository = transactionRepository;
-	    }
+    private static final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
+    private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
 
+    @Autowired
+    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
+        this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
+    }
 
     @Override
 
@@ -96,8 +99,8 @@ import java.util.Map;
         return transactionRepository.findAllByUserId(userId);
     }
     
-@Override    
-public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException {
+    @Override
+    public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException {
 	    try (FileWriter writer = new FileWriter(filePath)) {
 	        // Write CSV header
 	        writer.append("Transaction ID,User ID,Source,Transaction Type,Amount,Transaction Date\n");
@@ -123,23 +126,39 @@ public void exportToCsv(List<Transaction> transactions, String filePath) throws 
     @Override
     public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
         try{
+            logger.info(">>>In Transaction Service: getting 12 months analytics");
+
+            // initialize fields
             List<Map<Object, Object>> list = new ArrayList<>();
             Map<Object,Object> map = null;
-            double income = 0.0;
+            double amount = 0.0;
+
             // populate data into 12 months buckets
             for(int i = 1; i <= 12; i++){
                 map = new HashMap<Object,Object>();
-                List<Transaction> transactions = transactionRepository.findByMonthAndType(i,year,transactionType,userId);
-                income = transactions.stream()
-                        .mapToDouble(Transaction::getAmount)
-                        .sum();
-                map.put("label", Constants.listOfMonth[i-1]);
-                map.put("y",income);
+
+                // calculate total amount of either income/expense for specific month
+                amount = calculateMonthlyAmount(i,year,userId,transactionType);
+
+                // adding label for each month
+                map.put("label", LIST_OF_MONTHS[i-1]);
+
+                // adding data point for each month
+                map.put("y",amount);
                 list.add(map);
             }
             return list;
         } catch (Exception e){
+            logger.error(String.format(">>>Error in Transaction Service : %s",e.getMessage()));
             throw new TransactionException("Internal Service Error, Please try again later!");
         }
+    }
+
+    @Override
+    public Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType){
+        List<Transaction> transactions = transactionRepository.findByMonthAndType(month,year,transType,userId);
+        return transactions.stream()
+                .mapToDouble(Transaction::getAmount)
+                .sum();
     }
 }

@@ -11,5 +11,5 @@ import java.util.List;
  * Team 2 - SoloSavings Application
  */
 public class Constants {
-    public static final String[] listOfMonth = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+    public static final String[] LIST_OF_MONTHS = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 }

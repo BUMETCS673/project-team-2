@@ -11,14 +11,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -180,6 +183,28 @@ public class TransactionServiceTest {
         Assertions.assertThrows(TransactionException.class, () -> {
             transactionService.getTransactionsByType(userId, transactionType);
         });
+    }
+
+    @Test
+    public void testGetMonthlyAnalyticsByYear() throws TransactionException {
+        TransactionService tranServiceSpy = Mockito.spy(TransactionService.class);
+        Integer year = 2023;
+        Double amountEachMonth = 100.00;
+
+        when(tranServiceSpy.calculateMonthlyAmount(any(Integer.class),any(Integer.class),any(Integer.class),any(TransactionType.class)))
+                .thenReturn(amountEachMonth);
+
+        List<Map<Object, Object>> list = transactionService.getMonthlyAnalyticsByYear(1,year,TransactionType.CREDIT);
+
+        // list will have 12 maps, each contains an entry of label and an entry of data point
+        assertEquals(12,list.size());
+
+        for(Map<Object, Object> map : list){
+            assertTrue(map.containsKey("label"));
+            assertTrue(map.containsKey("y"));
+            assertTrue(map.containsValue(amountEachMonth));
+
+        }
     }
 
 }
