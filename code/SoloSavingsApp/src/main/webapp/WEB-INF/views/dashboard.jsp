@@ -130,7 +130,7 @@
             justify-content: center;
             align-items: center;
         }
-        .add-income-btn, .add-expense-btn{
+         .add-expense-btn, #analytics-button{
             margin: 10px;
         }
         /* Modal Content/Box */
@@ -194,9 +194,13 @@
 
         <!-- Add Income Button -->
         <button class="add-expense-btn">Add Expense</button>
-                <button id="transaction-history-button">Transaction History</button>
-        
-        
+
+        <!-- Transaction History Button -->
+        <button id="transaction-history-button">Transaction History</button>
+
+        <!-- Show 12 mon Button -->
+        <button id="analytics-button">View Analytics</button>
+
     </div>
     <%--income button and modal--%>
 
@@ -444,6 +448,10 @@
                 // Handle the error, e.g., show an error message to the user.
             }
         });
+    });
+
+    $("#analytics-button").click(function() {
+        window.location.replace("analytics");
     });
 </script>
 </html>
