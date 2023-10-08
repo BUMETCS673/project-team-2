@@ -170,7 +170,7 @@
    function deleteBudgetGoal(budgetgoal_id){
         return $.ajax({
             type: 'DELETE',
-            url: '/api/budgetGoal/delete/' + budgetgoal_id,
+            url: '/api/budgetgoal/delete/' + budgetgoal_id,
             contentType: 'application/json',
             success: function(response) {
                 //console.log(response);

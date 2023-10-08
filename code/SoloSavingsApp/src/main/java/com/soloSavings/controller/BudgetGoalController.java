@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/budgetgoal")
 public class BudgetGoalController {
@@ -45,6 +46,17 @@ public class BudgetGoalController {
         } catch (BudgetGoalException e) {
             securityContext.dispose();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @DeleteMapping("delete/{budgetgoal_id}")
+    public ResponseEntity<String> deleteBudgetGoal(@PathVariable("budgetgoal_id") Integer budgetgoal_id){
+        securityContext.setContext(SecurityContextHolder.getContext());
+        try {
+            budgetGoalServiceImpl.deleteBudgetGoal(budgetgoal_id);
+            return new ResponseEntity<>("Budget goal deleted." , HttpStatus.OK);
+        } catch (BudgetGoalException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 }

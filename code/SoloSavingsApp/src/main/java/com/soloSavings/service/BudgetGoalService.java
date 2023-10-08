@@ -11,4 +11,6 @@ import java.util.List;
 public interface BudgetGoalService {
     List<BudgetGoal> findAllByUserIdCurrentMonth(Integer userId) throws BudgetGoalException;
     void addBudgetGoal(Integer userId, BudgetGoal budgetGoal) throws BudgetGoalException;
+
+    void deleteBudgetGoal(Integer id) throws BudgetGoalException;
 }

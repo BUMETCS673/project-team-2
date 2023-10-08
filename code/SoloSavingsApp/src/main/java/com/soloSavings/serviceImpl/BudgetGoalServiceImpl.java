@@ -20,7 +20,7 @@ public class BudgetGoalServiceImpl implements BudgetGoalService {
     }
 
     @Override
-    public List<BudgetGoal> findAllByUserIdCurrentMonth(Integer userId) throws BudgetGoalException {
+    public List<BudgetGoal> findAllByUserIdCurrentMonth(Integer userId) {
         return budgetGoalRepository.findAllByUserIdCurrentMonth(userId);
     }
 
@@ -34,4 +34,12 @@ public class BudgetGoalServiceImpl implements BudgetGoalService {
             throw new BudgetGoalException("Invalid budget goal target amount. Please input correct transaction amount!");
         }
     }
+
+    @Override
+    public void deleteBudgetGoal(Integer id) throws BudgetGoalException {
+        BudgetGoal budgetGoal = budgetGoalRepository.findById(id).orElseThrow(() -> new BudgetGoalException("Budget goal not found!"));
+        budgetGoalRepository.deleteById(id);
+    }
+
+
 }
