@@ -17,23 +17,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.plugins.MockMaker;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,12 +35,6 @@ public class TransactionControllerTest {
     TransactionController transController;
     @Mock
     TransactionService transService;
-    
-
-    @Mock
-    private TransactionServiceImpl transactionServiceImpl;
-
-
     @Mock
     SecurityContext securityContext;
     User user;
@@ -205,11 +185,11 @@ public class TransactionControllerTest {
         // ... Set other properties as needed
 
         // Mock the behavior of transactionServiceImpl
-        when(transactionServiceImpl.getTransactionsForUser(userId))
+        when(transService.getTransactionsForUser(userId))
             .thenReturn(List.of(sampleTransaction));
 
         // Call the method you want to test
-        List<Transaction> result = transactionServiceImpl.getTransactionsForUser(userId);
+        List<Transaction> result = transService.getTransactionsForUser(userId);
 
         // Assertions
         assertTrue(!result.isEmpty()); // Check if the result is present (not empty)
