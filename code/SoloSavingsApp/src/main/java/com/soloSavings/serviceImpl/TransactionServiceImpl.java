@@ -16,12 +16,13 @@ import org.springframework.stereotype.Service;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.soloSavings.utils.Constants.LIST_OF_MONTHS;
+import static com.soloSavings.utils.Constants.*;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -45,7 +46,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-
     public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException {
         if(transaction_type.equalsIgnoreCase("CREDIT")){
             return transactionRepository.findByTransactionType(user_id, TransactionType.CREDIT);
@@ -56,21 +56,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Double getThisMonthExpense(Integer userId) {
-        List<Transaction> transactions = transactionRepository.findByCurrentMonth(TransactionType.DEBIT);
-        return transactions.stream()
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+    public Double getThisMonthTotalAmount(Integer userId, TransactionType transactionType) throws TransactionException {
+        int thisMonth = YearMonth.now().getMonth().getValue();
+        int thisYear = YearMonth.now().getYear();
+        return calculateMonthlyAmount(thisMonth,thisYear,userId,transactionType);
     }
-
-    @Override
-    public Double getThisMonthIncome(Integer userId) {
-        List<Transaction> transactions = transactionRepository.findByCurrentMonth(TransactionType.CREDIT);
-        return transactions.stream()
-                .mapToDouble(Transaction::getAmount)
-                .sum();
-    }
-
     @Override
     public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
         User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
@@ -84,7 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
             user = userRepository.save(user);
             return user.getBalance_amount();
         } else {
-            throw new TransactionException("Invalid transaction amount, Please input correct transaction amount!");
+            throw new TransactionException(INVALID_TRANSACTION_AMOUNT);
         }
     }
     private Double getNewUserBalance(User user, Transaction transaction){
@@ -125,7 +115,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
-        try{
             logger.info(">>>In Transaction Service: getting 12 months analytics");
 
             // initialize fields
@@ -148,17 +137,21 @@ public class TransactionServiceImpl implements TransactionService {
                 list.add(map);
             }
             return list;
-        } catch (Exception e){
-            logger.error(String.format(">>>Error in Transaction Service : %s",e.getMessage()));
-            throw new TransactionException("Internal Service Error, Please try again later!");
-        }
     }
 
     @Override
-    public Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType){
-        List<Transaction> transactions = transactionRepository.findByMonthAndType(month,year,transType,userId);
-        return transactions.stream()
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+    public Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType) throws TransactionException {
+        try {
+            logger.info(">>>In TransactionService, calculating monthly amount");
+            List<Transaction> transactions = transactionRepository.findByMonthAndType(month,year,transType,userId);
+            return transactions.stream()
+                    .mapToDouble(Transaction::getAmount)
+                    .sum();
+        } catch(Exception e){
+            logger.error(String.format(">>>Error in TransactionService, calculateMonthlyAmount : %s",e.getMessage()));
+            throw new TransactionException(INTERNAL_SERVER_ERROR);
+        }
+
     }
+
 }

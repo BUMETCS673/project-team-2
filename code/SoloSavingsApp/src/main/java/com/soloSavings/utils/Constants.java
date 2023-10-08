@@ -12,4 +12,8 @@ import java.util.List;
  */
 public class Constants {
     public static final String[] LIST_OF_MONTHS = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+
+    public static final String INTERNAL_SERVER_ERROR = "Internal Server Error, Please try again later!";
+
+    public static final String INVALID_TRANSACTION_AMOUNT = "Invalid transaction amount, Please input correct transaction amount!";
 }

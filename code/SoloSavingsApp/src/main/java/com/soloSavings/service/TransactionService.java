@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Map;
 
 /*
@@ -25,14 +24,12 @@ public interface TransactionService {
 
     Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException;
 
-    Double getThisMonthExpense(Integer userId) throws TransactionException;
-
-    Double getThisMonthIncome(Integer userId) throws TransactionException;
-    public List<Transaction> getTransactionsForUser(Integer userId) ;
-    public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException ;
-
+    List<Transaction> getTransactionsForUser(Integer userId) ;
+    void exportToCsv(List<Transaction> transactions, String filePath) throws IOException ;
 
     List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
 
-    Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType);
+    Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType) throws TransactionException;
+
+    Double getThisMonthTotalAmount(Integer userId, TransactionType transactionType) throws TransactionException;
 }

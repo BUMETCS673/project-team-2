@@ -281,7 +281,7 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/api/transaction/monthly/income',
+        url: '/api/transaction/thismonth/CREDIT',
         contentType: 'application/json',
         success: function(response) {
             thisMonthIncome = response;
@@ -293,7 +293,7 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/api/transaction/monthly/expense',
+        url: '/api/transaction/thismonth/DEBIT',
         contentType: 'application/json',
         success: function(response) {
             thisMonthExpense = response;

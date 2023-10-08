@@ -22,9 +22,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query("SELECT t FROM Transaction t WHERE t.user_id = ?1 and t.transaction_type = ?2")
     List<Transaction> findByTransactionType(Integer user_id, TransactionType transaction_type);
 
-    @Query("SELECT e FROM Transaction e WHERE MONTH(e.transaction_date) = MONTH(CURRENT_DATE()) AND YEAR(e.transaction_date) = YEAR(CURRENT_DATE()) AND  e.transaction_type = ?1")
-    List<Transaction> findByCurrentMonth(TransactionType trans_type);
-
     @Query("SELECT e FROM Transaction e WHERE  e.user_id = ?1")
     List<Transaction> findAllByUserId(Integer userId);
 

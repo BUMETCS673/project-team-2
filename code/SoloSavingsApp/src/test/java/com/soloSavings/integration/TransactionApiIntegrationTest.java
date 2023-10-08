@@ -148,7 +148,7 @@ public class TransactionApiIntegrationTest {
 
     @Test
     public void testGetThisMonthExpense() throws TransactionException {
-        Double initThisMonthExpense = transactionService.getThisMonthExpense(commonUser.getUser_id());
+        Double initThisMonthExpense = transactionService.getThisMonthTotalAmount(commonUser.getUser_id(),TransactionType.DEBIT);
         Transaction tran1 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,150.0, LocalDate.now());
         Transaction tran2 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,150.0, null);
         transactionRepository.save(tran1);
@@ -156,7 +156,7 @@ public class TransactionApiIntegrationTest {
         Double expectedExpense = initThisMonthExpense + tran1.getAmount();
 
         HttpEntity<Transaction> request = new HttpEntity<>(headers);
-        ResponseEntity<Double> response = restTemplate.exchange("/api/transaction/monthly/expense", HttpMethod.GET,request,Double.class);
+        ResponseEntity<Double> response = restTemplate.exchange("/api/transaction/thismonth/DEBIT", HttpMethod.GET,request,Double.class);
 
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -165,7 +165,7 @@ public class TransactionApiIntegrationTest {
 
     @Test
     public void testGetThisMonthIncome() throws TransactionException {
-        Double initThisMonthIncome = transactionService.getThisMonthIncome(commonUser.getUser_id());
+        Double initThisMonthIncome = transactionService.getThisMonthTotalAmount(commonUser.getUser_id(),TransactionType.CREDIT);
         Transaction tran1 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,150.0, LocalDate.now());
         Transaction tran2 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,150.0, null);
         Transaction tran3 = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,100.0, LocalDate.now());
@@ -175,7 +175,7 @@ public class TransactionApiIntegrationTest {
         Double expectedIncome = initThisMonthIncome+tran1.getAmount()+tran3.getAmount();
 
         HttpEntity<Transaction> request = new HttpEntity<>(headers);
-        ResponseEntity<Double> response = restTemplate.exchange("/api/transaction/monthly/income", HttpMethod.GET,request,Double.class);
+        ResponseEntity<Double> response = restTemplate.exchange("/api/transaction/thismonth/CREDIT", HttpMethod.GET,request,Double.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedIncome);

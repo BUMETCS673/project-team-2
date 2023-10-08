@@ -86,31 +86,17 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("monthly/expense")
-    public ResponseEntity<?> getThisMonthExpense() {
+    @GetMapping("thismonth/{transactionType}")
+    public ResponseEntity<?> getThisMonthTotalAmount(@PathVariable TransactionType transactionType) {
         securityContext.setContext(SecurityContextHolder.getContext());
         try {
-            Double thisMonthExpense = transactionServiceImpl.getThisMonthExpense(securityContext.getCurrentUser().getUser_id());
-            securityContext.dispose();
-            return new ResponseEntity<>(thisMonthExpense, HttpStatus.OK);
-        } catch (TransactionException e) {
-            securityContext.dispose();
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @GetMapping("monthly/income")
-    public ResponseEntity<?> getThisMonthIncome() {
-        securityContext.setContext(SecurityContextHolder.getContext());
-        try {
-            Double thisMonthIncome = transactionServiceImpl.getThisMonthIncome(securityContext.getCurrentUser().getUser_id());
+            Double thisMonthIncome = transactionServiceImpl.getThisMonthTotalAmount(securityContext.getCurrentUser().getUser_id(),transactionType);
             securityContext.dispose();
             return new ResponseEntity<>(thisMonthIncome, HttpStatus.OK);
         } catch (TransactionException e) {
             securityContext.dispose();
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
     }
     
     @GetMapping("export/csv")
@@ -143,8 +129,6 @@ public class TransactionController {
         }
     }
 
-  
- 
     @GetMapping("analytics/monthly/{type}/{year}")
     public ResponseEntity<?> getMonthlyAnalyticsByYear(
             @PathVariable("type") TransactionType transactionType,

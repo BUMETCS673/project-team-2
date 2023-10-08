@@ -23,6 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -112,7 +113,7 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void testGetThisMonthExpense(){
+    public void testGetThisMonthExpense() throws TransactionException {
         //Given
         List<Transaction> transactions = new ArrayList<>();
         Transaction trans1 = new Transaction(null,null,null, null,100.00,null);
@@ -122,15 +123,15 @@ public class TransactionServiceTest {
         Double expectedAmount = trans1.getAmount()+trans2.getAmount();
 
         //When
-        when(transactionRepository.findByCurrentMonth(any(TransactionType.class))).thenReturn(transactions);
-        Double actualAmount = transactionService.getThisMonthExpense(1);
+        when(transactionRepository.findByMonthAndType(anyInt(),anyInt(),any(TransactionType.class),anyInt())).thenReturn(transactions);
+        Double actualAmount = transactionService.getThisMonthTotalAmount(1,TransactionType.CREDIT);
 
         //Then
         assertEquals(expectedAmount,actualAmount);
     }
 
     @Test
-    public void testGetThisMonthIncome(){
+    public void testGetThisMonthIncome() throws TransactionException {
         //Given
         List<Transaction> transactions = new ArrayList<>();
         Transaction trans1 = new Transaction(null,null,null, null,100.00,null);
@@ -140,8 +141,8 @@ public class TransactionServiceTest {
         Double expectedAmount = trans1.getAmount()+trans2.getAmount();
 
         //When
-        when(transactionRepository.findByCurrentMonth(any(TransactionType.class))).thenReturn(transactions);
-        Double actualAmount = transactionService.getThisMonthIncome(1);
+        when(transactionRepository.findByMonthAndType(anyInt(),anyInt(),any(TransactionType.class),anyInt())).thenReturn(transactions);
+        Double actualAmount = transactionService.getThisMonthTotalAmount(1,TransactionType.CREDIT);
 
         //Then
         assertEquals(expectedAmount,actualAmount);
