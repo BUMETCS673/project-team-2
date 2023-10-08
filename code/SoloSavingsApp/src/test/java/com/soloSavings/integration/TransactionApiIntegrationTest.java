@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
@@ -52,7 +53,6 @@ public class TransactionApiIntegrationTest {
     @BeforeEach
     public void setup(){
         commonUser = userRepository.findByUsername(commonUser.getUsername());
-        commonUser.setBalance_amount(1000.00);
         userRepository.save(commonUser);
     }
 
@@ -81,10 +81,14 @@ public class TransactionApiIntegrationTest {
 
     @Test
     public void testAddExpenseTransaction() {
-        Transaction transaction = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,100.0, LocalDate.now());
-        Double expectedExpense = commonUser.getBalance_amount() - 100.0;
+        Transaction transactionForIncome = new Transaction(null,commonUser.getUser_id(),"", TransactionType.CREDIT,1000.0, LocalDate.now());
+        Transaction transactionForExp = new Transaction(null,commonUser.getUser_id(),"", TransactionType.DEBIT,100.0, LocalDate.now());
+        Double expectedExpense = commonUser.getBalance_amount() + transactionForIncome.getAmount() - transactionForExp.getAmount();
 
-        HttpEntity<Transaction> request = new HttpEntity<>(transaction, headers);
+        HttpEntity<Transaction> requestAddIncome = new HttpEntity<>(transactionForIncome, headers);
+        restTemplate.postForEntity("/api/transaction/add", requestAddIncome, String.class, commonUser.getUser_id());
+
+        HttpEntity<Transaction> request = new HttpEntity<>(transactionForExp, headers);
         ResponseEntity<Double> response = restTemplate.postForEntity("/api/transaction/add", request, Double.class, commonUser.getUser_id());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -179,5 +183,14 @@ public class TransactionApiIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedIncome);
+    }
+
+    @Test
+    public void testGetMonthlyAnalyticsByYear() {
+        HttpEntity<Transaction> request = new HttpEntity<>(headers);
+        ResponseEntity<List> response = restTemplate.exchange("/api/transaction/analytics/monthly/CREDIT/2023", HttpMethod.GET,request,List.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertEquals(12,response.getBody().size());
     }
 }
