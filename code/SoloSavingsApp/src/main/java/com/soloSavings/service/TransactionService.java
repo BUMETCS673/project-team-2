@@ -28,7 +28,6 @@ public interface TransactionService {
 
     Double getThisMonthIncome(Integer userId) throws TransactionException;
     public Optional<Transaction> getTransactionsForUser(Integer userId) ;
-    
-
+    Double getBudgetGoalActualAmount(Integer userId, TransactionType transactionType, String source) throws TransactionException;
     List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
 }
