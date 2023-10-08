@@ -50,4 +50,9 @@ public class HomeController {
     public String analytics() {
         return "analytics";
     }
+
+    @GetMapping("/solosavings/budgetGoals")
+    public String budgetGoals() {
+        return "BudgetGoals";
+    }
 }
