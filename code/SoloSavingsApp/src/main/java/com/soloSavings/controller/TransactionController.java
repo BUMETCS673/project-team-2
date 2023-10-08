@@ -16,21 +16,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -52,7 +46,7 @@ public class TransactionController {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     @Autowired
-    TransactionService transactionServiceImpl;
+    TransactionService transactionService;
     
   
 
@@ -63,7 +57,7 @@ public class TransactionController {
     public ResponseEntity<?> addTransaction (@RequestBody Transaction transaction){
         securityContext.setContext(SecurityContextHolder.getContext());
         try{
-            Double newBalance = transactionServiceImpl.addTransaction(securityContext.getCurrentUser().getUser_id(), transaction);
+            Double newBalance = transactionService.addTransaction(securityContext.getCurrentUser().getUser_id(), transaction);
             securityContext.dispose();
             return new ResponseEntity<>(newBalance, HttpStatus.OK);
        }
@@ -77,7 +71,7 @@ public class TransactionController {
     public ResponseEntity<?> getTransactionsByType(@PathVariable("transaction_type") String transaction_type) {
         securityContext.setContext(SecurityContextHolder.getContext());
         try {
-            List<Transaction> transactionsList = transactionServiceImpl.getTransactionsByType(securityContext.getCurrentUser().getUser_id(), transaction_type);
+            List<Transaction> transactionsList = transactionService.getTransactionsByType(securityContext.getCurrentUser().getUser_id(), transaction_type);
             securityContext.dispose();
             return new ResponseEntity<>(transactionsList, HttpStatus.OK);
         } catch (TransactionException e) {
@@ -90,7 +84,7 @@ public class TransactionController {
     public ResponseEntity<?> getThisMonthTotalAmount(@PathVariable TransactionType transactionType) {
         securityContext.setContext(SecurityContextHolder.getContext());
         try {
-            Double thisMonthIncome = transactionServiceImpl.getThisMonthTotalAmount(securityContext.getCurrentUser().getUser_id(),transactionType);
+            Double thisMonthIncome = transactionService.getThisMonthTotalAmount(securityContext.getCurrentUser().getUser_id(),transactionType);
             securityContext.dispose();
             return new ResponseEntity<>(thisMonthIncome, HttpStatus.OK);
         } catch (TransactionException e) {
@@ -104,9 +98,9 @@ public class TransactionController {
         securityContext.setContext(SecurityContextHolder.getContext());
         System.out.println("Enter to getTexportTransactionsToCsv");
         try {
-            List<Transaction> transactions = transactionServiceImpl.getTransactionsForUser(securityContext.getCurrentUser().getUser_id());
+            List<Transaction> transactions = transactionService.getTransactionsForUser(securityContext.getCurrentUser().getUser_id());
             String csvFilePath = "transaction_history.csv";
-            transactionServiceImpl.exportToCsv(transactions, csvFilePath);
+            transactionService.exportToCsv(transactions, csvFilePath);
 
             // Read the content of the CSV file
             byte[] csvFileContent = Files.readAllBytes(Paths.get(csvFilePath));
@@ -135,7 +129,7 @@ public class TransactionController {
             @PathVariable("year") Integer year) {
         securityContext.setContext(SecurityContextHolder.getContext());
         try {
-            List<Map<Object, Object>> incomes = transactionServiceImpl
+            List<Map<Object, Object>> incomes = transactionService
                     .getMonthlyAnalyticsByYear(securityContext.getCurrentUser().getUser_id(),
                             year,
                             transactionType);

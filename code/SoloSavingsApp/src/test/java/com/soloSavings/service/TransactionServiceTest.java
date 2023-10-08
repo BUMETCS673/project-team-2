@@ -20,11 +20,11 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.soloSavings.utils.Constants.INTERNAL_SERVER_ERROR;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class TransactionServiceTest {
@@ -188,24 +188,34 @@ public class TransactionServiceTest {
 
     @Test
     public void testGetMonthlyAnalyticsByYear() throws TransactionException {
-        TransactionService tranServiceSpy = Mockito.spy(TransactionService.class);
-        Integer year = 2023;
         Double amountEachMonth = 100.00;
+        Transaction tran = new Transaction(null,null,null,null,amountEachMonth,null);
+        List<Transaction> trans = new ArrayList<>();
+        trans.add(tran);
 
-        when(tranServiceSpy.calculateMonthlyAmount(any(Integer.class),any(Integer.class),any(Integer.class),any(TransactionType.class)))
-                .thenReturn(amountEachMonth);
-
-        List<Map<Object, Object>> list = transactionService.getMonthlyAnalyticsByYear(1,year,TransactionType.CREDIT);
+        when(transactionRepository.findByMonthAndType(anyInt(),anyInt(),any(TransactionType.class),anyInt()))
+                .thenReturn(trans);
+        List<Map<Object, Object>> list = transactionService.getMonthlyAnalyticsByYear(1,2023,TransactionType.CREDIT);
 
         // list will have 12 maps, each contains an entry of label and an entry of data point
         assertEquals(12,list.size());
-
+        verify(transactionRepository,times(12)).findByMonthAndType(anyInt(),anyInt(),any(TransactionType.class),anyInt());
         for(Map<Object, Object> map : list){
             assertTrue(map.containsKey("label"));
             assertTrue(map.containsKey("y"));
-            assertTrue(map.containsValue(amountEachMonth));
+            assertEquals(amountEachMonth,map.get("y"));
 
         }
+    }
+
+    @Test
+    public void testCalculateMonthlyAmountError() {
+        when(transactionRepository.findByMonthAndType(anyInt(),anyInt(),any(TransactionType.class),anyInt()))
+                .thenThrow(new RuntimeException (""));
+
+        assertThrows(TransactionException .class, () -> {
+            transactionService.calculateMonthlyAmount(1,2023,1,TransactionType.CREDIT);
+        });
     }
 
 }
