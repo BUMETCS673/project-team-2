@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.soloSavings.utils.Constants.INVALID_USERNAME_OR_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -88,6 +90,6 @@ public class UserAuthenticationControllerTest {
         ResponseEntity<?> response = userAuthController.loginUser(loginData);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Invalid email or password", response.getBody());
+        assertEquals(INVALID_USERNAME_OR_PASSWORD, response.getBody());
     }
 }

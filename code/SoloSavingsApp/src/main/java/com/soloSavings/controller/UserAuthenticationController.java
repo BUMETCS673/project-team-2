@@ -18,6 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import static com.soloSavings.utils.Constants.INVALID_USERNAME_OR_PASSWORD;
+
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
  * Boston University MET CS 673 - Software Engineering
@@ -60,7 +62,7 @@ public class UserAuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.username(), loginData.password()));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(INVALID_USERNAME_OR_PASSWORD);
         }
 
         UserDetails userDetails = userService.loadUserByUsername(loginData.username());

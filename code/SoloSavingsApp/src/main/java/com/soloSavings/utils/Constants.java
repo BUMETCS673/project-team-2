@@ -16,4 +16,6 @@ public class Constants {
     public static final String INTERNAL_SERVER_ERROR = "Internal Server Error, Please try again later!";
 
     public static final String INVALID_TRANSACTION_AMOUNT = "Invalid transaction amount, Please input correct transaction amount!";
+
+    public static final String INVALID_USERNAME_OR_PASSWORD = "Invalid username or password, Please try again!";
 }
