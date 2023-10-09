@@ -22,24 +22,13 @@ import java.util.Map;
 @Service
 public interface TransactionService {
     List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException ;
-
     List<Transaction> getTransactionsByUser(Integer user_id) throws TransactionException ;
-
     Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException;
-
+    List<Transaction> getTransactionsForUser(Integer userId) ;
+    void exportToCsv(List<Transaction> transactions, String filePath) throws IOException ;
     Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException;
-
-    Double getThisMonthExpense(Integer userId) throws TransactionException;
-
-    Double getThisMonthIncome(Integer userId) throws TransactionException;
-
-
     Double getBudgetGoalActualAmount(Integer userId, TransactionType transactionType, String source) throws TransactionException;
-
-    public List<Transaction> getTransactionsForUser(Integer userId) ;
-    public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException ;
-
-
-
     List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
+    Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType) throws TransactionException;
+    Double getThisMonthTotalAmount(Integer userId, TransactionType transactionType) throws TransactionException;
 }

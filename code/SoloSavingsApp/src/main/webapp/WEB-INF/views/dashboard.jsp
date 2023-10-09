@@ -130,7 +130,7 @@
             justify-content: center;
             align-items: center;
         }
-        .add-income-btn, .add-expense-btn, .budget-goals-btn{
+         .add-expense-btn,.budget-goals-btn, #analytics-button{
             margin: 10px;
         }
         /* Modal Content/Box */
@@ -198,13 +198,13 @@
         <!-- View Transaction History -->
         <button class="view-transactions-btn">View Transactions</button>
 
-
-
         <!-- Budget Goals Button -->
         <button class="budget-goals-btn">View Budget Goals</button>
 
-        <button id="transaction-history-button">Transaction History</button>
+        <button id="transaction-history-button">Download Transaction</button>
 
+        <!-- Show 12 mon Button -->
+        <button id="analytics-button">View Analytics</button>
 
 
     </div>
@@ -291,7 +291,7 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/api/transaction/monthly/income',
+        url: '/api/transaction/thismonth/CREDIT',
         contentType: 'application/json',
         success: function(response) {
             thisMonthIncome = response;
@@ -303,7 +303,7 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/api/transaction/monthly/expense',
+        url: '/api/transaction/thismonth/DEBIT',
         contentType: 'application/json',
         success: function(response) {
             thisMonthExpense = response;
@@ -347,7 +347,9 @@
         console.log("view budget goals page...");
         window.location.replace("/solosavings/budgetGoals");
     });
-
+    $("#analytics-button").click(function() {
+        window.location.replace("analytics");
+    });
     // When user clicks the close button for income modal
     var closeIncomeModal = incomeModal.getElementsByClassName("close")[0];
     closeIncomeModal.onclick = function() {
@@ -439,7 +441,6 @@
         });
 
     });
-
     $("#transaction-history-button").click(function() {
         console.log("Button clicked"); // Add this line for debugging
         $.ajax({

@@ -6,37 +6,22 @@ import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
-import com.soloSavings.serviceImpl.TransactionServiceImpl;
-
-import jakarta.annotation.Resource;
-
-
+import static com.soloSavings.utils.Constants.INTERNAL_SERVER_ERROR;
 import static org.mockito.ArgumentMatchers.any;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.plugins.MockMaker;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,12 +34,6 @@ public class TransactionControllerTest {
     TransactionController transController;
     @Mock
     TransactionService transService;
-    
-
-    @Mock
-    private TransactionServiceImpl transactionServiceImpl;
-
-
     @Mock
     SecurityContext securityContext;
     User user;
@@ -138,8 +117,8 @@ public class TransactionControllerTest {
         Double thisMonthIncome = 1000.0; // Set your expected this month's income here
 
         // Mock
-        when(transService.getThisMonthIncome(user.getUser_id())).thenReturn(thisMonthIncome);
-        ResponseEntity<?> response = transController.getThisMonthIncome();
+        when(transService.getThisMonthTotalAmount(anyInt(),any(TransactionType.class))).thenReturn(thisMonthIncome);
+        ResponseEntity<?> response = transController.getThisMonthTotalAmount(TransactionType.CREDIT);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -147,17 +126,15 @@ public class TransactionControllerTest {
     }
     @Test
     public void testGetThisMonthIncomeWithInvalidRequest() throws TransactionException {
-        String errorMessage = "Invalid request";
-
         // Mock
-        when(transService.getThisMonthIncome(user.getUser_id()))
-                .thenThrow(new TransactionException(errorMessage));
+        when(transService.getThisMonthTotalAmount(anyInt(),any(TransactionType.class)))
+                .thenThrow(new TransactionException(INTERNAL_SERVER_ERROR));
 
-        ResponseEntity<?> response = transController.getThisMonthIncome();
+        ResponseEntity<?> response = transController.getThisMonthTotalAmount(TransactionType.CREDIT);
 
         // Assert
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        assertEquals(errorMessage, response.getBody());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(INTERNAL_SERVER_ERROR, response.getBody());
     }
 
     @Test
@@ -166,8 +143,8 @@ public class TransactionControllerTest {
         Double thisMonthExpense = 500.0;
 
         // Mock
-        when(transService.getThisMonthExpense(user.getUser_id())).thenReturn(thisMonthExpense);
-        ResponseEntity<?> response = transController.getThisMonthExpense();
+        when(transService.getThisMonthTotalAmount(anyInt(),any(TransactionType.class))).thenReturn(thisMonthExpense);
+        ResponseEntity<?> response = transController.getThisMonthTotalAmount(TransactionType.DEBIT);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -175,17 +152,15 @@ public class TransactionControllerTest {
     }
     @Test
     public void testGetThisMonthExpenseWithInvalidRequest() throws TransactionException {
-        String errorMessage = "Invalid request";
-
         // Mock
-        when(transService.getThisMonthExpense(user.getUser_id()))
-                .thenThrow(new TransactionException(errorMessage));
+        when(transService.getThisMonthTotalAmount(anyInt(),any(TransactionType.class)))
+                .thenThrow(new TransactionException(INTERNAL_SERVER_ERROR));
 
-        ResponseEntity<?> response = transController.getThisMonthExpense();
+        ResponseEntity<?> response = transController.getThisMonthTotalAmount(TransactionType.DEBIT);
 
         // Assert
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        assertEquals(errorMessage, response.getBody());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(INTERNAL_SERVER_ERROR, response.getBody());
     }
     
     
@@ -205,11 +180,11 @@ public class TransactionControllerTest {
         // ... Set other properties as needed
 
         // Mock the behavior of transactionServiceImpl
-        when(transactionServiceImpl.getTransactionsForUser(userId))
+        when(transService.getTransactionsForUser(userId))
             .thenReturn(List.of(sampleTransaction));
 
         // Call the method you want to test
-        List<Transaction> result = transactionServiceImpl.getTransactionsForUser(userId);
+        List<Transaction> result = transService.getTransactionsForUser(userId);
 
         // Assertions
         assertTrue(!result.isEmpty()); // Check if the result is present (not empty)
@@ -217,6 +192,34 @@ public class TransactionControllerTest {
         assertEquals(userId, retrievedTransaction.getUser_id());
         assertEquals("stealing", retrievedTransaction.getSource());
         // ... Add more assertions for other properties as needed
+    }
+
+    @Test
+    public void testGetMonthlyAnalyticsByYearError() throws TransactionException {
+        // Mock
+        when(transService.getMonthlyAnalyticsByYear(anyInt(),anyInt(),any(TransactionType.class)))
+                .thenThrow(new TransactionException(INTERNAL_SERVER_ERROR));
+
+        ResponseEntity<?> response = transController.getMonthlyAnalyticsByYear(TransactionType.DEBIT,2023);
+
+        // Assert
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(INTERNAL_SERVER_ERROR, response.getBody());
+    }
+
+    @Test
+    public void testGetMonthlyAnalyticsByYear() throws TransactionException {
+        List<Map<Object, Object>> list = new ArrayList<>();
+
+        // Mock
+        when(transService.getMonthlyAnalyticsByYear(anyInt(),anyInt(),any(TransactionType.class)))
+                .thenReturn(list);
+
+        ResponseEntity<?> response = transController.getMonthlyAnalyticsByYear(TransactionType.DEBIT,2023);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(list, response.getBody());
     }
 }
 

@@ -9,13 +9,18 @@ import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.TransactionService;
 import com.soloSavings.utils.Constants;
 import com.soloSavings.utils.Validation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
+
+import static com.soloSavings.utils.Constants.*;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -25,20 +30,20 @@ import java.util.*;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-	@Service
-	public class TransactionServiceImpl implements TransactionService {
-	    private final UserRepository userRepository;
-	    private final TransactionRepository transactionRepository;
+@Service
+public class TransactionServiceImpl implements TransactionService {
 
-	    @Autowired
-	    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
-	        this.userRepository = userRepository;
-	        this.transactionRepository = transactionRepository;
-	    }
+    private static final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
+    private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
 
+    @Autowired
+    public TransactionServiceImpl(UserRepository userRepository, TransactionRepository transactionRepository) {
+        this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
+    }
 
     @Override
-
     public List<Transaction> getTransactionsByType(Integer user_id, String transaction_type) throws TransactionException {
         if(transaction_type.equalsIgnoreCase("CREDIT")){
             return transactionRepository.findByTransactionType(user_id, TransactionType.CREDIT);
@@ -49,19 +54,10 @@ import java.util.*;
     }
 
     @Override
-    public Double getThisMonthExpense(Integer userId) {
-        List<Transaction> transactions = transactionRepository.findByCurrentMonth(TransactionType.DEBIT);
-        return transactions.stream()
-                .mapToDouble(Transaction::getAmount)
-                .sum();
-    }
-
-    @Override
-    public Double getThisMonthIncome(Integer userId) {
-        List<Transaction> transactions = transactionRepository.findByCurrentMonth(TransactionType.CREDIT);
-        return transactions.stream()
-                .mapToDouble(Transaction::getAmount)
-                .sum();
+    public Double getThisMonthTotalAmount(Integer userId, TransactionType transactionType) throws TransactionException {
+        int thisMonth = YearMonth.now().getMonth().getValue();
+        int thisYear = YearMonth.now().getYear();
+        return calculateMonthlyAmount(thisMonth,thisYear,userId,transactionType);
     }
 
     @Override
@@ -77,7 +73,7 @@ import java.util.*;
             user = userRepository.save(user);
             return user.getBalance_amount();
         } else {
-            throw new TransactionException("Invalid transaction amount, Please input correct transaction amount!");
+            throw new TransactionException(INVALID_TRANSACTION_AMOUNT);
         }
     }
 
@@ -127,9 +123,9 @@ import java.util.*;
     public List<Transaction> getTransactionsForUser(Integer userId) {
         return transactionRepository.findAllByUserId(userId);
     }
-
-@Override
-public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException {
+    
+    @Override
+    public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException {
 	    try (FileWriter writer = new FileWriter(filePath)) {
 	        // Write CSV header
 	        writer.append("Transaction ID,User ID,Source,Transaction Type,Amount,Transaction Date\n");
@@ -159,24 +155,35 @@ public void exportToCsv(List<Transaction> transactions, String filePath) throws 
 
     @Override
     public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
-        try{
+            logger.info(">>>In Transaction Service: getting 12 months analytics");
+            // initialize fields
             List<Map<Object, Object>> list = new ArrayList<>();
             Map<Object,Object> map = null;
-            double income = 0.0;
+            double amount = 0.0;
+
             // populate data into 12 months buckets
             for(int i = 1; i <= 12; i++){
                 map = new HashMap<Object,Object>();
-                List<Transaction> transactions = transactionRepository.findByMonthAndType(i,year,transactionType,userId);
-                income = transactions.stream()
-                        .mapToDouble(Transaction::getAmount)
-                        .sum();
-                map.put("label", Constants.listOfMonth[i-1]);
-                map.put("y",income);
+                // calculate total amount of either income/expense for specific month
+                amount = calculateMonthlyAmount(i,year,userId,transactionType);
+                map.put("label", LIST_OF_MONTHS[i-1]);// adding label for each month
+                map.put("y",amount);// adding data point for each month
                 list.add(map);
             }
             return list;
-        } catch (Exception e){
-            throw new TransactionException("Internal Service Error, Please try again later!");
+    }
+
+    @Override
+    public Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType) throws TransactionException {
+        try {
+            logger.info(">>>In TransactionService, calculating monthly amount");
+            List<Transaction> transactions = transactionRepository.findByMonthAndType(month,year,transType,userId);
+            return transactions.stream()
+                    .mapToDouble(Transaction::getAmount)
+                    .sum();
+        } catch(Exception e){
+            logger.error(String.format(">>>Error in TransactionService, calculateMonthlyAmount : %s",e.getMessage()));
+            throw new TransactionException(INTERNAL_SERVER_ERROR);
         }
     }
 }
