@@ -1,14 +1,11 @@
 package com.soloSavings.controller;
 
-import com.soloSavings.config.JwtFilter;
 import com.soloSavings.config.JwtUtil;
-import com.soloSavings.config.SecurityConfig;
-import com.soloSavings.model.JwtResponse;
 import com.soloSavings.model.Login;
+import com.soloSavings.model.ResetPassword;
 import com.soloSavings.model.User;
-//import com.soloSavings.model.Token;
-//import com.soloSavings.service.TokenManagerService;
 import com.soloSavings.service.UserService;
+import com.soloSavings.serviceImpl.PasswordResetService;
 import jakarta.persistence.NonUniqueResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +16,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 /*
@@ -38,6 +34,8 @@ public class UserAuthenticationController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordResetService passwordResetService;
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -62,11 +60,46 @@ public class UserAuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.username(), loginData.password()));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
 
         UserDetails userDetails = userService.loadUserByUsername(loginData.username());
         String token = jwtUtil.generateToken(userDetails.getUsername());
         return ResponseEntity.ok(token);
+    }
+
+    @RequestMapping(value = "/forget-password", method = RequestMethod.POST)
+    public ResponseEntity forgetPassword(@RequestBody Login loginData) {
+        try {
+            UserDetails userDetails = userService.loadUserByUsername(loginData.username());
+            try {
+                User userInfo = userService.getUserByName(userDetails.getUsername());
+                logger.info("Request to send forget password link as the user: {}", loginData.username());
+                passwordResetService.initiatePasswordReset(userInfo.getUsername(), userInfo.getEmail());
+            } catch (Exception e) {
+                e.printStackTrace();
+                e.getMessage();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Issue with sending email.");
+            }
+            return ResponseEntity.ok("User found, email sent");
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong.");
+        }
+    }
+
+    @RequestMapping(value = "/reset-password", method = RequestMethod.POST)
+    public ResponseEntity resetPassword(@RequestBody ResetPassword resetPasswordData) {
+        try {
+            String userName = passwordResetService.retrieveUserName(resetPasswordData.token());
+            if (userName.equals(resetPasswordData.username())) {
+                userService.setUserNewPassword(userName, resetPasswordData.password());
+                passwordResetService.deleteTokenStorageRecord(userName);
+                return ResponseEntity.ok("Password reset successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Something went wrong.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong.");
+        }
     }
 }
