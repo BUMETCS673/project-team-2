@@ -12,6 +12,8 @@ import com.soloSavings.utils.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,8 +92,32 @@ import java.util.Map;
         }
     }
     
-    public Optional<Transaction> getTransactionsForUser(Integer userId) {
-        return transactionRepository.findById(userId);
+    public List<Transaction> getTransactionsForUser(Integer userId) {
+        return transactionRepository.findAllByUserId(userId);
+    }
+    
+@Override    
+public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException {
+	    try (FileWriter writer = new FileWriter(filePath)) {
+	        // Write CSV header
+	        writer.append("Transaction ID,User ID,Source,Transaction Type,Amount,Transaction Date\n");
+
+	        // Iterate through the list of transactions and write data for each transaction
+	        for (Transaction transaction : transactions) {
+	            try {
+	                writer.append(String.format("%d,%d,%s,%s,%.2f,%s\n",
+	                        transaction.getTransaction_id(),
+	                        transaction.getUser_id(),
+	                        transaction.getSource(),
+	                        transaction.getTransaction_type(),
+	                        transaction.getAmount(),
+	                        transaction.getTransaction_date()
+	                ));
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
     }
 
     @Override

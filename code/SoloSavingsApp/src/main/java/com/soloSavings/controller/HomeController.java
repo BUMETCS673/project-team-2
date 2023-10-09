@@ -40,7 +40,17 @@ public class HomeController {
         logger.info("Login to SoloSavings Application");
         return "login";
     }
-    
+
+    @GetMapping("/solosavings/forget-password")
+    public String forgetPassword() {
+        return "forgetPassword";
+    }
+
+    @GetMapping("/solosavings/reset-password")
+    public String resetPassword() {
+        return "resetPassword";
+    }
+
     @GetMapping("/solosavings/dashboard")
     public String dashboard() {
         return "dashboard";
