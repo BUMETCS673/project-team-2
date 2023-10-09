@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map;
 
 /*
@@ -32,4 +33,5 @@ public interface TransactionService {
     Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType) throws TransactionException;
 
     Double getThisMonthTotalAmount(Integer userId, TransactionType transactionType) throws TransactionException;
+    Double getBudgetGoalActualAmount(Integer userId, TransactionType transactionType, String source) throws TransactionException;
 }

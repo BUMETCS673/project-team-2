@@ -114,6 +114,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public Double getBudgetGoalActualAmount(Integer userId, TransactionType transactionType, String source) throws TransactionException {
+        return transactionRepository.getSumAmountByUserIdTypeSourceForCurrentMonth(userId,transactionType,source);
+    }
+
+    @Override
     public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
             logger.info(">>>In Transaction Service: getting 12 months analytics");
 
@@ -136,6 +141,7 @@ public class TransactionServiceImpl implements TransactionService {
                 map.put("y",amount);
                 list.add(map);
             }
+
             return list;
     }
 

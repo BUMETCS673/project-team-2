@@ -39,6 +39,17 @@ PRIMARY KEY(transaction_id),
 FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=INNODB;
 
+CREATE TABLE IF NOT EXISTS budgetgoals (
+id INT NOT NULL AUTO_INCREMENT,
+user_id INT NOT NULL,
+budget_goal_type ENUM('SAVE','SPEND') NOT NULL,
+source VARCHAR(255) NOT NULL,
+target_amount DECIMAL(18,2) NOT NULL,
+start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY(id),
+FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=INNODB;
+
 -- SELECT STATEMENTS
 -- SELECT * FROM `users`
 -- SELECT `user_id`, `username`, `email`, `password_hash`, `registration_date`, `balance_amount`, `last_updated` FROM `users`

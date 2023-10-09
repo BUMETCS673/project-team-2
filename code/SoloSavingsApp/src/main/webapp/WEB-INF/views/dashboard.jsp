@@ -195,11 +195,14 @@
         <!-- Add Income Button -->
         <button class="add-expense-btn">Add Expense</button>
 
-        <!-- Transaction History Button -->
+        <!-- Budget Goals Button -->
+        <button class="budget-goals-btn">View Budget Goals</button>
+
         <button id="transaction-history-button">Transaction History</button>
 
         <!-- Show 12 mon Button -->
         <button id="analytics-button">View Analytics</button>
+
 
     </div>
     <%--income button and modal--%>
@@ -333,7 +336,13 @@
         // Show the modal
         expenseModal.style.display = "block";
     });
-
+    $(".budget-goals-btn").click(function() {
+        console.log("view budget goals page...");
+        window.location.replace("/solosavings/budgetGoals");
+    });
+    $("#analytics-button").click(function() {
+        window.location.replace("analytics");
+    });
     // When user clicks the close button for income modal
     var closeIncomeModal = incomeModal.getElementsByClassName("close")[0];
     closeIncomeModal.onclick = function() {
@@ -448,10 +457,6 @@
                 // Handle the error, e.g., show an error message to the user.
             }
         });
-    });
-
-    $("#analytics-button").click(function() {
-        window.location.replace("analytics");
     });
 </script>
 </html>
