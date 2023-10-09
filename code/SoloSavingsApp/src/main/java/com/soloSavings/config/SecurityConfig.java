@@ -50,6 +50,8 @@ public class SecurityConfig {
                     auth.requestMatchers(new AntPathRequestMatcher("/**")).permitAll(); // Need to allow access to the landing page
                     auth.requestMatchers(new AntPathRequestMatcher("/api/login")).permitAll();
                     auth.requestMatchers(new AntPathRequestMatcher("/api/register")).permitAll();
+                    auth.requestMatchers(new AntPathRequestMatcher("/api/forget-password")).permitAll();
+                    auth.requestMatchers(new AntPathRequestMatcher("/api/reset-password")).permitAll();
                     auth.requestMatchers(new AntPathRequestMatcher("/solosavings/**")).permitAll(); //Any URL with pattern "/solosavings/**" do not need to be authenticated
                     auth.requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated();
                 })

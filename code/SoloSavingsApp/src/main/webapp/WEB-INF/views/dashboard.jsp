@@ -260,7 +260,7 @@
         const jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         if(jwtToken) {
             jwt = jwtToken;
-            console.log("Found JWT cookie: " + jwt);
+            console.log("Found JWT cookie");
 
         } else {
             console.log("Failed to find JWT cookie");

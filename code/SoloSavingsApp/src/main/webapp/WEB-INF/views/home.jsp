@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoloSavings - Home</title>
-    <link rel="stylesheet" href="your-css-file.css"> <!-- Replace 'your-css-file.css' with your actual CSS file path -->
     <style>
         body {
             font-family: Arial, sans-serif;
