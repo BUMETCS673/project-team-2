@@ -39,7 +39,7 @@
         }
 
         /* Modal Content/Box */
-        .modal-content {
+        .modal-contentBudgetGoal {
             background-color: #fefefe;
             margin: 15% auto;
             padding: 20px;
@@ -172,7 +172,7 @@
     <!-- Add Budget Goal Spend Modal -->
     <div id="add-spend-modal" class="modal">
         <!-- Modal content -->
-        <div class="modal-content">
+        <div class="modal-contentBudgetGoal">
             <span class="close">&times;</span>
             <h2>Add Your Budget Goal</h2>
             <form id="add-spend-form">
@@ -194,7 +194,7 @@
     <!-- Add Budget Goal Save Modal -->
     <div id="add-save-modal" class="modal">
         <!-- Modal content -->
-        <div class="modal-content">
+        <div class="modal-contentBudgetGoal">
             <span class="close">&times;</span>
             <h2>Add Your Budget Goal</h2>
             <form id="add-save-form">

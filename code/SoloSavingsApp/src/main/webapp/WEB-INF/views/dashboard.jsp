@@ -130,7 +130,7 @@
             justify-content: center;
             align-items: center;
         }
-        .add-income-btn, .add-expense-btn{
+        .add-income-btn, .add-expense-btn, .budget-goals-btn{
             margin: 10px;
         }
         /* Modal Content/Box */
