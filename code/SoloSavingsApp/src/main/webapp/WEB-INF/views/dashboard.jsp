@@ -194,9 +194,15 @@
 
         <!-- Add Income Button -->
         <button class="add-expense-btn">Add Expense</button>
-                <button id="transaction-history-button">Transaction History</button>
+
+
+        <!-- Budget Goals Button -->
+        <button class="budget-goals-btn">View Budget Goals</button>
+
+        <button id="transaction-history-button">Transaction History</button>
         
         
+
     </div>
     <%--income button and modal--%>
 
@@ -328,6 +334,10 @@
     $(".add-expense-btn").click(function() {
         // Show the modal
         expenseModal.style.display = "block";
+    });
+    $(".budget-goals-btn").click(function() {
+        console.log("view budget goals page...");
+        window.location.replace("/solosavings/budgetGoals");
     });
 
     // When user clicks the close button for income modal

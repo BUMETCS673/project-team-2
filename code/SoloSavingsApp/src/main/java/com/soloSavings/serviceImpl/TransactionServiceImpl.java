@@ -121,6 +121,11 @@ public void exportToCsv(List<Transaction> transactions, String filePath) throws 
     }
 
     @Override
+    public Double getBudgetGoalActualAmount(Integer userId, TransactionType transactionType, String source) throws TransactionException {
+        return transactionRepository.getSumAmountByUserIdTypeSourceForCurrentMonth(userId,transactionType,source);
+    }
+
+    @Override
     public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
         try{
             List<Map<Object, Object>> list = new ArrayList<>();

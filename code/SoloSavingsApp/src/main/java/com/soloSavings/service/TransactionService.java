@@ -28,8 +28,13 @@ public interface TransactionService {
     Double getThisMonthExpense(Integer userId) throws TransactionException;
 
     Double getThisMonthIncome(Integer userId) throws TransactionException;
+
+
+    Double getBudgetGoalActualAmount(Integer userId, TransactionType transactionType, String source) throws TransactionException;
+
     public List<Transaction> getTransactionsForUser(Integer userId) ;
     public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException ;
+
 
 
     List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
