@@ -8,22 +8,10 @@ package com.soloSavings.controller;
  * Team 2 - SoloSavings Application
  */
 import com.soloSavings.config.SecurityConfig;
-import com.soloSavings.exceptions.TransactionException;
-import com.soloSavings.model.Transaction;
-import com.soloSavings.service.SecurityContext;
-import com.soloSavings.service.TransactionService;
-import com.soloSavings.serviceImpl.CsvExportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 @Controller
 public class HomeController {
@@ -52,7 +40,17 @@ public class HomeController {
         logger.info("Login to SoloSavings Application");
         return "login";
     }
-    
+
+    @GetMapping("/solosavings/forget-password")
+    public String forgetPassword() {
+        return "forgetPassword";
+    }
+
+    @GetMapping("/solosavings/reset-password")
+    public String resetPassword() {
+        return "resetPassword";
+    }
+
     @GetMapping("/solosavings/dashboard")
     public String dashboard() {
         return "dashboard";
@@ -66,5 +64,10 @@ public class HomeController {
     @GetMapping("/solosavings/transactionHistory")
     public String transactionhistory() {
             return "transactionHistory";
+    }
+
+    @GetMapping("/solosavings/budgetGoals")
+    public String budgetGoals() {
+        return "BudgetGoals";
     }
 }

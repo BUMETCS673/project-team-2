@@ -6,18 +6,14 @@ import com.soloSavings.model.Transaction;
 import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.TransactionService;
-import com.soloSavings.serviceImpl.CsvExportService;
 
 
-import com.soloSavings.serviceImpl.TransactionServiceImpl;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -58,8 +54,7 @@ public class TransactionController {
     @Autowired
     TransactionService transactionServiceImpl;
     
-    @Autowired
-     CsvExportService csvExportService;
+
 
     @Autowired
     SecurityContext securityContext;
@@ -117,32 +112,35 @@ public class TransactionController {
         }
         
     }
-    @GetMapping("/export/csv")
-    public ResponseEntity<?> exportTransactionsToCsv() throws IOException {
+
+    @GetMapping("export/csv")
+    public ResponseEntity<?> getTexportTransactionsToCsv() {
         securityContext.setContext(SecurityContextHolder.getContext());
-        Integer user_id = securityContext.getCurrentUser().getUser_id();
-            Optional<Transaction> transactions = transactionServiceImpl.getTransactionsForUser(user_id);
-
-            // Generate CSV file
+        System.out.println("Enter to getTexportTransactionsToCsv");
+        try {
+            List<Transaction> transactions = transactionServiceImpl.getTransactionsForUser(securityContext.getCurrentUser().getUser_id());
             String csvFilePath = "transaction_history.csv";
-            csvExportService.exportToCsv(transactions, csvFilePath);
+            transactionServiceImpl.exportToCsv(transactions, csvFilePath);
 
-            // Read the content of the CSV file
-            byte[] csvFileContent = Files.readAllBytes(Paths.get(csvFilePath));
+        // Read the content of the CSV file
+        byte[] csvFileContent = Files.readAllBytes(Paths.get(csvFilePath));
 
-            // Create a Resource object for the CSV file
-            ByteArrayResource resource = new ByteArrayResource(csvFileContent);
+        // Create a Resource object for the CSV file
+        ByteArrayResource resource = new ByteArrayResource(csvFileContent);
 
             // Set content disposition to trigger a download
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transaction_history.csv");
-
+            System.out.println("CSV Exporte990");
             return ResponseEntity.ok()
                     .headers(headers)
                     .contentLength(csvFileContent.length)
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(resource);
-
+        } catch (Exception e) {
+            securityContext.dispose();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+        }
     }
 
  

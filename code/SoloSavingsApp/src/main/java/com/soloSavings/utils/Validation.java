@@ -10,4 +10,8 @@ public class Validation {
             return amount > 0 && amount < userBal;
         }
     }
+
+    public static boolean validateBudgetGoal(Double targetAmount){
+        return targetAmount > 0;
+    }
 }

@@ -1,6 +1,5 @@
 package com.soloSavings.service;
 
-import com.soloSavings.model.Transaction;
 import com.soloSavings.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -19,5 +18,5 @@ public interface UserService extends UserDetailsService {
     public String getPasswordHash(String email);
     public User getUserByName(String username);
     public User getUserByEmail(String email);
-
+    public void setUserNewPassword(String username, String newPassword);
 }

@@ -198,6 +198,15 @@
         <!-- View Transaction History -->
         <button class="view-transactions-btn">View Transactions</button>
 
+
+
+        <!-- Budget Goals Button -->
+        <button class="budget-goals-btn">View Budget Goals</button>
+
+        <button id="transaction-history-button">Transaction History</button>
+
+
+
     </div>
     <%--income button and modal--%>
 
@@ -255,14 +264,13 @@
     &copy; 2023 SoloSavings
 </footer>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     let jwt = "";
     function setAuthHeader() {
         const jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         if(jwtToken) {
             jwt = jwtToken;
-            console.log("Found JWT cookie: " + jwt);
+            console.log("Found JWT cookie");
 
         } else {
             console.log("Failed to find JWT cookie");
@@ -334,6 +342,10 @@
     $(".view-transactions-btn").click(function() {
         console.log("view transaction history page...");
         window.location.replace("/solosavings/transactionHistory");
+    });
+    $(".budget-goals-btn").click(function() {
+        console.log("view budget goals page...");
+        window.location.replace("/solosavings/budgetGoals");
     });
 
     // When user clicks the close button for income modal
@@ -426,6 +438,30 @@
             });
         });
 
+    });
+
+    $("#transaction-history-button").click(function() {
+        console.log("Button clicked"); // Add this line for debugging
+        $.ajax({
+            type: "GET",
+            url: "/api/transaction/export/csv", // Replace with the actual URL, e.g., "/solosavings/123/export/csv"
+            	success: function(response) {
+            	    console.log("Transaction history exported successfully");
+            	    // Create a hidden anchor element and set the href attribute to the response data
+            	    const anchor = document.createElement("a");
+            	    anchor.href = URL.createObjectURL(new Blob([response]));
+
+            	    // Set the download attribute to specify the filename
+            	    anchor.setAttribute("download", "transaction_history.csv");
+
+            	    // Trigger a click event on the anchor element to initiate the download
+            	    anchor.click();
+            	},
+            error: function(error) {
+                console.error("Error exporting transaction history", error);
+                // Handle the error, e.g., show an error message to the user.
+            }
+        });
     });
 </script>
 </html>

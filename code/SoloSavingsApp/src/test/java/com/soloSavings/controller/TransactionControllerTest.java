@@ -206,14 +206,14 @@ public class TransactionControllerTest {
 
         // Mock the behavior of transactionServiceImpl
         when(transactionServiceImpl.getTransactionsForUser(userId))
-            .thenReturn(Optional.of(sampleTransaction));
+            .thenReturn(List.of(sampleTransaction));
 
         // Call the method you want to test
-        Optional<Transaction> result = transactionServiceImpl.getTransactionsForUser(userId);
+        List<Transaction> result = transactionServiceImpl.getTransactionsForUser(userId);
 
         // Assertions
-        assertTrue(result.isPresent()); // Check if the result is present (not empty)
-        Transaction retrievedTransaction = result.get(); // Get the retrieved Transaction
+        assertTrue(!result.isEmpty()); // Check if the result is present (not empty)
+        Transaction retrievedTransaction = result.get(0); // Get the retrieved Transaction
         assertEquals(userId, retrievedTransaction.getUser_id());
         assertEquals("stealing", retrievedTransaction.getSource());
         // ... Add more assertions for other properties as needed

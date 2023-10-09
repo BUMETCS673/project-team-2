@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Service
-public class UserServiceImpl  implements UserService{
+public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
@@ -45,6 +45,15 @@ public class UserServiceImpl  implements UserService{
         return user;
     }
 
+
+    @Override
+    public void setUserNewPassword(String username, String newPassword) {
+        User user = userRepository.findByUsername(username);
+        if(null == user)
+            throw new UsernameNotFoundException("User could not be found with username " + username);
+        String hashedPassword = SecurityConfig.hashedPassword(newPassword);
+        userRepository.updatePasswordByUsername(hashedPassword, username);
+    }
 
     @Override
     public String getPasswordHash(String email) {
