@@ -28,5 +28,13 @@ public class Transaction {
     private TransactionType transaction_type;
     private Double amount;
     private LocalDate transaction_date;
+
+    public Boolean isDebit(){
+        return this.transaction_type.equals(TransactionType.DEBIT);
+    }
+    public Boolean isCredit(){
+        return this.transaction_type.equals(TransactionType.CREDIT);
+    }
+
 }
 

@@ -15,11 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Map;
+import java.util.*;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -84,8 +80,44 @@ import java.util.Map;
             throw new TransactionException("Invalid transaction amount, Please input correct transaction amount!");
         }
     }
-    private Double getNewUserBalance(User user, Transaction transaction){
-        if(transaction.getTransaction_type().equals(TransactionType.CREDIT)){
+
+    @Override
+
+    public List<Transaction> getTransactionsByUser(Integer user_id) throws TransactionException {
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
+        return transactionRepository.findByTransactionUser(user_id);
+
+    }
+
+    public Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException {
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
+        Transaction transaction = transactionRepository.findById(transaction_id).orElseThrow(() -> new TransactionException("Transaction not found!"));
+        if (!Objects.equals(transaction.getUser_id(), user_id)) {
+            throw new TransactionException("Invalid Transaction Request");
+        } else if (transaction.isDebit() || transaction.isCredit() && getUserBalanceAfterRemoval(user, transaction) >= 0) {
+            transactionRepository.deleteById(transaction_id);
+           // return updateUserBalance(user, transaction, "remove");
+            user.setBalance_amount(getUserBalanceAfterRemoval(user, transaction));
+            user.setLast_updated(LocalDate.now());
+            user = userRepository.save(user);
+            return user.getBalance_amount();
+        } else {
+            throw new TransactionException("Income transaction required to cover expense. Can not delete this transaction. Please review!");
+        }
+
+
+    }
+
+    private Double getUserBalanceAfterRemoval(User user, Transaction transaction) {
+        if (transaction.isCredit()) {
+            return user.getBalance_amount() - transaction.getAmount();
+        } else {
+            return user.getBalance_amount() + transaction.getAmount();
+        }
+    }
+
+    private Double getNewUserBalance(User user, Transaction transaction) {
+        if (transaction.isCredit()) {
             return user.getBalance_amount() + transaction.getAmount();
         } else {
             return user.getBalance_amount() - transaction.getAmount();
@@ -95,8 +127,8 @@ import java.util.Map;
     public List<Transaction> getTransactionsForUser(Integer userId) {
         return transactionRepository.findAllByUserId(userId);
     }
-    
-@Override    
+
+@Override
 public void exportToCsv(List<Transaction> transactions, String filePath) throws IOException {
 	    try (FileWriter writer = new FileWriter(filePath)) {
 	        // Write CSV header
