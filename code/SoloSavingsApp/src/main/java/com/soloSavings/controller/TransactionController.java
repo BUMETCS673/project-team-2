@@ -120,10 +120,7 @@ public class TransactionController {
     @GetMapping("/export/csv")
     public ResponseEntity<?> exportTransactionsToCsv() throws IOException {
         securityContext.setContext(SecurityContextHolder.getContext());
-
-            Integer user_id = securityContext.getCurrentUser().getUser_id();
-
-
+        Integer user_id = securityContext.getCurrentUser().getUser_id();
             Optional<Transaction> transactions = transactionServiceImpl.getTransactionsForUser(user_id);
 
             // Generate CSV file

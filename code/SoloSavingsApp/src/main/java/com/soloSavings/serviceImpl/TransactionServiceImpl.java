@@ -92,9 +92,13 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = transactionRepository.findById(transaction_id).orElseThrow(() -> new TransactionException("Transaction not found!"));
         if (!Objects.equals(transaction.getUser_id(), user_id)) {
             throw new TransactionException("Invalid Transaction Request");
-        } else if (transaction.isCredit() && getUserBalanceAfterRemoval(user, transaction) > 0) {
+        } else if (transaction.isDebit() || transaction.isCredit() && getUserBalanceAfterRemoval(user, transaction) >= 0) {
             transactionRepository.deleteById(transaction_id);
-            return updateUserBalance(user, transaction, "remove");
+           // return updateUserBalance(user, transaction, "remove");
+            user.setBalance_amount(getUserBalanceAfterRemoval(user, transaction));
+            user.setLast_updated(LocalDate.now());
+            user = userRepository.save(user);
+            return user.getBalance_amount();
         } else {
             throw new TransactionException("Income transaction required to cover expense. Can not delete this transaction. Please review!");
         }
