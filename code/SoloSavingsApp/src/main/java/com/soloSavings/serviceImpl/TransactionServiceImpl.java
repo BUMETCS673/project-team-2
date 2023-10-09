@@ -7,6 +7,7 @@ import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.TransactionService;
+import com.soloSavings.utils.Constants;
 import com.soloSavings.utils.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.soloSavings.utils.Constants.*;
 
@@ -61,6 +59,7 @@ public class TransactionServiceImpl implements TransactionService {
         int thisYear = YearMonth.now().getYear();
         return calculateMonthlyAmount(thisMonth,thisYear,userId,transactionType);
     }
+
     @Override
     public Double addTransaction(Integer user_id, Transaction transaction) throws TransactionException {
         User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
@@ -77,8 +76,44 @@ public class TransactionServiceImpl implements TransactionService {
             throw new TransactionException(INVALID_TRANSACTION_AMOUNT);
         }
     }
-    private Double getNewUserBalance(User user, Transaction transaction){
-        if(transaction.getTransaction_type().equals(TransactionType.CREDIT)){
+
+    @Override
+
+    public List<Transaction> getTransactionsByUser(Integer user_id) throws TransactionException {
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
+        return transactionRepository.findByTransactionUser(user_id);
+
+    }
+
+    public Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException {
+        User user = userRepository.findById(user_id).orElseThrow(() -> new TransactionException("User not found!"));
+        Transaction transaction = transactionRepository.findById(transaction_id).orElseThrow(() -> new TransactionException("Transaction not found!"));
+        if (!Objects.equals(transaction.getUser_id(), user_id)) {
+            throw new TransactionException("Invalid Transaction Request");
+        } else if (transaction.isDebit() || transaction.isCredit() && getUserBalanceAfterRemoval(user, transaction) >= 0) {
+            transactionRepository.deleteById(transaction_id);
+           // return updateUserBalance(user, transaction, "remove");
+            user.setBalance_amount(getUserBalanceAfterRemoval(user, transaction));
+            user.setLast_updated(LocalDate.now());
+            user = userRepository.save(user);
+            return user.getBalance_amount();
+        } else {
+            throw new TransactionException("Income transaction required to cover expense. Can not delete this transaction. Please review!");
+        }
+
+
+    }
+
+    private Double getUserBalanceAfterRemoval(User user, Transaction transaction) {
+        if (transaction.isCredit()) {
+            return user.getBalance_amount() - transaction.getAmount();
+        } else {
+            return user.getBalance_amount() + transaction.getAmount();
+        }
+    }
+
+    private Double getNewUserBalance(User user, Transaction transaction) {
+        if (transaction.isCredit()) {
             return user.getBalance_amount() + transaction.getAmount();
         } else {
             return user.getBalance_amount() - transaction.getAmount();
@@ -121,7 +156,6 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException {
             logger.info(">>>In Transaction Service: getting 12 months analytics");
-
             // initialize fields
             List<Map<Object, Object>> list = new ArrayList<>();
             Map<Object,Object> map = null;
@@ -130,18 +164,12 @@ public class TransactionServiceImpl implements TransactionService {
             // populate data into 12 months buckets
             for(int i = 1; i <= 12; i++){
                 map = new HashMap<Object,Object>();
-
                 // calculate total amount of either income/expense for specific month
                 amount = calculateMonthlyAmount(i,year,userId,transactionType);
-
-                // adding label for each month
-                map.put("label", LIST_OF_MONTHS[i-1]);
-
-                // adding data point for each month
-                map.put("y",amount);
+                map.put("label", LIST_OF_MONTHS[i-1]);// adding label for each month
+                map.put("y",amount);// adding data point for each month
                 list.add(map);
             }
-
             return list;
     }
 
@@ -157,7 +185,5 @@ public class TransactionServiceImpl implements TransactionService {
             logger.error(String.format(">>>Error in TransactionService, calculateMonthlyAmount : %s",e.getMessage()));
             throw new TransactionException(INTERNAL_SERVER_ERROR);
         }
-
     }
-
 }

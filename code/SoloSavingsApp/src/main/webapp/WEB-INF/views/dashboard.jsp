@@ -130,7 +130,7 @@
             justify-content: center;
             align-items: center;
         }
-         .add-expense-btn, #analytics-button{
+         .add-expense-btn,.budget-goals-btn, #analytics-button{
             margin: 10px;
         }
         /* Modal Content/Box */
@@ -195,10 +195,13 @@
         <!-- Add Income Button -->
         <button class="add-expense-btn">Add Expense</button>
 
+        <!-- View Transaction History -->
+        <button class="view-transactions-btn">View Transactions</button>
+
         <!-- Budget Goals Button -->
         <button class="budget-goals-btn">View Budget Goals</button>
 
-        <button id="transaction-history-button">Transaction History</button>
+        <button id="transaction-history-button">Download Transaction</button>
 
         <!-- Show 12 mon Button -->
         <button id="analytics-button">View Analytics</button>
@@ -336,6 +339,10 @@
         // Show the modal
         expenseModal.style.display = "block";
     });
+    $(".view-transactions-btn").click(function() {
+        console.log("view transaction history page...");
+        window.location.replace("/solosavings/transactionHistory");
+    });
     $(".budget-goals-btn").click(function() {
         console.log("view budget goals page...");
         window.location.replace("/solosavings/budgetGoals");
@@ -428,13 +435,12 @@
                     location.reload();
                 },
                 error: function(error) {
-                    console.error("Error adding income", error);
+                    console.error("Error adding expense", error);
                 }
             });
         });
 
     });
-    
     $("#transaction-history-button").click(function() {
         console.log("Button clicked"); // Add this line for debugging
         $.ajax({

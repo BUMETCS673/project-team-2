@@ -91,6 +91,7 @@ public class TransactionController {
             securityContext.dispose();
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        
     }
     
     @GetMapping("export/csv")
@@ -102,11 +103,11 @@ public class TransactionController {
             String csvFilePath = "transaction_history.csv";
             transactionService.exportToCsv(transactions, csvFilePath);
 
-            // Read the content of the CSV file
-            byte[] csvFileContent = Files.readAllBytes(Paths.get(csvFilePath));
+        // Read the content of the CSV file
+        byte[] csvFileContent = Files.readAllBytes(Paths.get(csvFilePath));
 
-            // Create a Resource object for the CSV file
-            ByteArrayResource resource = new ByteArrayResource(csvFileContent);
+        // Create a Resource object for the CSV file
+        ByteArrayResource resource = new ByteArrayResource(csvFileContent);
 
             // Set content disposition to trigger a download
             HttpHeaders headers = new HttpHeaders();
@@ -123,6 +124,7 @@ public class TransactionController {
         }
     }
 
+
     @GetMapping("analytics/monthly/{type}/{year}")
     public ResponseEntity<?> getMonthlyAnalyticsByYear(
             @PathVariable("type") TransactionType transactionType,
@@ -138,6 +140,34 @@ public class TransactionController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("delete/{transaction_id}")
+    public ResponseEntity<String> deleteTransaction(@PathVariable("transaction_id") Integer transaction_id){
+        logger.info("****Attempting to delete transaction_id " + transaction_id);
+        securityContext.setContext(SecurityContextHolder.getContext());
+        try {
+            Integer user_id = securityContext.getCurrentUser().getUser_id();
+            Double userBal = transactionService.deleteTransaction(user_id, transaction_id);
+            return new ResponseEntity<>("Transaction Successfully Deleted. User Balance is " + userBal , HttpStatus.OK);
+        } catch (TransactionException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    @GetMapping("history")
+    public ResponseEntity<?> getTransactionsHistory() {
+       securityContext.setContext(SecurityContextHolder.getContext());
+        try {
+            Integer user_id = securityContext.getCurrentUser().getUser_id();
+            logger.info("Getting Transaction History for " + user_id);
+
+            List<Transaction> transactionsHistory = transactionService.getTransactionsByUser(user_id);
+            return new ResponseEntity<>(transactionsHistory, HttpStatus.OK);
+        } catch (TransactionException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
 }
 
     

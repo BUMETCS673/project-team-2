@@ -61,6 +61,11 @@ public class HomeController {
         return "analytics";
     }
 
+    @GetMapping("/solosavings/transactionHistory")
+    public String transactionhistory() {
+            return "transactionHistory";
+    }
+
     @GetMapping("/solosavings/budgetGoals")
     public String budgetGoals() {
         return "BudgetGoals";

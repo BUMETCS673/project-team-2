@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.soloSavings.utils.Constants.INTERNAL_SERVER_ERROR;
@@ -185,6 +186,108 @@ public class TransactionServiceTest {
             transactionService.getTransactionsByType(userId, transactionType);
         });
     }
+
+    @Test
+    public void testDeleteTransactionDebit() throws TransactionException {
+
+        //Given
+        Integer user_id = 1;
+        Integer transaction_id = 1;
+
+        User mockUserBefore = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 100.00, LocalDate.now());
+        Transaction mockTransaction = new Transaction(1, 1, "Expense", TransactionType.DEBIT, 50.00, LocalDate.now());
+
+        //When
+        when(userRepository.findById(user_id)).thenReturn(Optional.of(mockUserBefore));
+        when(transactionRepository.findById(transaction_id)).thenReturn(Optional.of(mockTransaction));
+        when(userRepository.save(any(User.class))).thenReturn(mockUserBefore);
+
+        Double expectedAmount = transactionService.deleteTransaction(user_id,transaction_id);
+
+        //Then
+        assertEquals(expectedAmount, mockUserBefore.getBalance_amount());
+    }
+
+    @Test
+    public void testDeleteTransactionCredit() throws TransactionException{
+        //Given
+        Integer user_id = 1;
+        Integer transaction_id = 1;
+
+        User mockUserBefore = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 100.00, LocalDate.now());
+        Transaction mockTransaction = new Transaction(1, 1, "Income", TransactionType.CREDIT, 50.00, LocalDate.now());
+
+        //When
+        when(userRepository.findById(user_id)).thenReturn(Optional.of(mockUserBefore));
+        when(transactionRepository.findById(transaction_id)).thenReturn(Optional.of(mockTransaction));
+        when(userRepository.save(any(User.class))).thenReturn(mockUserBefore);
+
+        Double expectedAmount = transactionService.deleteTransaction(user_id,transaction_id);
+
+        //Then
+        assertEquals(expectedAmount, mockUserBefore.getBalance_amount());
+    }
+
+    @Test
+    public void testDeleteTransactionCreditEdgeCase() throws TransactionException{
+        //Given
+        Integer user_id = 1;
+        Integer transaction_id = 1;
+
+        User mockUserBefore = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 100.00, LocalDate.now());
+        Transaction mockTransaction = new Transaction(1, 1, "Income", TransactionType.CREDIT, 100.00, LocalDate.now());
+
+        //When
+        when(userRepository.findById(user_id)).thenReturn(Optional.of(mockUserBefore));
+        when(transactionRepository.findById(transaction_id)).thenReturn(Optional.of(mockTransaction));
+        when(userRepository.save(any(User.class))).thenReturn(mockUserBefore);
+
+        Double expectedAmount = transactionService.deleteTransaction(user_id,transaction_id);
+
+        //Then
+        assertEquals(expectedAmount, mockUserBefore.getBalance_amount());
+    }
+
+    @Test
+    public void testDeleteTransactionInvalidUser() throws TransactionException{
+        //Given
+        Integer user_id = 1;
+        Integer transaction_id = 1;
+
+        User mockUserBefore = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 100.00, LocalDate.now());
+        Transaction mockTransaction = new Transaction(1, 2, "Expense", TransactionType.DEBIT, 50.00, LocalDate.now());
+
+        //When
+        when(userRepository.findById(user_id)).thenReturn(Optional.of(mockUserBefore));
+        when(transactionRepository.findById(transaction_id)).thenReturn(Optional.of(mockTransaction));
+
+        //Then
+        Assertions.assertThrows(TransactionException.class, () -> {
+            transactionService.deleteTransaction(user_id, transaction_id);
+        });
+    }
+
+    @Test
+    public void testDeleteTransactionCreditOverExpense() throws TransactionException{
+
+        //Given
+        Integer user_id = 1;
+        Integer transaction_id = 1;
+
+        User mockUserBefore = new User(1, "generic", "generic@solosavings.com", "password_hash", LocalDate.now(), 100.00, LocalDate.now());
+        Transaction mockTransaction = new Transaction(1, 2, "Income", TransactionType.CREDIT, 150.00, LocalDate.now());
+
+        //When
+        when(userRepository.findById(user_id)).thenReturn(Optional.of(mockUserBefore));
+        when(transactionRepository.findById(transaction_id)).thenReturn(Optional.of(mockTransaction));
+
+        //Then
+        Assertions.assertThrows(TransactionException.class, () -> {
+            transactionService.deleteTransaction(user_id, transaction_id);
+        });
+
+    }
+
 
     @Test
     public void testGetMonthlyAnalyticsByYear() throws TransactionException {
