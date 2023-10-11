@@ -1,10 +1,7 @@
 package com.soloSavings.service;
 
 import com.soloSavings.exceptions.BudgetGoalException;
-import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.BudgetGoal;
-import com.soloSavings.model.User;
-import com.soloSavings.model.helper.TransactionType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

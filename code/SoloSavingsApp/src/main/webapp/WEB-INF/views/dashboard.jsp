@@ -159,7 +159,8 @@
     <nav>
         <ul>
             <li><a href="/solosavings" style="color: white;">Home</a></li>
-            <li><a href="/solosavings/login" style="color: white;">Login</a></li>
+            <li id="login"><a href="/solosavings/login" style="color: white;">Login</a></li>
+            <li id="logout"><a onclick="logout()">Logout</a></li>
             <li><a href="/solosavings/register" style="color: white;">Register</a></li>
         </ul>
     </nav>
@@ -266,6 +267,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     let jwt = "";
+    const EXPIRE_COOKIE = "jwtToken=; expires= Thur, 01 Jan 1970 00:00:00 UTC; path=/solosavings;";
     function setAuthHeader() {
         const jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         if(jwtToken) {
@@ -278,6 +280,13 @@
             window.location.replace("/solosavings/login");
         }
     }
+
+    function logout() {
+        console.log("Logging out");
+        document.cookie = EXPIRE_COOKIE;
+        window.location.replace("/");
+    }
+
     setAuthHeader();
 
     let thisMonthIncome;

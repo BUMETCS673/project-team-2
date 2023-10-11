@@ -7,7 +7,6 @@ import com.soloSavings.model.helper.TransactionType;
 import com.soloSavings.repository.TransactionRepository;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.TransactionService;
-import com.soloSavings.utils.Constants;
 import com.soloSavings.utils.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

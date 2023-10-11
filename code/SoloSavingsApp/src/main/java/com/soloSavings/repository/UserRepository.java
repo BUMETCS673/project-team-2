@@ -1,15 +1,11 @@
 package com.soloSavings.repository;
 
-import com.soloSavings.model.Transaction;
 import com.soloSavings.model.User;
-import com.soloSavings.model.helper.TransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings

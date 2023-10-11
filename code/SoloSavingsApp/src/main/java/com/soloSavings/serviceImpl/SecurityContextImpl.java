@@ -4,9 +4,7 @@ import com.soloSavings.config.JwtUtil;
 import com.soloSavings.model.User;
 import com.soloSavings.service.SecurityContext;
 import com.soloSavings.service.UserService;
-import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
