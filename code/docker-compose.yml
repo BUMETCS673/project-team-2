@@ -25,3 +25,4 @@ services:
       - SPRING_SSL_PORT=8443
       - SPRING_SSL=true
       - SPRING_KEYPW=${SPRING_KEYPW}
+      - SPRING_PROFILES_ACTIVE=prod
