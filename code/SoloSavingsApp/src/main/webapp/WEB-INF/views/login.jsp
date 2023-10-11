@@ -119,7 +119,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function setJwtInCookie(jwtResponse) {
-        document.cookie = "jwtToken=" + jwtResponse;
+        console.log("Token: " + jwtResponse['token'] + " Expiry: " + jwtResponse['expiry']);
+        document.cookie = "jwtToken=" + jwtResponse['token'] + "; expires=" + jwtResponse['expiry'];
     }
     $(document).ready(function() {
         $('#loginForm').submit(function(event) {
@@ -135,6 +136,7 @@
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
+                    console.log(response)
                     setJwtInCookie(response);
                     alert("Authentication passed successfully, redirect to your dashboard.");
                     window.location.replace("/solosavings/dashboard");

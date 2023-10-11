@@ -3,6 +3,7 @@ package com.soloSavings.controller;
 import com.soloSavings.config.JwtUtil;
 import com.soloSavings.model.Login;
 import com.soloSavings.model.ResetPassword;
+import com.soloSavings.model.TokenDetails;
 import com.soloSavings.model.User;
 import com.soloSavings.service.UserService;
 import com.soloSavings.serviceImpl.PasswordResetService;
@@ -40,7 +41,6 @@ public class UserAuthenticationController {
     private PasswordResetService passwordResetService;
     @Autowired
     AuthenticationManager authenticationManager;
-
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -57,7 +57,7 @@ public class UserAuthenticationController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity loginUser(@RequestBody Login loginData) {
+    public ResponseEntity<?> loginUser(@RequestBody Login loginData) {
         logger.info("Request to log in as the user: {}", loginData.username());
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginData.username(), loginData.password()));
@@ -66,8 +66,8 @@ public class UserAuthenticationController {
         }
 
         UserDetails userDetails = userService.loadUserByUsername(loginData.username());
-        String token = jwtUtil.generateToken(userDetails.getUsername());
-        return ResponseEntity.ok(token);
+        TokenDetails token = jwtUtil.generateToken(userDetails.getUsername());
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/forget-password", method = RequestMethod.POST)

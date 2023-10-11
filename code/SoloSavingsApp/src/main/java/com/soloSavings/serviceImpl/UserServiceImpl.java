@@ -1,7 +1,6 @@
 package com.soloSavings.serviceImpl;
 
 import com.soloSavings.config.SecurityConfig;
-import com.soloSavings.model.Transaction;
 import com.soloSavings.model.User;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.service.UserService;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Service

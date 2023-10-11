@@ -1,6 +1,5 @@
 package com.soloSavings.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.soloSavings.model.helper.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
