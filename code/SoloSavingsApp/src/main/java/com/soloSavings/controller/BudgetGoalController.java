@@ -2,7 +2,9 @@ package com.soloSavings.controller;
 
 import com.soloSavings.exceptions.BudgetGoalException;
 import com.soloSavings.model.BudgetGoal;
+import com.soloSavings.model.BudgetGoalTracker;
 import com.soloSavings.service.BudgetGoalService;
+import com.soloSavings.service.BudgetGoalTrackerService;
 import com.soloSavings.service.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,9 @@ public class BudgetGoalController {
     BudgetGoalService budgetGoalServiceImpl;
 
     @Autowired
+    BudgetGoalTrackerService budgetGoalTrackerService;
+
+    @Autowired
     SecurityContext securityContext;
 
     @RequestMapping(value="add", method=RequestMethod.POST)
@@ -36,13 +41,26 @@ public class BudgetGoalController {
         }
     }
 
+//    @GetMapping("all")
+//    public ResponseEntity<?> getBudgetGoals() {
+//        securityContext.setContext(SecurityContextHolder.getContext());
+//        try{
+//            List<BudgetGoal> budgetGoalList = budgetGoalServiceImpl.findAllByUserIdCurrentMonth(securityContext.getCurrentUser().getUser_id());
+//            securityContext.dispose();
+//            return new ResponseEntity<>(budgetGoalList,HttpStatus.OK);
+//        } catch (BudgetGoalException e) {
+//            securityContext.dispose();
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+//        }
+//    }
+
     @GetMapping("all")
     public ResponseEntity<?> getBudgetGoals() {
         securityContext.setContext(SecurityContextHolder.getContext());
         try{
-            List<BudgetGoal> budgetGoalList = budgetGoalServiceImpl.findAllByUserIdCurrentMonth(securityContext.getCurrentUser().getUser_id());
+            List<BudgetGoalTracker> budgetGoalTrackerList = budgetGoalTrackerService.findAllGoalsByUserId(securityContext.getCurrentUser().getUser_id());
             securityContext.dispose();
-            return new ResponseEntity<>(budgetGoalList,HttpStatus.OK);
+            return new ResponseEntity<>(budgetGoalTrackerList,HttpStatus.OK);
         } catch (BudgetGoalException e) {
             securityContext.dispose();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
