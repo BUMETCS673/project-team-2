@@ -33,9 +33,11 @@ jobs:
       run: mvn test
       working-directory: ./code/SoloSavingsApp
 
-    - name: Start Spring Boot App
-      run: nohup java -jar target/*.jar &
-      working-directory: ./code/SoloSavingsApp
+    - name: Deploy to Tomcat
+      run: cp target/*.war /opt/tomcat/webapps/myapp.war
+
+    - name: Start Tomcat
+      run: /opt/tomcat/bin/startup.sh
       
     - name: Wait for app to start
       run: |
