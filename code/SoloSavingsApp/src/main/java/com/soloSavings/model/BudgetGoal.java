@@ -2,15 +2,13 @@ package com.soloSavings.model;
 
 import com.soloSavings.model.helper.BudgetGoalType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name="budgetgoals")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

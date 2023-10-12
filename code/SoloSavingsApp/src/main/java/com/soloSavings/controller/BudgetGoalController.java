@@ -32,9 +32,9 @@ public class BudgetGoalController {
     public ResponseEntity<?> addBudgetGoal (@RequestBody BudgetGoal budgetGoal){
         securityContext.setContext(SecurityContextHolder.getContext());
         try{
-            budgetGoalServiceImpl.addBudgetGoal(securityContext.getCurrentUser().getUser_id(), budgetGoal);
+            BudgetGoal budgetGoalReturned = budgetGoalServiceImpl.addBudgetGoal(securityContext.getCurrentUser().getUser_id(), budgetGoal);
             securityContext.dispose();
-            return new ResponseEntity<>("Budget goal added.",HttpStatus.OK);
+            return new ResponseEntity<>(budgetGoalReturned,HttpStatus.OK);
         } catch (BudgetGoalException e) {
             securityContext.dispose();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
@@ -55,11 +55,11 @@ public class BudgetGoalController {
     }
 
     @DeleteMapping("delete/{budgetgoal_id}")
-    public ResponseEntity<String> deleteBudgetGoal(@PathVariable("budgetgoal_id") Integer budgetgoal_id){
+    public ResponseEntity<?> deleteBudgetGoal(@PathVariable("budgetgoal_id") Integer budgetgoal_id){
         securityContext.setContext(SecurityContextHolder.getContext());
         try {
-            budgetGoalServiceImpl.deleteBudgetGoal(budgetgoal_id);
-            return new ResponseEntity<>("Budget goal deleted." , HttpStatus.OK);
+            BudgetGoal budgetGoalReturned = budgetGoalServiceImpl.deleteBudgetGoal(budgetgoal_id);
+            return new ResponseEntity<>(budgetGoalReturned , HttpStatus.OK);
         } catch (BudgetGoalException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
         }
