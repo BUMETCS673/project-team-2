@@ -33,22 +33,13 @@ jobs:
       run: mvn test
       working-directory: ./code/SoloSavingsApp
 
-    - name: Install Tomcat
+    - name: Start Tomcat container
       run: |
-        sudo apt-get update
-        sudo apt-get install tomcat8 tomcat8-admin
-
-    - name: Configure Tomcat
-      run: |
-        cp -r /opt/tomcat/webapps.dist/* /opt/tomcat/webapps/
-        cp -r /opt/tomcat/conf.dist/* /opt/tomcat/conf/
+        docker run -d -p 8080:8080 --name tomcat tomcat:8.5
         
-    - name: Deploy to Tomcat
-      run: cp target/*.war /opt/tomcat/webapps/myapp.war
+    - name: Copy WAR to container
+      run: docker cp target/*.war tomcat:/usr/local/tomcat/webapps
       working-directory: ./code/SoloSavingsApp
-      
-    - name: Start Tomcat
-      run: /opt/tomcat/bin/startup.sh
       
     - name: Wait for app to start
       run: |
