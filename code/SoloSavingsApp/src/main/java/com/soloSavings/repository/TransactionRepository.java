@@ -30,7 +30,4 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query("SELECT e FROM Transaction e WHERE MONTH(e.transaction_date) = ?1 AND YEAR(e.transaction_date) = ?2 AND e.transaction_type = ?3 AND e.user_id = ?4")
     List<Transaction> findByMonthAndType(int month, int year, TransactionType transaction_type, Integer userId);
 
-    @Query("SELECT SUM(e.amount) FROM Transaction e WHERE MONTH(e.transaction_date) = MONTH(CURRENT_DATE()) AND YEAR(e.transaction_date) = YEAR(CURRENT_DATE()) AND  e.user_id = ?1 and e.transaction_type = ?2 AND e.source = ?3")
-    Double getSumAmountByUserIdTypeSourceForCurrentMonth(Integer userId,TransactionType transaction_type, String source);
-
 }

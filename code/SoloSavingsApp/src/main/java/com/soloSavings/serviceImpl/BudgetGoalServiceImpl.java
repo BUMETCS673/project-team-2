@@ -20,11 +20,6 @@ public class BudgetGoalServiceImpl implements BudgetGoalService {
     }
 
     @Override
-    public List<BudgetGoal> findAllByUserIdCurrentMonth(Integer userId) {
-        return budgetGoalRepository.findAllByUserIdCurrentMonth(userId);
-    }
-
-    @Override
     public void addBudgetGoal(Integer userId, BudgetGoal budgetGoal) throws BudgetGoalException {
         if(Validation.validateBudgetGoal(budgetGoal.getTargetAmount())){
             budgetGoal.setUserId(userId);
