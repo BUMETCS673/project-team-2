@@ -26,7 +26,7 @@ jobs:
         java-version: 17
         
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file code/SoloSavingsApp/pom.xml
       
     - name: Run Tests
       run: mvn test
