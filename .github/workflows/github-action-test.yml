@@ -26,7 +26,7 @@ jobs:
         java-version: 17
         
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn package -DskipTests
       working-directory: ./code/SoloSavingsApp
       
     - name: Run Units Tests
@@ -35,6 +35,7 @@ jobs:
 
     - name: Deploy to Tomcat
       run: cp target/*.war /opt/tomcat/webapps/myapp.war
+      working-directory: ./code/SoloSavingsApp
 
     - name: Start Tomcat
       run: /opt/tomcat/bin/startup.sh
