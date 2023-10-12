@@ -7,11 +7,14 @@ import com.soloSavings.model.helper.BudgetGoalType;
 import com.soloSavings.repository.BudgetGoalRepository;
 import com.soloSavings.repository.UserRepository;
 import com.soloSavings.serviceImpl.BudgetGoalServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -31,7 +34,8 @@ public class BudgetGoalServiceTest {
 
     private User user;
     private BudgetGoal budgetGoal;
-    private BudgetGoal budgetGoalReturned;
+    private BudgetGoal budgetGoalAdded;
+    private BudgetGoal budgetGoalDeleted;
 
     @BeforeEach void setup(){
         //Given
@@ -57,9 +61,47 @@ public class BudgetGoalServiceTest {
         //When
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(budgetGoalRepository.save(any(BudgetGoal.class))).thenReturn(budgetGoal);
-        budgetGoalReturned = budgetGoalService.addBudgetGoal(user.getUser_id(),budgetGoal);
+        budgetGoalAdded = budgetGoalService.addBudgetGoal(user.getUser_id(),budgetGoal);
 
         //Then
-        assertEquals(budgetGoalReturned,budgetGoal);
+        assertEquals(budgetGoalAdded,budgetGoal);
+    }
+
+    @Test
+    public void testAddBudgetGoalError() throws BudgetGoalException {
+        //When
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(budgetGoalRepository.save(any(BudgetGoal.class))).thenReturn(budgetGoal);
+        budgetGoal.setTargetAmount(-1.00);
+
+        //Then
+        Assertions.assertThrows(BudgetGoalException.class, () -> {
+           budgetGoalService.addBudgetGoal(user.getUser_id(),budgetGoal);
+        });
+    }
+
+    @Test
+    public void testDeleteBudgetGoal() throws BudgetGoalException {
+        //When
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(budgetGoalRepository.save(any(BudgetGoal.class))).thenReturn(budgetGoal);
+        when(budgetGoalRepository.findById(any(Integer.class))).thenReturn(Optional.ofNullable(budgetGoal));
+        budgetGoalAdded = budgetGoalService.addBudgetGoal(user.getUser_id(),budgetGoal);
+        budgetGoalDeleted = budgetGoalService.deleteBudgetGoal(user.getUser_id());
+
+        //Then
+        assertEquals(budgetGoalAdded,budgetGoal);
+    }
+
+    @Test
+    public void testDeleteBudgetGoalError() throws BudgetGoalException {
+        //When
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(budgetGoalRepository.save(any(BudgetGoal.class))).thenReturn(budgetGoal);
+
+        //Then
+        Assertions.assertThrows(BudgetGoalException.class, () -> {
+            budgetGoalService.deleteBudgetGoal(user.getUser_id());
+        });
     }
 }
