@@ -26,10 +26,16 @@ jobs:
         java-version: 17
         
     - name: Build with Maven
-      run: mvn -B package --file code/SoloSavingsApp/pom.xml
+      run: mvn -B package --file pom.xml
+      working-directory: ./code/SoloSavingsApp
       
-    - name: Run Tests
+    - name: Run Units Tests
       run: mvn test
+      working-directory: ./code/SoloSavingsApp
+
+    - name: Start Spring Boot App
+      run: nohup java -jar target/*.jar &
+      working-directory: ./code/SoloSavingsApp
       
     - name: Wait for app to start
       run: |
@@ -38,8 +44,8 @@ jobs:
         done
             
     - name: Integration Tests
-      run: |
-        mvn verify -P test
+      run: mvn verify -P test
+      working-directory: ./code/SoloSavingsApp
   
       env:
         SPRING_DATASOURCE_URL: jdbc:h2:mem:test
