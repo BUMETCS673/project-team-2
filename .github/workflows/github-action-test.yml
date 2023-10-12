@@ -33,10 +33,20 @@ jobs:
       run: mvn test
       working-directory: ./code/SoloSavingsApp
 
+    - name: Install Tomcat
+      run: |
+        apt-get update
+        apt-get install tomcat8 tomcat8-admin
+
+    - name: Configure Tomcat
+      run: |
+        cp -r /opt/tomcat/webapps.dist/* /opt/tomcat/webapps/
+        cp -r /opt/tomcat/conf.dist/* /opt/tomcat/conf/
+        
     - name: Deploy to Tomcat
       run: cp target/*.war /opt/tomcat/webapps/myapp.war
       working-directory: ./code/SoloSavingsApp
-
+      
     - name: Start Tomcat
       run: /opt/tomcat/bin/startup.sh
       
