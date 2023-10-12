@@ -35,8 +35,8 @@ jobs:
 
     - name: Install Tomcat
       run: |
-        apt-get update
-        apt-get install tomcat8 tomcat8-admin
+        sudo apt-get update
+        sudo apt-get install tomcat8 tomcat8-admin
 
     - name: Configure Tomcat
       run: |
