@@ -25,7 +25,7 @@ jobs:
       with:
         java-version: 17
         
-    - name: Build with Maven
+    - name: package war file
       run: mvn package -DskipTests
       working-directory: ./code/SoloSavingsApp
       
@@ -37,7 +37,7 @@ jobs:
       run: |
         docker run -d -p 8080:8080 --name tomcat tomcat:8.5
         
-    - name: Copy WAR to container
+    - name: Copy WAR file to container
       run: docker cp target/*.war tomcat:/usr/local/tomcat/webapps
       working-directory: ./code/SoloSavingsApp
       
