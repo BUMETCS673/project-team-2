@@ -44,14 +44,9 @@ public class BudgetGoalController {
     @GetMapping("all")
     public ResponseEntity<?> getBudgetGoals() {
         securityContext.setContext(SecurityContextHolder.getContext());
-        try{
-            List<BudgetGoalTracker> budgetGoalTrackerList = budgetGoalTrackerService.findAllGoalsByUserId(securityContext.getCurrentUser().getUser_id());
-            securityContext.dispose();
-            return new ResponseEntity<>(budgetGoalTrackerList,HttpStatus.OK);
-        } catch (BudgetGoalException e) {
-            securityContext.dispose();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+        List<BudgetGoalTracker> budgetGoalTrackerList = budgetGoalTrackerService.findAllGoalsByUserId(securityContext.getCurrentUser().getUser_id());
+        securityContext.dispose();
+        return new ResponseEntity<>(budgetGoalTrackerList,HttpStatus.OK);
     }
 
     @DeleteMapping("delete/{budgetgoal_id}")

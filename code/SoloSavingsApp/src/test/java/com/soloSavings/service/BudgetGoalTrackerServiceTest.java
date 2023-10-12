@@ -55,7 +55,6 @@ public class BudgetGoalTrackerServiceTest {
 
     @BeforeEach
     void setup(){
-        //Given
         user = User.builder().user_id(1)
                 .username("test")
                 .email("test@gmail.com")

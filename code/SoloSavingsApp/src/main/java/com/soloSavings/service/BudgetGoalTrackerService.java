@@ -9,6 +9,6 @@ import java.util.List;
 @Service
 public interface BudgetGoalTrackerService {
 
-    List<BudgetGoalTracker> findAllGoalsByUserId(Integer userId) throws BudgetGoalException;
+    List<BudgetGoalTracker> findAllGoalsByUserId(Integer userId);
 
 }
