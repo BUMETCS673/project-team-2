@@ -178,4 +178,17 @@
 			</resource>
 		</resources>
 	</build>
+	<profiles>
+		<profile>
+			<id>test</id>
+			<dependencies>
+				<!-- Maven dependency for H2 for testing-->
+				<dependency>
+					<groupId>com.h2database</groupId>
+					<artifactId>h2</artifactId>
+					<scope>runtime</scope>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 </project>
