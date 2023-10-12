@@ -3,6 +3,7 @@ package com.soloSavings.controller;
 import com.soloSavings.config.JwtUtil;
 import com.soloSavings.exceptions.UserAuthenticationException;
 import com.soloSavings.model.Login;
+import com.soloSavings.model.TokenDetails;
 import com.soloSavings.model.User;
 import com.soloSavings.service.UserService;
 import jakarta.persistence.NonUniqueResultException;
@@ -68,7 +69,7 @@ public class UserAuthenticationControllerTest {
         Login loginData = new Login("test@solosavings.com", "hhhh");
         Set<GrantedAuthority> test = new HashSet<>();
         UserDetails userDetails =  new org.springframework.security.core.userdetails.User("test","test",test);
-        String token = "testing-token";
+        TokenDetails token = jwtUtil.generateToken("testing-token");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
         when(userService.loadUserByUsername(loginData.username())).thenReturn(userDetails);
