@@ -1,6 +1,7 @@
 package com.soloSavings.integration;
 
 import com.soloSavings.model.Login;
+import com.soloSavings.model.TokenDetails;
 import com.soloSavings.model.Transaction;
 import com.soloSavings.model.User;
 import com.soloSavings.model.helper.TransactionType;
@@ -41,9 +42,10 @@ public class UserApiIntegrationTest {
 
         Login login = new Login(commonUser.getUsername(),commonUser.getPassword_hash());
 
-        ResponseEntity<String> loginResponse = restTemplate.postForEntity("/api/login", login, String.class);
+        ResponseEntity<TokenDetails> loginResponse = restTemplate.postForEntity("/api/login", login, TokenDetails.class);
+
         headers = new HttpHeaders();
-        headers.setBearerAuth(Objects.requireNonNull(loginResponse.getBody()));
+        headers.setBearerAuth(Objects.requireNonNull(loginResponse.getBody().token()));
     }
     @BeforeEach
     public void setCommonUser(){
