@@ -1,6 +1,8 @@
 # Start with a base image containing Java runtime
 FROM maven:3.8-openjdk-17 as builder
 ENV SPRING_MYSQL_HOST=solosavings-db
+ENV SPRING_SSL=true
+ENV SPRING_KEYPW=Password1
 
 # Set the working directory in the image to /app
 WORKDIR /app

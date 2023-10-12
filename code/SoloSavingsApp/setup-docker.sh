@@ -1,11 +1,9 @@
 #!/bin/bash
 
 # Variables
-ImageName="solosavings-db"
+ImageName="solosavings-app"
 NetworkName="solosavings-net"
-ExtPort=9000
-PortNumber=3306
-RootPW="cs673"
+PortNumber=8888
 
 # Functions
 Stop-Container() {
@@ -18,33 +16,22 @@ Start-Container() {
   Detached=$1
   echo "Starting $ImageName Detached: $Detached"
   if [ "$Detached" = true ] ; then
-    echo "Running docker command: docker run --network $NetworkName -p $ExtPort:$PortNumber --name $ImageName -e MYSQL_ROOT_PASSWORD=$RootPW -d $ImageName"
-    docker run --network $NetworkName -p $ExtPort:$PortNumber --name $ImageName -e MYSQL_ROOT_PASSWORD=$RootPW -d $ImageName
+    echo "Running docker command: docker run --network $NetworkName -p $PortNumber:$PortNumber --name $ImageName -d $ImageName"
+    docker run --network $NetworkName -p $PortNumber:$PortNumber --name $ImageName -d $ImageName
   else
-    echo "Running docker command: docker run --network $NetworkName -p $ExtPort:$PortNumber --name $ImageName -e MYSQL_ROOT_PASSWORD=$RootPW $ImageName"
-    docker run --network $NetworkName -p $ExtPort:$PortNumber --name $ImageName -e MYSQL_ROOT_PASSWORD=$RootPW $ImageName
+    echo "Running docker command: docker run --network $NetworkName -p $PortNumber:$PortNumber --name $ImageName $ImageName"
+    docker run --network $NetworkName -p $PortNumber:$PortNumber --name $ImageName $ImageName
   fi
   echo "Started $ImageName"
 }
 
 Remove-Container() {
-  id=$(docker container ls -a -f name=$ImageName -q)
-  if [ ! -z "$id" ] ; then
-    echo "Removing old container"
-    docker container rm $id
+  containerId=$(docker container ls -a -f name=$ImageName -q)
+  if [ ! -z "$containerId" ] ; then
+    echo "Removing old $ImageName container"
+    docker container rm $containerId
   fi
 }
-
-Show-Help() {
-  echo "Options:"
-  echo "-b | --build    Build"
-  echo "-r | --restart  Restart"
-  echo "-s | --start    Start"
-  echo "-d | --detached Detached"
-  echo "-st | --stop    Stop"
-}
-
-
 
 # Preflight checks
 if ! command -v docker &> /dev/null ; then
@@ -57,7 +44,6 @@ if [ -z "$Nets" ] ; then
   echo "Missing docker network $NetworkName"
   exit 1
 fi
-
 
 # Command-line arguments
 while [ "$1" != "" ]; do
@@ -77,9 +63,6 @@ while [ "$1" != "" ]; do
         -st | --stop )           shift
                                 Stop=true
                                 ;;
-	-? | --help )		shift
-				Help=true
-				;;
         * )                     exit 1
     esac
     shift
@@ -87,6 +70,7 @@ done
 
 if [ "$Build" = true ] ; then
   docker build -t $ImageName .
+  Stop-Container
   Remove-Container
 fi
 
@@ -97,6 +81,4 @@ fi
 if [ "$Start" = true ] || [ "$Restart" = true ] ; then
   Start-Container 
 fi
-if [ "$Help" = true ] ; then
-  Show-Help
-fi
+
