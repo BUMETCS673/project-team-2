@@ -43,7 +43,7 @@ jobs:
       
     - name: Wait for app to start
       run: |
-        while ! curl -s http://localhost:8888; do
+        while ! curl -s http://localhost:8080; do
           sleep 1
         done
             
