@@ -255,7 +255,7 @@
             { "mData": "budgetGoalType"},
             { "mData": "source" },
             { "mData": "targetAmount" },
-            { "mData": null, "defaultContent": "TODO" },
+            { "mData": "actualAmount"},
             {"mData": null, "defaultContent": "<button>Delete</button>"}
         ]
     })

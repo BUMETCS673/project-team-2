@@ -26,7 +26,6 @@ public interface TransactionService {
     List<Transaction> getTransactionsForUser(Integer userId) ;
     void exportToCsv(List<Transaction> transactions, String filePath) throws IOException ;
     Double deleteTransaction(Integer user_id, Integer transaction_id) throws TransactionException;
-    Double getBudgetGoalActualAmount(Integer userId, TransactionType transactionType, String source) throws TransactionException;
     List<Map<Object, Object>> getMonthlyAnalyticsByYear(Integer userId, Integer year, TransactionType transactionType) throws TransactionException;
     Double calculateMonthlyAmount(int month, int year, int userId, TransactionType transType) throws TransactionException;
     Double getThisMonthTotalAmount(Integer userId, TransactionType transactionType) throws TransactionException;

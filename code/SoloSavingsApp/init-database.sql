@@ -50,6 +50,15 @@ PRIMARY KEY(id),
 FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=INNODB;
 
+CREATE OR REPLACE VIEW budgetgoaltracker AS
+SELECT b.id, b.budget_goal_type, b.source, b.target_amount, SUM(t.amount) actual_amount, b.user_id
+FROM budgetgoals b, transactions t
+WHERE MONTH(b.start_date) = MONTH(t.transaction_date)
+AND b.user_id = t.user_id
+AND b.source = t.source
+AND b.budget_goal_type = IF(t.transaction_type = 'CREDIT','SAVE','SPEND')
+GROUP BY b.id, b.budget_goal_type, b.source, b.target_amount, b.user_id;
+
 -- SELECT STATEMENTS
 -- SELECT * FROM `users`
 -- SELECT `user_id`, `username`, `email`, `password_hash`, `registration_date`, `balance_amount`, `last_updated` FROM `users`
