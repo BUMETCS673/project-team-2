@@ -13,7 +13,7 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "AWOuellette-patch-1" ]
+    branches: [ "main" ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
@@ -84,20 +84,6 @@ jobs:
     - name: package war file
       run: mvn package -DskipTests
       working-directory: ./code/SoloSavingsApp
-
-    # - name: Start Tomcat container
-    #   run: |
-    #     docker run -d -p 8080:8080 --name tomcat tomcat:8.5
-        
-    # - name: Copy WAR file to container
-    #   run: docker cp target/*.war tomcat:/usr/local/tomcat/webapps
-    #   working-directory: ./code/SoloSavingsApp
-      
-    # - name: Wait for app to start
-    #   run: |
-    #     while ! curl -s http://localhost:8080; do
-    #       sleep 1
-    #     done
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
