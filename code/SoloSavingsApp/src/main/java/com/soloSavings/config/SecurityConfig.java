@@ -10,14 +10,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-
+import org.springframework.security.config.Customizer;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -26,11 +24,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-    @Autowired
-    private UserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -38,8 +32,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                //.csrf(Customizer.withDefaults()) // TODO(Will): I don't have time to fix CSRF right now...
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(new AntPathRequestMatcher("/**")).permitAll(); // Need to allow access to the landing page
                     auth.requestMatchers(new AntPathRequestMatcher("/api/login")).permitAll();
@@ -48,7 +40,9 @@ public class SecurityConfig {
                     auth.requestMatchers(new AntPathRequestMatcher("/api/reset-password")).permitAll();
                     auth.requestMatchers(new AntPathRequestMatcher("/solosavings/**")).permitAll(); //Any URL with pattern "/solosavings/**" do not need to be authenticated
                     auth.requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated();
+                    auth.anyRequest().authenticated();
                 })
+                .csrf(csrf -> csrf.disable())
                 .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

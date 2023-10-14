@@ -183,7 +183,7 @@
                     window.location.replace("login");
                 },
                 error: function(error) {
-                    alert(error.responseText);
+                    alert("Something went wrong, please register the account again.");
                     console.error('Registration failed:', error);
                 }
             });
