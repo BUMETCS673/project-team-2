@@ -28,7 +28,7 @@
             display: inline;
             margin-right: 20px;
             color: white;
-            text-align: underline;
+            text-decoration: underline;
             cursor: pointer;
         }
 
@@ -161,7 +161,7 @@
     <nav>
         <ul>
             <li><a href="/solosavings" style="color: white;">Home</a></li>
-            <li id="logout"><a onclick="logout()" style="color: white;">Logout</a></li>
+            <li id="logout"><a onclick="logout()" style="color: white; text-decoration: underline;">Logout</a></li>
         </ul>
     </nav>
 </header>
