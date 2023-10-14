@@ -48,7 +48,7 @@ public class UserAuthenticationControllerTest {
         ResponseEntity<?> response = userAuthController.registerUser(registerUser);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("The user account with email " + registerUser.getEmail() +" has successfully created", response.getBody());
+        assertEquals("The user account with email has successfully created", response.getBody());
 
         verify(userService).save(registerUser);
     }

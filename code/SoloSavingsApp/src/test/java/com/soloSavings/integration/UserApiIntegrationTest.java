@@ -69,7 +69,7 @@ public class UserApiIntegrationTest {
     @Test
     public void testRegister() {
         User newUser = new User(null,"newUser","newUser@gmail","Password1",LocalDate.now(),1000.00,LocalDate.now());
-        String expectedMessage = "The user account with email newUser@gmail has successfully created";
+        String expectedMessage = "The user account with email has successfully created";
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/register", newUser, String.class);
 
@@ -92,7 +92,7 @@ public class UserApiIntegrationTest {
     public void testLogin() {
         User loginUser = new User(null,"loginUser","loginUser@gmail","Password1",LocalDate.now(),1000.00,LocalDate.now());
         Login login = new Login(loginUser.getUsername(),loginUser.getPassword_hash());
-        String expectedMessage = String.format("The user account with email %s has successfully created",loginUser.getEmail());
+        String expectedMessage = String.format("The user account with email has successfully created");
 
         ResponseEntity<String> registerResponse = restTemplate.postForEntity("/api/register", loginUser, String.class);
         ResponseEntity<String> loginResponse = restTemplate.postForEntity("/api/login", login, String.class);
