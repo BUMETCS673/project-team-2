@@ -61,7 +61,7 @@ public class UserAuthenticationControllerTest {
         ResponseEntity<?> response = userAuthController.registerUser(registerUser);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals("The email " + registerUser.getEmail() + " already registered.", response.getBody());
+        assertEquals("The email has already registered.", response.getBody());
     }
 
     @Test

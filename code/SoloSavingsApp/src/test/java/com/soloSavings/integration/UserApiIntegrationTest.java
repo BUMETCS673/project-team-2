@@ -80,7 +80,7 @@ public class UserApiIntegrationTest {
 
     @Test
     public void testRegisterAlreadyExistError() {
-        String expectedMessage = String.format("The email %s already registered.",commonUser.getEmail());
+        String expectedMessage = String.format("The email has already registered.");
 
         ResponseEntity<String> response = restTemplate.postForEntity("/api/register", commonUser, String.class);
 
