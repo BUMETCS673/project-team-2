@@ -15,6 +15,9 @@ CREATE USER 'team2'@'localhost' IDENTIFIED BY 'cs673';
 GRANT ALL PRIVILEGES ON * . * TO 'team2'@'localhost';
 FLUSH PRIVILEGES;
 
+-- USE DATABASE
+USE solosavings;
+
 -- CREATE TABLES
 
 CREATE TABLE IF NOT EXISTS users (
