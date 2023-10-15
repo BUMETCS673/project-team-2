@@ -130,7 +130,7 @@
             justify-content: center;
             align-items: center;
         }
-        .add-income-btn, .add-expense-btn{
+         .add-expense-btn,.budget-goals-btn, #analytics-button{
             margin: 10px;
         }
         /* Modal Content/Box */
@@ -159,7 +159,8 @@
     <nav>
         <ul>
             <li><a href="/solosavings" style="color: white;">Home</a></li>
-            <li><a href="/solosavings/login" style="color: white;">Login</a></li>
+            <li id="login"><a href="/solosavings/login" style="color: white;">Login</a></li>
+            <li id="logout"><a onclick="logout()">Logout</a></li>
             <li><a href="/solosavings/register" style="color: white;">Register</a></li>
         </ul>
     </nav>
@@ -194,6 +195,19 @@
 
         <!-- Add Income Button -->
         <button class="add-expense-btn">Add Expense</button>
+
+        <!-- View Transaction History -->
+        <button class="view-transactions-btn">View Transactions</button>
+
+        <!-- Budget Goals Button -->
+        <button class="budget-goals-btn">View Budget Goals</button>
+
+        <button id="transaction-history-button">Download Transaction</button>
+
+        <!-- Show 12 mon Button -->
+        <button id="analytics-button">View Analytics</button>
+
+
     </div>
     <%--income button and modal--%>
 
@@ -242,14 +256,7 @@
         </div>
 
     </div>
-    <div class="comments-section">
-        <h2 style="clear: both">Comments</h2>
-        <textarea id="comment-input" placeholder="Write your comment here" style="width: 85%;float: left"></textarea>
-        <button id="submit-comment" style="width: 10%;float: left;margin-top:5px;margin-left: 15px;">Submit</button>
-        <div id="comments-list" style="clear: both">
 
-        </div>
-    </div>
 
 </main>
 </body>
@@ -307,11 +314,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     let jwt = "";
+    const EXPIRE_COOKIE = "jwtToken=; expires= Thur, 01 Jan 1970 00:00:00 UTC; path=/solosavings;";
     function setAuthHeader() {
         const jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         if(jwtToken) {
             jwt = jwtToken;
-            console.log("Found JWT cookie: " + jwt);
+            console.log("Found JWT cookie");
 
         } else {
             console.log("Failed to find JWT cookie");
@@ -319,6 +327,13 @@
             window.location.replace("/solosavings/login");
         }
     }
+
+    function logout() {
+        console.log("Logging out");
+        document.cookie = EXPIRE_COOKIE;
+        window.location.replace("/");
+    }
+
     setAuthHeader();
 
     $(document).ready(function() {
@@ -425,7 +440,7 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/api/transaction/monthly/income',
+        url: '/api/transaction/thismonth/CREDIT',
         contentType: 'application/json',
         success: function(response) {
             thisMonthIncome = response;
@@ -437,7 +452,7 @@
     $.ajax({
         async: false,
         type: 'GET',
-        url: '/api/transaction/monthly/expense',
+        url: '/api/transaction/thismonth/DEBIT',
         contentType: 'application/json',
         success: function(response) {
             thisMonthExpense = response;
@@ -473,7 +488,17 @@
         // Show the modal
         expenseModal.style.display = "block";
     });
-
+    $(".view-transactions-btn").click(function() {
+        console.log("view transaction history page...");
+        window.location.replace("/solosavings/transactionHistory");
+    });
+    $(".budget-goals-btn").click(function() {
+        console.log("view budget goals page...");
+        window.location.replace("/solosavings/budgetGoals");
+    });
+    $("#analytics-button").click(function() {
+        window.location.replace("analytics");
+    });
     // When user clicks the close button for income modal
     var closeIncomeModal = incomeModal.getElementsByClassName("close")[0];
     closeIncomeModal.onclick = function() {
@@ -559,11 +584,34 @@
                     location.reload();
                 },
                 error: function(error) {
-                    console.error("Error adding income", error);
+                    console.error("Error adding expense", error);
                 }
             });
         });
 
+    });
+    $("#transaction-history-button").click(function() {
+        console.log("Button clicked"); // Add this line for debugging
+        $.ajax({
+            type: "GET",
+            url: "/api/transaction/export/csv", // Replace with the actual URL, e.g., "/solosavings/123/export/csv"
+            	success: function(response) {
+            	    console.log("Transaction history exported successfully");
+            	    // Create a hidden anchor element and set the href attribute to the response data
+            	    const anchor = document.createElement("a");
+            	    anchor.href = URL.createObjectURL(new Blob([response]));
+
+            	    // Set the download attribute to specify the filename
+            	    anchor.setAttribute("download", "transaction_history.csv");
+
+            	    // Trigger a click event on the anchor element to initiate the download
+            	    anchor.click();
+            	},
+            error: function(error) {
+                console.error("Error exporting transaction history", error);
+                // Handle the error, e.g., show an error message to the user.
+            }
+        });
     });
 </script>
 </html>

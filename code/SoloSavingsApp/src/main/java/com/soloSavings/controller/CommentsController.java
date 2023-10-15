@@ -24,13 +24,15 @@ public class CommentsController {
     @Autowired
     SecurityContext securityContext;
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<?> addComments (HttpServletRequest request, @RequestBody Comments comments){
-            securityContext.setContext(SecurityContextHolder.getContext());
-            comments.setUser_id(securityContext.getCurrentUser().getUser_id());
-            commentsService.add(comments);
-            securityContext.dispose();
-            return new ResponseEntity<>(HttpStatus.OK);
+    @RequestMapping(value = "/add/{transactionId}", method = RequestMethod.POST)
+    public ResponseEntity<?> addComments (HttpServletRequest request, @RequestBody Comments comments,
+                                          @PathVariable("transactionId") Integer transactionId){
+        securityContext.setContext(SecurityContextHolder.getContext());
+        comments.setUser_id(securityContext.getCurrentUser().getUser_id());
+        comments.setTransaction_id(transactionId);
+        commentsService.add(comments);
+        securityContext.dispose();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.POST)
@@ -49,17 +51,20 @@ public class CommentsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping( "/list")
+    @GetMapping( "/list/{transactionId}")
     @ResponseBody
-    public ResponseEntity<List<Comments>> listComments (HttpServletRequest request){
+    public ResponseEntity<List<Comments>> listComments (HttpServletRequest request,
+                                                        @PathVariable("transactionId") Integer transactionId){
         securityContext.setContext(SecurityContextHolder.getContext());
-        List<Comments> commentsList = commentsService.allList(securityContext.getCurrentUser().getUser_id());
+        //List<Comments> commentsList = commentsService.allList(securityContext.getCurrentUser().getUser_id());
+        List<Comments> commentsList = commentsService.allListByTransactionId(transactionId);
         if (commentsList != null && !commentsList.isEmpty()) {
             securityContext.dispose();
             return new ResponseEntity<>(commentsList, HttpStatus.OK);
         } else {
-            securityContext.dispose();
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            //securityContext.dispose();
+            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(commentsList, HttpStatus.OK);
         }
     }
 }

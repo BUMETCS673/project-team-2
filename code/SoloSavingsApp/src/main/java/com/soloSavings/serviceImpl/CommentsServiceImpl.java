@@ -32,4 +32,9 @@ public class CommentsServiceImpl implements CommentsService {
     public void add(Comments comments) {
         commentsRepository.save(comments);
     }
+
+    @Override
+    public List<Comments> allListByTransactionId(Integer transactionId) {
+        return commentsRepository.allListByTransactionId(transactionId);
+    }
 }

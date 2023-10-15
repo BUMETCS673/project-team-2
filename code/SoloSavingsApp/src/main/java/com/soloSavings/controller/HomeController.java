@@ -7,7 +7,6 @@ package com.soloSavings.controller;
  * This software is the confidential and proprietary information of
  * Team 2 - SoloSavings Application
  */
-import com.soloSavings.config.SecurityConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -40,7 +39,17 @@ public class HomeController {
         logger.info("Login to SoloSavings Application");
         return "login";
     }
-    
+
+    @GetMapping("/solosavings/forget-password")
+    public String forgetPassword() {
+        return "forgetPassword";
+    }
+
+    @GetMapping("/solosavings/reset-password")
+    public String resetPassword() {
+        return "resetPassword";
+    }
+
     @GetMapping("/solosavings/dashboard")
     public String dashboard() {
         return "dashboard";
@@ -49,5 +58,15 @@ public class HomeController {
     @GetMapping("/solosavings/analytics")
     public String analytics() {
         return "analytics";
+    }
+
+    @GetMapping("/solosavings/transactionHistory")
+    public String transactionhistory() {
+            return "transactionHistory";
+    }
+
+    @GetMapping("/solosavings/budgetGoals")
+    public String budgetGoals() {
+        return "BudgetGoals";
     }
 }

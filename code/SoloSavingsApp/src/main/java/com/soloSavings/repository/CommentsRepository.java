@@ -28,4 +28,7 @@ public interface CommentsRepository extends JpaRepository<Comments, Integer> {
     @Query("SELECT c FROM Comments c where c.user_id=?1")
     List<Comments> allList(Integer user_id);
 
+    @Query("SELECT c FROM Comments c where c.transaction_id=?1")
+    List<Comments> allListByTransactionId(Integer transactionId);
+
 }

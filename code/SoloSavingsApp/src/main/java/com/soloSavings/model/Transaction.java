@@ -1,18 +1,15 @@
 package com.soloSavings.model;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.soloSavings.model.helper.TransactionType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 
 @Entity
 @Table(name = "transactions")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,5 +25,13 @@ public class Transaction {
     private TransactionType transaction_type;
     private Double amount;
     private LocalDate transaction_date;
+
+    public Boolean isDebit(){
+        return this.transaction_type.equals(TransactionType.DEBIT);
+    }
+    public Boolean isCredit(){
+        return this.transaction_type.equals(TransactionType.CREDIT);
+    }
+
 }
 

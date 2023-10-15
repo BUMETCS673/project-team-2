@@ -167,7 +167,7 @@
             if(!isValidationCheckPassed()) return;
 
             const formData = {
-                username: $('input[name="username"]').val(),
+                username: $('input[name="username"]').val().toLowerCase(),
                 password_hash: $('input[name="password_hash"]').val(),
                 email: $('input[name="email"]').val()
             };
@@ -180,7 +180,7 @@
                 success: function(response) {
                     console.log('Registration successful:', response);
                     confirm("Your account successfully created, redirect to your dashboard.")
-                    window.location.replace("dashboard");
+                    window.location.replace("login");
                 },
                 error: function(error) {
                     alert(error.responseText);
