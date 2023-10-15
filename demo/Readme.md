@@ -1,1 +1,1 @@
-This folder contains all demo vidoes
+This folder contains all demo videos

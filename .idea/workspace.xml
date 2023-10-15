@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ba8333ed-18f5-4098-9cd0-3e697cfbaf88" name="Changes" comment="">
+    <list default="true" id="ba8333ed-18f5-4098-9cd0-3e697cfbaf88" name="Changes" comment="Modify README file">
+      <change afterPath="$PROJECT_DIR$/misc/dashboard.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/demo/Readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +50,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/misc" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="ACTIVE_PROFILES" />
@@ -76,11 +82,27 @@
       <updated>1695398325514</updated>
       <workItem from="1695398326573" duration="2584000" />
       <workItem from="1695427349733" duration="2969000" />
+      <workItem from="1697306544797" duration="2348000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Modify README file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modify README file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

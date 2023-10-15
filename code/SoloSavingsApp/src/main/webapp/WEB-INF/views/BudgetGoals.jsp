@@ -7,6 +7,7 @@
     <title>SoloSavings Budget Goals</title>
     <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
     <jsp:include page="templates/header.jsp" />
     <div>

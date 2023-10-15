@@ -28,7 +28,7 @@ var table = $('#BudgetGoalsDataTable').DataTable({
         { "mData": "budgetGoalType"},
         { "mData": "source" },
         { "mData": "targetAmount" },
-        { "mData": "actualAmount"},
+        { "mData": "actualAmount", "defaultContent": 0},
         {"mData": null, "defaultContent": "<button>Delete</button>"}
     ]
 })

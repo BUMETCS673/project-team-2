@@ -13,7 +13,7 @@
     <div class="hero">
         <h1>Welcome to SoloSavings</h1>
         <p>Your Money Management Solution</p>
-        <a href="/" class="btn-primary">Get Started</a>
+        <a href="#" class="btn-primary" id="get-started-button">Get Started</a>
     </div>
 
     <section class="features">
@@ -34,3 +34,17 @@
     <jsp:include page="templates/footer.jsp" />
 </body>
 </html>
+ <script>
+        document.getElementById("get-started-button").addEventListener("click", function(event) {
+            event.preventDefault();
+
+            const jwtToken = document.cookie.replace(/(?:(?:^|.*;\s*)jwtToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            if (jwtToken) {
+                // Redirect to the dashboard page if the user has a JWT token
+                window.location.href = "/solosavings/dashboard";
+            } else {
+                // Redirect to the details page if the user doesn't have a JWT token
+                window.location.href = "/solosavings/details";
+            }
+        });
+    </script>
