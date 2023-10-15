@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.config.Customizer;
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -42,7 +44,11 @@ public class SecurityConfig {
                     auth.requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated();
                     auth.anyRequest().authenticated();
                 })
-                .csrf(csrf -> csrf.disable())
+                .csrf((csrf) -> csrf
+                    .csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .ignoringRequestMatchers(new AntPathRequestMatcher("/**"))
+                )
                 .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
