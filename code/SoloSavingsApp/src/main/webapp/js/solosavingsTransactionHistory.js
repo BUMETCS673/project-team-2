@@ -41,10 +41,10 @@ var closeCommentModal = commentModal.getElementsByClassName("close")[0];
 closeCommentModal.onclick = function() {
     commentModal.style.display = "none";
 };
-
+var transaction_id
 
 table.on('click', 'button', function (e) {
-    let transaction_id = e.target.closest('tr').firstChild.innerText;
+    transaction_id = e.target.closest('tr').firstChild.innerText;
     let button = e.target
     if(button.textContent == 'Delete') {
         // Confirm box
@@ -71,6 +71,7 @@ table.on('click', 'button', function (e) {
         commentModal.style.display = "block";
         commentsList.style.display="none";
     } else if(button.textContent == 'View Comments') {
+        console.log("Transaction Id" + transaction_id);
         $.ajax({
             type: "GET",
             url: "/comments/list/"+transaction_id,
@@ -125,20 +126,6 @@ $("#submit-comment").click(function() {
     });
 });
 
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: "/comments/list/"+transaction_id,
-        contentType: 'application/json',
-        success: function(response) {
-            displayComments(response);
-        },
-        error: function(error) {
-            console.error("Error getting comments", error);
-        }
-    });
-});
-
 function displayComments(comments) {
     const commentsList = $("#comments-list");
 
@@ -179,4 +166,19 @@ $("#comments-list").on("click", ".edit-comment", function() {
         }
     });
 
+});
+
+$("#comments-list").on("click", ".delete-comment", function() {
+    const commentId = $(this).attr("id");
+    console.log("Comment id" + commentId);
+    $.ajax({
+        type: "POST",
+        url: "/comments/del/"+commentId, // Replace with your actual server endpoint
+        contentType: 'application/json',
+        success: function(response) {
+            location.reload();
+        },
+        error: function(error) {
+        }
+    });
 });

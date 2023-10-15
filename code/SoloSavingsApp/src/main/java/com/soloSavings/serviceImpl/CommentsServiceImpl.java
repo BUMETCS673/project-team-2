@@ -18,8 +18,8 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public void deleteByCommentsId(Integer user_id, Integer comments_id) {
-        Comments comments = commentsRepository.findByCommentsId(user_id, comments_id);
+    public void deleteByCommentsId(Integer comments_id, Integer user_id) {
+        Comments comments = commentsRepository.findByCommentsId(comments_id, user_id);
         if(null != comments)
             commentsRepository.deleteById(comments_id);
     }
