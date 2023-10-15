@@ -1,10 +1,7 @@
 package com.soloSavings.repository;
 
 import com.soloSavings.model.Comments;
-import com.soloSavings.model.Transaction;
-import com.soloSavings.model.helper.TransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -21,8 +18,8 @@ import java.util.List;
 @Repository
 public interface CommentsRepository extends JpaRepository<Comments, Integer> {
 
-    @Query("SELECT c FROM Comments c WHERE c.id = ?1")
-    Comments findByCommentsId(Integer comments_id);
+    @Query("SELECT c FROM Comments c WHERE c.id = ?1 AND c.user_id = ?2")
+    Comments findByCommentsId(Integer comments_id, Integer user_id);
 
 
     @Query("SELECT c FROM Comments c where c.user_id=?1")

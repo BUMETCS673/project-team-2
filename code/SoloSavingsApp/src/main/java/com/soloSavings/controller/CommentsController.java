@@ -1,11 +1,8 @@
 package com.soloSavings.controller;
 
-import com.soloSavings.exceptions.TransactionException;
 import com.soloSavings.model.Comments;
-import com.soloSavings.model.Transaction;
 import com.soloSavings.service.CommentsService;
 import com.soloSavings.service.SecurityContext;
-import com.soloSavings.service.TransactionService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,17 +32,22 @@ public class CommentsController {
 
     @RequestMapping(value = "/find", method = RequestMethod.POST)
     public ResponseEntity<Comments> findComments (@RequestParam Integer comments_id){
-        Comments foundComment = commentsService.findByCommentsId(comments_id);
+        securityContext.setContext(SecurityContextHolder.getContext());
+        Comments foundComment = commentsService.findByCommentsId(comments_id, securityContext.getCurrentUser().getUser_id());
         if (foundComment != null) {
+            securityContext.dispose();
             return new ResponseEntity<>(foundComment, HttpStatus.OK);
         } else {
+            securityContext.dispose();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @RequestMapping(value = "/del/{commentsId}", method = RequestMethod.POST)
     public ResponseEntity<?> delComments (@PathVariable("commentsId") Integer comments_id){
-        commentsService.deleteByCommentsId(comments_id);
+        securityContext.setContext(SecurityContextHolder.getContext());
+        commentsService.deleteByCommentsId(comments_id, securityContext.getCurrentUser().getUser_id());
+        securityContext.dispose();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

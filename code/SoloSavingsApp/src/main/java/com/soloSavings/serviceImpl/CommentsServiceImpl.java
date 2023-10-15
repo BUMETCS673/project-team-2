@@ -7,20 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentsServiceImpl implements CommentsService {
     @Autowired
     CommentsRepository commentsRepository;
     @Override
-    public Comments findByCommentsId(Integer comments_id) {
-        return commentsRepository.findByCommentsId(comments_id);
+    public Comments findByCommentsId(Integer user_id, Integer comments_id) {
+        return commentsRepository.findByCommentsId(comments_id, user_id);
     }
 
     @Override
-    public void deleteByCommentsId(Integer comments_id) {
-        commentsRepository.deleteById(comments_id);
+    public void deleteByCommentsId(Integer user_id, Integer comments_id) {
+        Comments comments = commentsRepository.findByCommentsId(user_id, comments_id);
+        if(null != comments)
+            commentsRepository.deleteById(comments_id);
     }
 
     @Override
