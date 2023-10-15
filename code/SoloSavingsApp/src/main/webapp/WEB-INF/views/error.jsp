@@ -4,53 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>404 - Not Found</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        p {
-            color: #666;
-        }
-
-        .back-link {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .back-link a {
-            text-decoration: none;
-            color: #007bff;
-            cursor: pointer;
-        }
-
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
-
 <body>
+    <jsp:include page="templates/header.jsp" />
     <div class="container">
         <h1>404 - Not Found</h1>
         <p>The requested resource was not found.</p>
@@ -58,10 +15,6 @@
             <a href="/">Go back to the homepage</a>
         </div>
     </div>
+    <jsp:include page="templates/footer.jsp" />
 </body>
-
-<footer>
-    &copy; 2023 SoloSavings. All rights reserved.
-</footer>
-
 </html>

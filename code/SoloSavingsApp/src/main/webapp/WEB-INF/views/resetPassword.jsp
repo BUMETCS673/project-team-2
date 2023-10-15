@@ -12,96 +12,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Reset Password</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-        }
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-            color: white;
-        }
-        h1 {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        form {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            max-width: 400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            flex-direction: column;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<header>
-    <nav>
-        <ul>
-            <li><a href="/solosavings" style="color: white;">Home</a></li>
-            <li><a href="/solosavings/login" style="color: white;">Login</a></li>
-            <li><a href="/solosavings/register" style="color: white;">Register</a></li>
-        </ul>
-    </nav>
-</header>
+<jsp:include page="templates/header.jsp" />
 <h1>Reset Password</h1>
 <form id="resetForm">
     <label for="token">Reset Token:</label>
@@ -122,56 +36,9 @@
 
     <input type="submit" value="Reset Password">
 </form>
+<jsp:include page="templates/footer.jsp" />
 </body>
-<footer>
-    &copy; 2023 SoloSavings. All rights reserved.
-</footer>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    function isValidationCheckPassed() {
-        const password = document.getElementById("password").value;
-        const confirmPassword = document.getElementById("confirm_password").value;
-        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-
-        if (!passwordPattern.test(password)) {
-            alert("Password must contain at least one uppercase letter, one lowercase letter, one digit, and be at least 8 characters long.");
-            return false;
-        }
-
-        if (password !== confirmPassword) {
-            alert("Passwords do not match.");
-            return false;
-        }
-
-        return true;
-    }
-
-    $(document).ready(function() {
-        $('#resetForm').submit(function(event) {
-            event.preventDefault();
-            if(!isValidationCheckPassed()) return;
-            const formData = {
-                token: $('input[name="token"]').val(),
-                username: $('input[name="username"]').val(),
-                password: $('input[name="password"]').val(),
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: '/api/reset-password',
-                contentType: 'application/json',
-                data: JSON.stringify(formData),
-                success: function(response) {
-                    console.log('Reset password successfully:', response);
-                    alert("Password reset successfully, redirect to login page.");
-                    window.location.replace("/solosavings/login");
-                },
-                error: function(error) {
-                    alert('Something went wrong, please try again.');
-                    console.error('Something went wrong:', error);
-                }
-            });
-        });
-    });
-</script>
+<script src="/js/solosavingsResetPassword.js"></script>
 </html>
