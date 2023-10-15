@@ -67,6 +67,14 @@ AND b.source = t.source
 AND b.budget_goal_type = IF(t.transaction_type = 'CREDIT','SAVE','SPEND')
 GROUP BY b.id, b.budget_goal_type, b.source, b.target_amount, b.user_id;
 
+CREATE TABLE `comments` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `content` varchar(255) DEFAULT NULL,
+                            `user_id` int(11) DEFAULT NULL,
+                            `transaction_id` int(11) DEFAULT NULL,
+                            PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=306 DEFAULT CHARSET=utf8;
+
 /* Creating user
  * Username: Generic
  * Email: generic@solosavings.com

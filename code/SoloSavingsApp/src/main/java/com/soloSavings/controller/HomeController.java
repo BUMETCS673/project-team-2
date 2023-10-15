@@ -61,7 +61,7 @@ public class HomeController {
     }
 
     @GetMapping("/solosavings/transactionHistory")
-    public String transactionhistory() {
+    public String transactionHistory() {
             return "transactionHistory";
     }
 

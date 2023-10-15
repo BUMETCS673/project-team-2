@@ -94,4 +94,15 @@ public class UserServiceTest {
         assertEquals(10.00,userService.getBalance(user.getUser_id()));
     }
 
+    @Test
+    public void testSetUserNewPassword(){
+        //When
+        when(userRepository.findByUsername(anyString())).thenReturn(user);
+        doNothing().when(userRepository).updatePasswordByUsername(anyString(),anyString());
+        userService.setUserNewPassword(user.getUsername(),user.getPassword_hash());
+        //Then
+        verify(userRepository, times(1)).updatePasswordByUsername(anyString(),anyString());
+
+    }
+
 }

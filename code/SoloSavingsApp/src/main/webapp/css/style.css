@@ -219,6 +219,39 @@ button:hover {
     text-align: center;
 }
 
+/* Comment styling */
+.comments-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+#comment-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    resize: none;
+}
+#submit-comment {
+    background-color: #007acc;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+#submit-comment:hover {
+    background-color: #005fbb;
+}
+#comments-list {
+    margin-top: 10px;
+}
+.comment {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
