@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class UserServiceImpl  implements UserService{
+public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    TransactionServiceImpl transactionServiceImpl;
     @Override
     public Double getBalance(Integer id) {
         User user = userRepository.findById(id).get();
@@ -39,6 +41,16 @@ public class UserServiceImpl  implements UserService{
         if(null == user)
             throw new UsernameNotFoundException("User could not be found with email " + email);
         return user;
+    }
+
+
+    @Override
+    public void setUserNewPassword(String username, String newPassword) {
+        User user = userRepository.findByUsername(username);
+        if(null == user)
+            throw new UsernameNotFoundException("User could not be found with username " + username);
+        String hashedPassword = SecurityConfig.hashedPassword(newPassword);
+        userRepository.updatePasswordByUsername(hashedPassword, username);
     }
 
     @Override

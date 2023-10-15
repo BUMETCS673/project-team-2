@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -22,8 +21,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query("SELECT t FROM Transaction t WHERE t.user_id = ?1 and t.transaction_type = ?2")
     List<Transaction> findByTransactionType(Integer user_id, TransactionType transaction_type);
 
-    @Query("SELECT e FROM Transaction e WHERE MONTH(e.transaction_date) = MONTH(CURRENT_DATE()) AND YEAR(e.transaction_date) = YEAR(CURRENT_DATE()) AND  e.transaction_type = ?1")
-    List<Transaction> findByCurrentMonth(TransactionType trans_type);
+    @Query("SELECT t FROM Transaction t WHERE t.user_id = ?1")
+    List<Transaction> findByTransactionUser(Integer user_id);
 
     @Query("SELECT e FROM Transaction e WHERE  e.user_id = ?1")
     List<Transaction> findAllByUserId(Integer userId);

@@ -1,8 +1,5 @@
 package com.soloSavings.controller;
 
-import com.soloSavings.exceptions.TransactionException;
-import com.soloSavings.model.Transaction;
-import com.soloSavings.service.TransactionService;
 import com.soloSavings.serviceImpl.SecurityContextImpl;
 import com.soloSavings.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,5 +16,7 @@ public interface CommentsService {
 
     public void add(Comments comments);
 
+    List<Comments> allListByTransactionId(Integer transactionId);
+
 
 }

@@ -48,4 +48,5 @@ public class User {
         this.registration_date = LocalDate.now();
         this.last_updated = LocalDate.now();
     }
+
 }

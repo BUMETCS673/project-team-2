@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoloSavings - Login</title>
-    <link rel="stylesheet" href="css/style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -111,6 +110,7 @@
 
     <section>
         <p>Don't have an account? <a href="/solosavings/register">Register here</a></p>
+        <p>Forget your password? <a href="/solosavings/forget-password">Click here</a></p>
     </section>
 </body>
 <footer>
@@ -119,13 +119,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function setJwtInCookie(jwtResponse) {
-        document.cookie = "jwtToken=" + jwtResponse;
+        console.log("Token: " + jwtResponse['token'] + " Expiry: " + jwtResponse['expiry']);
+        document.cookie = "jwtToken=" + jwtResponse['token'] + "; expires=" + jwtResponse['expiry'];
     }
     $(document).ready(function() {
         $('#loginForm').submit(function(event) {
             event.preventDefault();
             const formData = {
-                username: $('input[name="username"]').val(),
+                username: $('input[name="username"]').val().toLowerCase(),
                 password: $('input[name="password"]').val(),
             };
 
@@ -135,13 +136,13 @@
                 contentType: 'application/json',
                 data: JSON.stringify(formData),
                 success: function(response) {
-                    console.log('Login successful:', response);
+                    console.log(response)
                     setJwtInCookie(response);
                     alert("Authentication passed successfully, redirect to your dashboard.");
                     window.location.replace("/solosavings/dashboard");
                 },
                 error: function(error) {
-                    alert(error.responseText);
+                    alert("Authentication failed, please try again");
                     console.error('Login failed:', error);
                 }
             });

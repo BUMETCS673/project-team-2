@@ -1,13 +1,11 @@
 package com.soloSavings.repository;
 
-import com.soloSavings.model.Transaction;
 import com.soloSavings.model.User;
-import com.soloSavings.model.helper.TransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /*
  * Copyright (c) 2023 Team 2 - SoloSavings
@@ -28,5 +26,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT e FROM User e WHERE e.email = ?1")
     User findUserByEmail(String email);
 
-
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.password_hash = ?1 WHERE u.username = ?2")
+    void updatePasswordByUsername(String password_hash, String username);
 }

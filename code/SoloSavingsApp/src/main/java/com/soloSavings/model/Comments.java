@@ -22,4 +22,6 @@ public class Comments {
     private Integer id;
     private String content;
     private Integer user_id;
+
+    private Integer transaction_id;
 }

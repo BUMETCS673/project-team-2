@@ -3,6 +3,7 @@ package com.soloSavings.controller;
 import com.soloSavings.config.JwtUtil;
 import com.soloSavings.exceptions.UserAuthenticationException;
 import com.soloSavings.model.Login;
+import com.soloSavings.model.TokenDetails;
 import com.soloSavings.model.User;
 import com.soloSavings.service.UserService;
 import jakarta.persistence.NonUniqueResultException;
@@ -20,6 +21,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.soloSavings.utils.Constants.INVALID_USERNAME_OR_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -66,7 +69,7 @@ public class UserAuthenticationControllerTest {
         Login loginData = new Login("test@solosavings.com", "hhhh");
         Set<GrantedAuthority> test = new HashSet<>();
         UserDetails userDetails =  new org.springframework.security.core.userdetails.User("test","test",test);
-        String token = "testing-token";
+        TokenDetails token = jwtUtil.generateToken("testing-token");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(null);
         when(userService.loadUserByUsername(loginData.username())).thenReturn(userDetails);
@@ -88,6 +91,6 @@ public class UserAuthenticationControllerTest {
         ResponseEntity<?> response = userAuthController.loginUser(loginData);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Invalid email or password", response.getBody());
+        assertEquals(INVALID_USERNAME_OR_PASSWORD, response.getBody());
     }
 }
