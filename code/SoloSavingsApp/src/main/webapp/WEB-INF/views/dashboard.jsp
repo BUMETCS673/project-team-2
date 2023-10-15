@@ -28,6 +28,8 @@
             display: inline;
             margin-right: 20px;
             color: white;
+            text-decoration: underline;
+            cursor: pointer;
         }
 
         h1, h2, h3, p {
@@ -159,9 +161,7 @@
     <nav>
         <ul>
             <li><a href="/solosavings" style="color: white;">Home</a></li>
-            <li id="login"><a href="/solosavings/login" style="color: white;">Login</a></li>
-            <li id="logout"><a onclick="logout()">Logout</a></li>
-            <li><a href="/solosavings/register" style="color: white;">Register</a></li>
+            <li id="logout"><a onclick="logout()" style="color: white; text-decoration: underline;">Logout</a></li>
         </ul>
     </nav>
 </header>

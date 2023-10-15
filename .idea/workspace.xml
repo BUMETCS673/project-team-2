@@ -4,96 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ba8333ed-18f5-4098-9cd0-3e697cfbaf88" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/codeql.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/workflows/github-action-test.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/setup-docker.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/config/MailConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/BudgetGoalController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/exceptions/BudgetGoalException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/BudgetGoal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/BudgetGoalTracker.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/ResetPassword.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/TokenDetails.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/helper/BudgetGoalType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/BudgetGoalRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/BudgetGoalTrackerRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/BudgetGoalService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/BudgetGoalTrackerService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/EmailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/BudgetGoalServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/BudgetGoalTrackerServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/EmailServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/PasswordResetService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/utils/ResetTokenStorage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/resources/application-prod.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/BudgetGoals.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/forgetPassword.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/resetPassword.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/transactionHistory.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/controller/BudgetGoalControllerTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/service/BudgetGoalServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/service/BudgetGoalTrackerServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/CS673_presentation2_team2.pptx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/CS673_presentation2_team2.pptx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/Deployment.md" afterDir="false" />
+    <list default="true" id="ba8333ed-18f5-4098-9cd0-3e697cfbaf88" name="Changes" comment="Modify README file">
+      <change afterPath="$PROJECT_DIR$/misc/dashboard.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/init-database.sql" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/init-database.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/config/JwtFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/config/JwtFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/config/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/config/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/CommentsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/CommentsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/HomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/TransactionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/TransactionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/UserAuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/UserAuthenticationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/Comments.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/Comments.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/JwtResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/Transaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/helper/TransactionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/model/helper/TransactionType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/CommentsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/CommentsRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/TransactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/TransactionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/CommentsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/CommentsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/TransactionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/TransactionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/CommentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/CommentsServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/CsvExportService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/SecurityContextImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/SecurityContextImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/TransactionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/TransactionServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/serviceImpl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/utils/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/utils/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/utils/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/utils/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/utils/Validation.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/java/com/soloSavings/utils/Validation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/Expenses.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/dashboard.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/dashboard.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/home.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/home.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/login.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/login.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/register.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/main/webapp/WEB-INF/views/register.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/controller/TransactionControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/controller/TransactionControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/controller/UserAuthenticationControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/controller/UserAuthenticationControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/integration/TransactionApiIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/integration/TransactionApiIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/integration/UserApiIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/integration/UserApiIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/service/TransactionServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/java/com/soloSavings/service/TransactionServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/code/SoloSavingsApp/src/test/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/database/setup-docker.sh" beforeDir="false" afterPath="$PROJECT_DIR$/code/database/setup-docker.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/solosavings.postman_collection.json" beforeDir="false" afterPath="$PROJECT_DIR$/code/solosavings.postman_collection.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_Manual Testing_Team2.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/CS673_Manual Testing_Team2.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_MeetingMinutes_Team2.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/CS673_MeetingMinutes_Team2.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_ProgressReport_Team2.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/CS673_ProgressReport_Team2.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_SDD_Team2.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/CS673_SDD_Team2.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_SPPP_RiskManagement_Team2.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/CS673_SPPP_RiskManagement_Team2.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_SPPP_Team2.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/CS673_SPPP_Team2.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_STD_Team2.docx" beforeDir="false" afterPath="$PROJECT_DIR$/doc/CS673_STD_Team2.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_presentation0_team2.pptx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/CS673_presentation1team2.pptx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/Readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/demo/Readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,11 +16,6 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -118,29 +28,33 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2Vl6TIAAZm42gZJda4gJECaljcD" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "正在合并 ZhaoXin-Comments",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;SpringBootBackend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/misc" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="ACTIVE_PROFILES" />
@@ -168,6 +82,7 @@
       <updated>1695398325514</updated>
       <workItem from="1695398326573" duration="2584000" />
       <workItem from="1695427349733" duration="2969000" />
+      <workItem from="1697306544797" duration="2348000" />
     </task>
     <servers />
   </component>
@@ -184,6 +99,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Modify README file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modify README file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
