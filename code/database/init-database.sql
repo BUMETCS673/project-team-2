@@ -47,6 +47,26 @@ CREATE TABLE IF NOT EXISTS transactions (
   FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=INNODB;
 
+CREATE TABLE IF NOT EXISTS budgetgoals (
+id INT NOT NULL AUTO_INCREMENT,
+user_id INT NOT NULL,
+budget_goal_type ENUM('SAVE','SPEND') NOT NULL,
+source VARCHAR(255) NOT NULL,
+target_amount DECIMAL(18,2) NOT NULL,
+start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY(id),
+FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=INNODB;
+
+CREATE OR REPLACE VIEW budgetgoaltracker AS
+SELECT b.id, b.budget_goal_type, b.source, b.target_amount, SUM(t.amount) actual_amount, b.user_id
+FROM budgetgoals b LEFT OUTER JOIN transactions t
+ON MONTH(b.start_date) = MONTH(t.transaction_date)
+AND b.user_id = t.user_id
+AND b.source = t.source
+AND b.budget_goal_type = IF(t.transaction_type = 'CREDIT','SAVE','SPEND')
+GROUP BY b.id, b.budget_goal_type, b.source, b.target_amount, b.user_id;
+
 /* Creating user
  * Username: Generic
  * Email: generic@solosavings.com
