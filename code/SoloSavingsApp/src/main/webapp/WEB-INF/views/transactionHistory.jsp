@@ -13,6 +13,25 @@
         <h1>View your transaction history</h1>
     </div>
     <main>
+
+    <!-- Add Comment Modal -->
+    <div id="add-comment-modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Your Comments</h2>
+            <div class="comments-section" id="add-comments-list">
+                <h2 style="clear: both">Comments</h2>
+                <textarea id="comment-input" placeholder="Write your comment here" style="width: 85%;float: left"></textarea>
+                <button id="submit-comment" style="width: 10%;float: left;margin-top:5px;margin-left: 15px;">Submit</button>
+
+            </div>
+            <div id="comments-list" style="clear: both">
+
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <table id="transactionHistoryDataTable">
             <thead>
@@ -23,6 +42,7 @@
                 <th>Transaction Type</th>
                 <th>Amount</th>
                 <th>Actions</th>
+                <th>Comment Actions</th>
             </tr>
             </thead>
         </table>
