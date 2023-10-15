@@ -49,10 +49,10 @@ public class UserAuthenticationController {
         logger.info("Request to create a new user: {}", user);
         try {
             userService.save(user);
-            return ResponseEntity.ok().body("The user account with email " + user.getEmail() + " has successfully created");
+            return ResponseEntity.ok().body("The user account with email has successfully created");
         } catch (NonUniqueResultException e) {
             logger.info(e.getMessage());
-            return new ResponseEntity<>("The email " + user.getEmail() + " already registered.", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The email has already registered.", HttpStatus.FORBIDDEN);
         }
     }
 

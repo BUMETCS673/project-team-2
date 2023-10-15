@@ -179,11 +179,11 @@
                 data: JSON.stringify(formData),
                 success: function(response) {
                     console.log('Registration successful:', response);
-                    confirm("Your account successfully created, redirect to your dashboard.")
+                    confirm("Your account successfully created, redirect you to the login page.")
                     window.location.replace("login");
                 },
                 error: function(error) {
-                    alert(error.responseText);
+                    alert("Something went wrong, please register the account again.");
                     console.error('Registration failed:', error);
                 }
             });
