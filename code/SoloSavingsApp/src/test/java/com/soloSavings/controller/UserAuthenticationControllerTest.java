@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +17,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 import static com.soloSavings.utils.Constants.INVALID_USERNAME_OR_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -56,8 +53,6 @@ public class UserAuthenticationControllerTest {
     }
     @Test
     public void testRegisterUser(){
-        //User registerUser = new User(1, "test", "test@solosavings.com", "hhhh", LocalDate.now(), 100.00, LocalDate.now());
-        // register new user
         doNothing().when(userService).save(any());
         ResponseEntity<?> response = userAuthController.registerUser(user);
 
@@ -69,8 +64,6 @@ public class UserAuthenticationControllerTest {
 
     @Test
     public void testRegisterUserAlreadyRegistered() {
-        //User registerUser = new User(1, "test", "test@solosavings.com", "hhhh", LocalDate.now(), 100.00, LocalDate.now());
-        // register new user
         doThrow(new NonUniqueResultException()).when(userService).save(any());
         ResponseEntity<?> response = userAuthController.registerUser(user);
 
