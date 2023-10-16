@@ -22,7 +22,7 @@ public class CommentsController {
     SecurityContext securityContext;
 
     @RequestMapping(value = "/add/{transactionId}", method = RequestMethod.POST)
-    public ResponseEntity<?> addComments (HttpServletRequest request, @RequestBody Comments comments,
+    public ResponseEntity<?> addComments (@RequestBody Comments comments,
                                           @PathVariable("transactionId") Integer transactionId){
         securityContext.setContext(SecurityContextHolder.getContext());
         comments.setUser_id(securityContext.getCurrentUser().getUser_id());
@@ -55,8 +55,7 @@ public class CommentsController {
 
     @GetMapping( "/list/{transactionId}")
     @ResponseBody
-    public ResponseEntity<List<Comments>> listComments (HttpServletRequest request,
-                                                        @PathVariable("transactionId") Integer transactionId){
+    public ResponseEntity<List<Comments>> listComments (@PathVariable("transactionId") Integer transactionId){
         securityContext.setContext(SecurityContextHolder.getContext());
         //List<Comments> commentsList = commentsService.allList(securityContext.getCurrentUser().getUser_id());
         List<Comments> commentsList = commentsService.allListByTransactionId(transactionId);
