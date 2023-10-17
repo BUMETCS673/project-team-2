@@ -1,6 +1,7 @@
 # Table of Contents
 - [SoloSavings](#SoloSavings)
 - [Achitecture](#Achitecture)
+- [Design Patterns](#Design-Patterns)
 - [Use Case Diagram](#Use-Case-Diagram)
 - [Database Design](#Database-Design)
 - [Deployment](#Deployment)
@@ -19,33 +20,40 @@
 
 The SoloSavings web application is designed with a layered architecture that separates concerns and promotes modularity and maintainability. It consists of the following key components:
 
-1.Frontend (UI):
+1. Frontend (UI):
 The frontend is responsible for the user interface and user experience.\
 Technologies:JSP, JavaScript, HTML, CSS.\
 The frontend communicates with the backend through RESTful APIs.
 
-2.Backend (Java Spring Boot):
+2. Backend (Java Spring Boot):
 The backend handles business logic, data processing, and interacts with the database.\
 Technologies: Java Spring Boot, Spring Security for authentication and authorization.\
 It exposes RESTful APIs to the frontend for data retrieval and manipulation.
 
-3.Database (MySQL):
+3. Database (MySQL):
 MySQL is used as the database management system to store user data, financial records, and other application data.\
 The backend interacts with the MySQL database to perform CRUD (Create, Read, Update, Delete) operations.
 
-4.Frontend-Backend Communication:
+4. Frontend-Backend Communication:
 The frontend communicates with the backend through RESTful APIs.\
 REST endpoints are defined in the backend to handle HTTP requests from the frontend.
 
-5.Dependency and Interaction:
+5. Dependency and Interaction:
 The frontend interacts with the backend through API calls, making HTTP requests to fetch and update data.\
 Spring Boot acts as the middleware between the frontend and the database, processing requests and managing data retrieval and storage.\
 MySQL stores user data, financial records, and application data.
 
-6.Framework:
+6. Framework:
 Java Spring Boot is used as the primary backend framework, providing features for handling RESTful APIs, security, and database interactions.\
 Java Security is used as the primary security framework, providing security features for authentication.
 
+## Design Patterns
+### MVC-R (Model-View-Controller with Repository)
+#### Intent:
+The MVC-R design pattern, an extension of the classic Model-View-Controller (MVC) pattern, introduces a Repository layer to decouple data access from user interface and business logic in the SoloSavings application. The primary aim is to establish a well-structured, maintainable, and scalable architectural foundation.
+
+#### Motivation:
+The SoloSavings application requires an architectural pattern that distinguishes data access concerns from user interfaces and business logic. The MVC-R pattern addresses this by incorporating a Repository layer.
 
 ## Class Diagram
 ![Class Diagram](misc/class-diagram.jpg)
@@ -62,7 +70,7 @@ This database design serves as a foundation for the "SoloSavings" application, f
 
 1. Users table:
 
-Attributes:
+###### Attributes:
 - user_id (Primary Key): Unique identifier for each user.
 - username: User's chosen username.
 - password_hash (or encrypted password): Securely stored password hash.
@@ -74,7 +82,7 @@ Attributes:
 
 2. Transaction table:
 
-Attributes:
+###### Attributes:
 - transaction_id (Primary Key): Unique identifier for each transaction record.
 - user_id (Foreign Key referencing Users): Identifies the user associated with the income.
 - source: Source of transaction (e.g., salary, freelance work, electricity bill, cellphone bill).
@@ -84,7 +92,7 @@ Attributes:
 
 3. BudgetGoal table:
 
-Attributes:
+###### Attributes:
 - id (Primary Key): Unique identifier for each budget goal record
 - user_id (Foreign Key referencing Users): Identifies the user associated with the income
 - budget_goal_type: SAVE for saving goals SPEND for spending goals
@@ -94,7 +102,7 @@ Attributes:
 
 4. Comments table:
 
-Attributes:
+###### Attributes:
 - id (Primary Key): Unique identifier for each budget goal record
 - user_id (Foreign Key referencing Users): Identifies the user associated with the income
 - content: Comments for each transaction id
