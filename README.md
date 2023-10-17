@@ -15,6 +15,8 @@
 ### https://solosavings.wanl.blue 
 ![Dashboard](misc/dashboard.jpg)
 
+[[↑] Back to top](#table-of-contents)
+
 ## Architecture
 ![Architecture](misc/architecture.jpg)
 
@@ -47,6 +49,8 @@ MySQL stores user data, financial records, and application data.
 Java Spring Boot is used as the primary backend framework, providing features for handling RESTful APIs, security, and database interactions.\
 Java Security is used as the primary security framework, providing security features for authentication.
 
+[[↑] Back to top](#table-of-contents)
+
 ## Design Patterns
 ### MVC-R (Model-View-Controller with Repository)
 #### Intent:
@@ -55,11 +59,17 @@ The MVC-R design pattern, an extension of the classic Model-View-Controller (MVC
 #### Motivation:
 The SoloSavings application requires an architectural pattern that distinguishes data access concerns from user interfaces and business logic. The MVC-R pattern addresses this by incorporating a Repository layer.
 
+[[↑] Back to top](#table-of-contents)
+
 ## Class Diagram
 ![Class Diagram](misc/class-diagram.jpg)
 
+[[↑] Back to top](#table-of-contents)
+
 ## Use Case Diagram
 ![Use Case Diagram](misc/use-case.png)
+
+[[↑] Back to top](#table-of-contents)
 
 ## Database Design
 This database design serves as a foundation for the "SoloSavings" application, facilitating the management of user accounts and transactions(income, expenses) to manage the user balance.
@@ -120,6 +130,7 @@ The "transaction" table stores income-related transactions and expense-related t
 The “BudgetGoal” table stores the budget goal a user would like to meet. Data includes the type of goal, source it’ll be in reference to and target amount they would like to set. It is related to the “Users” table through the user_id foreign key.
 Comments table stores content for future reference on the users account.
 
+[[↑] Back to top](#table-of-contents)
 
 ## Development
 ![Docker](misc/docker.jpg)
@@ -158,6 +169,8 @@ Comments table stores content for future reference on the users account.
 /api/budgetgoal/delete/{budgetgoal_id}
 /api/budgetgoal/all
 ```
+
+[[↑] Back to top](#table-of-contents)
 
 ## Deployment
 
@@ -198,4 +211,4 @@ If the SPRING_MYSQL_HOST environment variable is defined (which it is in the sol
 
 Otherwise, the value will default to localhost.
 
-
+[[↑] Back to top](#table-of-contents)
