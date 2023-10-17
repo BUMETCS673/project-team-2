@@ -1,0 +1,28 @@
+version: '3'
+services:
+  solosavings-db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE= solosavings
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - /databases:/var/lib/mysql
+      - ./database/init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
+
+  solosavings-app:
+    build: SoloSavingsApp/.
+    restart: on-failure
+    ports:
+      - "443:8443"
+    depends_on:
+      - solosavings-db
+    volumes:
+      - /etc/letsencrypt/live/solosavings.wanl.blue/keystore.p12:/cert/keystore.p12
+    environment:
+      - SPRING_MYSQL_HOST=solosavings-db
+      - SPRING_SSL_PORT=8443
+      - SPRING_SSL=true
+      - SPRING_KEYPW=${SPRING_KEYPW}
+      - SPRING_PROFILES_ACTIVE=prod

@@ -1,0 +1,444 @@
+{
+	"info": {
+		"_postman_id": "1e1a00d9-da9f-4840-947a-7628d268f6d1",
+		"name": "solosavings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "10642642",
+		"_collection_link": "https://bold-robot-475420.postman.co/workspace/cs673~88080ce9-6005-434c-9659-6cc6bf689660/collection/10642642-1e1a00d9-da9f-4840-947a-7628d268f6d1?action=share&source=collection_link&creator=10642642"
+	},
+	"item": [
+		{
+			"name": "RegisterUser",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"generic2\",\r\n    \"password_hash\": \"Password3\",\r\n    \"email\": \"generic2@solosavings.com\"\r\n}"
+				},
+				"url": "localhost:8888/api/register"
+			},
+			"response": []
+		},
+		{
+			"name": "RegisterUserError",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"generic2\",\r\n    \"password_hash\": \"Password3\",\r\n    \"email\": \"generic2@solosavings.com\"\r\n}"
+				},
+				"url": "localhost:8888/api/register"
+			},
+			"response": []
+		},
+		{
+			"name": "Login JWT Error",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"generic2\",\r\n    \"password\": \"Password2\"\r\n}"
+				},
+				"url": "localhost:8888/api/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Login JWT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var JWT = responseBody;\r",
+							"pm.collectionVariables.set(\"JWT\", JWT);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"generic2\",\r\n    \"password\": \"Password3\"\r\n}"
+				},
+				"url": "localhost:8888/api/login"
+			},
+			"response": []
+		},
+		{
+			"name": "AddTransactionIncome",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_id\": \"\",\r\n    \"user_id\":\"\",\r\n    \"source\": \"Income 1\",\r\n    \"transaction_type\": \"CREDIT\",\r\n    \"amount\": 100.00,\r\n    \"transaction_date\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/add"
+			},
+			"response": []
+		},
+		{
+			"name": "AddTransactionIncome AmountInvalid Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_id\": \"\",\r\n    \"user_id\":\"\",\r\n    \"source\": \"Income 1\",\r\n    \"transaction_type\": \"CREDIT\",\r\n    \"amount\": -100.00,\r\n    \"transaction_date\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/add"
+			},
+			"response": []
+		},
+		{
+			"name": "AddTransactionExpense",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_id\": \"\",\r\n    \"user_id\":\"\",\r\n    \"source\": \"Expense 1\",\r\n    \"transaction_type\": \"DEBIT\",\r\n    \"amount\": 60.00,\r\n    \"transaction_date\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/add"
+			},
+			"response": []
+		},
+		{
+			"name": "AddTransactionExpense AmountInvalid Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_id\": \"\",\r\n    \"user_id\":\"\",\r\n    \"source\": \"Expense 1\",\r\n    \"transaction_type\": \"DEBIT\",\r\n    \"amount\": -100.00,\r\n    \"transaction_date\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/add"
+			},
+			"response": []
+		},
+		{
+			"name": "AddTransactionExpense ISF Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction_id\": \"\",\r\n    \"user_id\":\"\",\r\n    \"source\": \"Expense 1\",\r\n    \"transaction_type\": \"DEBIT\",\r\n    \"amount\": 1000.00,\r\n    \"transaction_date\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/add"
+			},
+			"response": []
+		},
+		{
+			"name": "GetTransactionCredit",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/credit"
+			},
+			"response": []
+		},
+		{
+			"name": "GetTransactionDebit",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/debit"
+			},
+			"response": []
+		},
+		{
+			"name": "GetTransactionError",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/debits"
+			},
+			"response": []
+		},
+		{
+			"name": "GetTransactionHistory",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/history"
+			},
+			"response": []
+		},
+		{
+			"name": "GetMonthlyIncome",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/monthly/income"
+			},
+			"response": []
+		},
+		{
+			"name": "GetMonthlyExpense",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/monthly/expense"
+			},
+			"response": []
+		},
+		{
+			"name": "GetAnalytics-CREDIT",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/analytics/monthly/CREDIT/2023"
+			},
+			"response": []
+		},
+		{
+			"name": "GetAnalytics-DEBIT",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/analytics/monthly/DEBIT/2023"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTransaction",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/delete/906"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTransaction - Transaction not found",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/delete/906"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteTransaction - Not User Transaction",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:8888/api/transaction/delete/2"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{JWT}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "JWT",
+			"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJnZW5lcmljMiIsImlhdCI6MTY5NjcxNTk2MSwiZXhwIjoxNjk2NzE3NzYxfQ.clpVA6F8HkOkFjSFQWSHAwrtNUxp9lWpRT9-j2440Vo",
+			"type": "string"
+		}
+	]
+}

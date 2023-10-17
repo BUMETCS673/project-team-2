@@ -1,0 +1,60 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page isELIgnored="false" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SoloSavings Transaction History</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <jsp:include page="templates/header.jsp" />
+    <div>
+        <h1>View your transaction history</h1>
+    </div>
+    <main>
+
+    <!-- Add Comment Modal -->
+    <div id="add-comment-modal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Your Comments</h2>
+            <div class="comments-section" id="add-comments-list">
+                <h2 style="clear: both">Comments</h2>
+                <textarea id="comment-input" placeholder="Write your comment here" style="width: 85%;float: left"></textarea>
+                <button id="submit-comment" style="width: 10%;float: left;margin-top:5px;margin-left: 15px;">Submit</button>
+
+            </div>
+            <div id="comments-list" style="clear: both">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <table id="transactionHistoryDataTable">
+            <thead>
+            <tr>
+                <th>Transaction Id</th>
+                <th>Transaction Date</th>
+                <th>Source</th>
+                <th>Transaction Type</th>
+                <th>Amount</th>
+                <th>Actions</th>
+                <th>Comment Actions</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    </main>
+    <jsp:include page="templates/footer.jsp" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.js"></script>
+    <script src="/js/solosavingsTransactionHistory.js"></script>
+</body>
+c</html>
